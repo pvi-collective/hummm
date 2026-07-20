@@ -31,7 +31,7 @@ function begin() {
 
   startButton.disabled = true;
   startButton.textContent = 'Listening…';
-  message.textContent = 'Allow location access, then put the phone in your pocket.';
+  message.textContent = 'allow location access, then keep the phone on you.';
   app.classList.add('listening');
   watchId = navigator.geolocation.watchPosition(onPosition, onLocationProblem, {
     enableHighAccuracy: true,
