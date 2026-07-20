@@ -53,7 +53,7 @@ function onPosition(position) {
 
   if (referenceDistance === null) {
     referenceDistance = filteredDistance;
-    message.textContent = 'Walk. The rhythm will answer your movement.';
+    message.textContent = 'move. listen. look.';
     return;
   }
 
@@ -65,11 +65,11 @@ function onPosition(position) {
   if (progress >= MIN_MEANINGFUL_CHANGE_METRES) {
     const pulses = pulseCount(filteredDistance, progress);
     playPulses(pulses);
-    message.textContent = 'Keep going.';
+    message.textContent = 'keep going.';
     referenceDistance = filteredDistance;
   } else if (progress <= -MIN_MEANINGFUL_CHANGE_METRES) {
-    // Silence is deliberate: the last movement did not bring the participant closer.
-    message.textContent = 'Listen. Try another way.';
+    // silence is deliberate: the last movement did not bring the participant closer.
+    message.textContent = 'listen. try another way.';
     referenceDistance = filteredDistance;
   }
 }
@@ -96,7 +96,7 @@ function arrive() {
   navigator.vibrate?.([500]);
   app.classList.remove('listening');
   app.classList.add('arrived');
-  message.textContent = 'You have arrived. Stay here.';
+  message.textContent = 'you have arrived. stay here.';
   startButton.classList.add('hidden');
   retryButton.classList.remove('hidden');
 }
