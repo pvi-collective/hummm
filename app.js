@@ -30,7 +30,7 @@ function begin() {
   }
 
   startButton.disabled = true;
-  startButton.textContent = 'Listening…';
+  startButton.textContent = 'listening…';
   message.textContent = 'allow location access, then keep the phone on you.';
   app.classList.add('listening');
   watchId = navigator.geolocation.watchPosition(onPosition, onLocationProblem, {
@@ -53,7 +53,7 @@ function onPosition(position) {
 
   if (referenceDistance === null) {
     referenceDistance = filteredDistance;
-    message.textContent = 'move. listen. look.';
+    message.textContent = 'move.   listen.   look.';
     return;
   }
 
