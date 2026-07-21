@@ -2,8 +2,10 @@
    Change only TARGET when preparing a new field test. */
 const TARGET = { lat: -31.94915, lng: 115.85944 };
 const ARRIVAL_RADIUS_METRES = 12;
-const MIN_MEANINGFUL_CHANGE_METRES = 5;
-const FEEDBACK_INTERVAL_MS = 2600;
+const MAX_ARRIVAL_ACCURACY_METRES = 20;
+const REQUIRED_ARRIVAL_READINGS = 2;
+const MIN_DIRECTION_CHANGE_METRES = 4;
+const DIRECTION_CHECK_INTERVAL_MS = 3500;
 
 const app = document.querySelector('.app');
 const message = document.querySelector('#message');
@@ -12,8 +14,11 @@ const retryButton = document.querySelector('#retry-button');
 
 let watchId = null;
 let filteredDistance = null;
-let referenceDistance = null;
-let lastFeedbackAt = 0;
+let directionAnchorDistance = null;
+let lastDirectionCheckAt = 0;
+let lastHapticAt = 0;
+let arrivalReadingCount = 0;
+let guidanceTimer = null;
 let arrived = false;
 
 startButton.addEventListener('click', begin);
@@ -44,47 +49,76 @@ function begin() {
 function onPosition(position) {
   const { latitude, longitude, accuracy } = position.coords;
   const rawDistance = distanceBetween(latitude, longitude, TARGET.lat, TARGET.lng);
-  // Gentle smoothing prevents a single noisy GPS reading changing the message.
+  // Gentle smoothing prevents a single noisy GPS reading changing the response.
   filteredDistance = filteredDistance === null ? rawDistance : filteredDistance * 0.65 + rawDistance * 0.35;
 
-  if (filteredDistance <= Math.max(ARRIVAL_RADIUS_METRES, accuracy)) {
-    arrive();
-    return;
+  if (filteredDistance <= ARRIVAL_RADIUS_METRES && accuracy <= MAX_ARRIVAL_ACCURACY_METRES) {
+    arrivalReadingCount += 1;
+    if (arrivalReadingCount >= REQUIRED_ARRIVAL_READINGS) {
+      arrive();
+      return;
+    }
+    setGuidance('almost there.');
+  } else {
+    arrivalReadingCount = 0;
   }
 
-  if (referenceDistance === null) {
-    referenceDistance = filteredDistance;
-    message.textContent = 'move.   notice.   explore.';
-    return;
-  }
+  playFieldRhythm();
 
-  const now = Date.now();
-  if (now - lastFeedbackAt < FEEDBACK_INTERVAL_MS) return;
-  lastFeedbackAt = now;
-
-  const progress = referenceDistance - filteredDistance;
-  if (progress >= MIN_MEANINGFUL_CHANGE_METRES) {
-    const pulses = pulseCount(filteredDistance, progress);
-    playPulses(pulses);
-    message.textContent = 'keep going.';
-    referenceDistance = filteredDistance;
-  } else if (progress <= -MIN_MEANINGFUL_CHANGE_METRES) {
-    // silence is deliberate: the last movement did not bring the participant closer.
-    message.textContent = 'listen. try another way.';
-    referenceDistance = filteredDistance;
+  if (directionAnchorDistance === null) {
+    directionAnchorDistance = filteredDistance;
+    lastDirectionCheckAt = Date.now();
+    setGuidance('move. pay attention.');
+  } else {
+    updateDirectionGuidance();
   }
 }
 
-function pulseCount(distance, progress) {
-  if (distance < 45 || progress > 30) return 4;
-  if (distance < 120 || progress > 15) return 3;
-  if (distance < 300 || progress > 8) return 2;
-  return 1;
+function playFieldRhythm() {
+  const now = Date.now();
+  const rhythm = rhythmForDistance(filteredDistance);
+  if (now - lastHapticAt < rhythm.interval) return;
+  lastHapticAt = now;
+  playPulses(rhythm.pulses);
+}
+
+function rhythmForDistance(distance) {
+  if (distance > 400) return { pulses: 1, interval: 7000 };
+  if (distance > 250) return { pulses: 1, interval: 5200 };
+  if (distance > 150) return { pulses: 1, interval: 4000 };
+  if (distance > 75) return { pulses: 2, interval: 3000 };
+  if (distance > 35) return { pulses: 3, interval: 2200 };
+  return { pulses: 4, interval: 1500 };
+}
+
+function updateDirectionGuidance() {
+  const now = Date.now();
+  if (now - lastDirectionCheckAt < DIRECTION_CHECK_INTERVAL_MS) return;
+
+  const change = directionAnchorDistance - filteredDistance;
+  if (change >= MIN_DIRECTION_CHANGE_METRES) {
+    setGuidance('keep going.', true);
+    directionAnchorDistance = filteredDistance;
+  } else if (change <= -MIN_DIRECTION_CHANGE_METRES) {
+    setGuidance('try another way.', true);
+    directionAnchorDistance = filteredDistance;
+  }
+  lastDirectionCheckAt = now;
+}
+
+function setGuidance(text, returnToBase = false) {
+  clearTimeout(guidanceTimer);
+  message.textContent = text;
+  if (returnToBase) {
+    guidanceTimer = setTimeout(() => {
+      message.textContent = 'move. pay attention.';
+    }, 4500);
+  }
 }
 
 function playPulses(count) {
   const pattern = [];
-  for (let i = 0; i < count; i += 1) pattern.push(115, 130);
+  for (let i = 0; i < count; i += 1) pattern.push(90, 110);
   navigator.vibrate?.(pattern);
   app.classList.add('pulsing');
   setTimeout(() => app.classList.remove('pulsing'), 300);
@@ -94,7 +128,7 @@ function arrive() {
   if (arrived) return;
   arrived = true;
   navigator.geolocation.clearWatch(watchId);
-  navigator.vibrate?.([500]);
+  navigator.vibrate?.([700]);
   app.classList.remove('listening');
   app.classList.add('arrived');
   message.textContent = 'you have arrived. stay here.';
@@ -119,6 +153,7 @@ function showProblem(text) {
 }
 
 function reset() {
+  clearTimeout(guidanceTimer);
   window.location.reload();
 }
 
