@@ -1,6 +1,6 @@
 /* hummm Build 001 — Haptic Compass
    Change only TARGET when preparing a new field test. */
-const TARGET = { lat: -31.94915, lng: 115.85944 };
+const TARGET = { lat: -31.95022, lng: 115.86051 };
 const ARRIVAL_RADIUS_METRES = 12;
 const MAX_ARRIVAL_ACCURACY_METRES = 20;
 const REQUIRED_ARRIVAL_READINGS = 2;
