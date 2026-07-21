@@ -30,9 +30,10 @@ function begin() {
   }
 
   startButton.disabled = true;
+  navigator.vibrate([300, 100, 300]);
   startButton.textContent = 'pay attention';
   message.textContent = 'allow location access, then keep the phone on you.';
-  app.classList.add('pay attention');
+  app.classList.add('listening');
   watchId = navigator.geolocation.watchPosition(onPosition, onLocationProblem, {
     enableHighAccuracy: true,
     maximumAge: 1000,
