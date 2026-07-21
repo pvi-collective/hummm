@@ -1,38 +1,22 @@
-# hummm — Build 001: Haptic Compass
+# hummm — Build 002: The Calling
 
-This small field-test app asks one question: can a person navigate toward a hidden place through haptic feedback alone?
+This build keeps the GPS/arrival interaction from Build 001, but replaces anonymous pulse patterns with named haptic phrases.
 
-## Publish it
+Research question: **Can a living haptic language both guide and move a human wayfinder?**
 
-1. Unzip this download.
-2. Upload the **contents** of this folder to the root of the `pvi-collective/hummm` GitHub repository, replacing its current files if prompted.
-3. Commit the changes. GitHub Pages will update at `https://pvi-collective.github.io/hummm/` within a minute or two.
-4. Open that address on an Android phone using Chrome. Allow location access, press **Start**, and put the phone in a pocket.
+Design principles: Human Wayfinding; Trust before autonomy; Rhythm is language; Silence is productive; Places express themselves; Wayfinders respond through movement; Arrival is joy not achievement.
 
-Do not run the app from Google Drive or by opening `index.html` directly: GPS needs the secure GitHub Pages address.
+## Test
 
-## Target location
+1. Copy these files into a new `feature/haptic-language` branch of the hummm repository.
+2. Open the GitHub Pages URL on an Android phone over HTTPS.
+3. Enable location, press **begin**, and keep the phone in a pocket.
+4. Use the new target: `-31.95022, 115.86051`.
 
-The current hidden target is:
+The screen remains minimal, but the small debug line is visible during this prototype so GPS and phrase behaviour can be checked. Moving away deliberately produces silence. Arrival plays Relief once and stops tracking.
 
-```js
-const TARGET = { lat: -31.94915, lng: 115.85944 };
-```
+## Hardware boundary
 
-To set a new target, change that one line near the top of `app.js`, then upload the updated file to GitHub.
+`playPhrase(name)` is the hardware-independent interface. The default `phoneOutput` uses `navigator.vibrate()`. A future Woojer adapter can replace `output` without changing GPS, distance, or phrase selection.
 
-## Haptic behaviour
-
-The first GPS reading establishes a baseline. Every few seconds, the app checks whether the participant has moved at least five metres closer or farther away:
-
-- closer: one to four short pulses, with more pulses for stronger progress or close range;
-- farther away: silence;
-- within roughly 12 m (or current GPS accuracy, if larger): one long arrival pulse, then silence.
-
-The app intentionally gives no map, direction, distance number, or target name.
-
-## Important limitations
-
-- Browser vibration (`navigator.vibrate`) is generally supported on Android Chrome. iPhones and iPads do not provide it to web pages.
-- This first build drives the **phone** only. A Woojer Strap paired as Bluetooth audio needs a later build that creates low-frequency audio pulses in the browser.
-- GPS accuracy can worsen around tall buildings. The arrival radius automatically allows for the phone's reported uncertainty.
+Serve from HTTPS (GitHub Pages is suitable). Browser vibration support varies by phone and browser; the app gives a short acknowledgement pulse when Begin is pressed.
