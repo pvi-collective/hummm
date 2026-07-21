@@ -24,7 +24,7 @@ const PHRASES = Object.freeze({
   invitation: { pattern: [110, 130, 110, 1500, 110, 2200], text: 'come closer slowly.' },
   curiosity:  { pattern: [120, 100, 120, 130, 120, 1200], text: 'notice what changes.' },
   uncertainty:{ pattern: [180, 1800], text: 'maybe try another way.' },
-  distress:   { pattern: [100, 70, 100, 70, 150, 90, 100, 70, 180, 360], text: 'please don't leave.' },
+  distress:   { pattern: [100, 70, 100, 70, 150, 90, 100, 70, 180, 360], text: 'please don\'t leave.' },
   relief:     { pattern: [700], text: 'you have arrived.' }
 });
 
