@@ -30,9 +30,9 @@ function begin() {
   }
 
   startButton.disabled = true;
-  startButton.textContent = 'listening…';
+  startButton.textContent = 'pay attention';
   message.textContent = 'allow location access, then keep the phone on you.';
-  app.classList.add('listening');
+  app.classList.add('pay attention');
   watchId = navigator.geolocation.watchPosition(onPosition, onLocationProblem, {
     enableHighAccuracy: true,
     maximumAge: 1000,
@@ -53,7 +53,7 @@ function onPosition(position) {
 
   if (referenceDistance === null) {
     referenceDistance = filteredDistance;
-    message.textContent = 'move.   listen.   look.';
+    message.textContent = 'move.   notice.   explore.';
     return;
   }
 
