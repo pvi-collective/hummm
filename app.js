@@ -56,6 +56,7 @@ const startButton = document.querySelector('#startButton');
 const instruction = document.querySelector('#instruction');
 const status = document.querySelector('#status');
 const debug = document.querySelector('#debug');
+const distanceDisplay = document.querySelector('#distanceDisplay');
 
 let watchId = null;
 let timerId = null;
@@ -146,7 +147,10 @@ function handlePosition(position) {
   };
 
   const distance = distanceBetween(point, TARGET);
-  const phrase = choosePhrase(distance);
+
+distanceDisplay.textContent = Math.round(distance);
+
+const phrase = choosePhrase(distance);
 
   if (distance <= ARRIVAL_RADIUS_METRES) {
     if (!arrived) {
@@ -164,12 +168,8 @@ function handlePosition(position) {
     }
   }
 
-  debug.innerHTML = `
-    <strong>${Math.round(distance)}</strong> m<br>
-    accuracy: ${Math.round(position.coords.accuracy)} m<br>
-    phrase: ${phrase || 'silence'}<br>
-    current: ${currentPhrase || 'none'}
-  `;
+  debug.textContent =
+  `${Math.round(distance)}m · ±${Math.round(position.coords.accuracy)}m · ${phrase || 'quiet'} · current: ${currentPhrase || 'none'}`;
 
   lastPosition = point;
   lastDistance = distance;
