@@ -4,7 +4,27 @@ html, body { min-height: 100%; margin: 0; background: #111; color: #f1efe8; }
 body { display: grid; place-items: center; min-height: 100svh; }
 .app { width: min(100%, 34rem); min-height: 100svh; padding: 2rem 1.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 .eyebrow { position: absolute; top: 1.25rem; margin: 0; color: #8f8b80; font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; }
-.orb { width: 7rem; height: 7rem; margin-bottom: 2.5rem; border: 1px solid #d8d2c4; border-radius: 50%; opacity: .8; transition: transform 1.2s ease, border-color 1.2s ease, opacity 1.2s ease; }
+.orb {
+  width: 7rem;
+  height: 7rem;
+  margin-bottom: 2.5rem;
+
+  border: 1px solid #d8d2c4;
+  border-radius: 50%;
+
+  opacity: .8;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+
+  transition:
+    transform 1.2s ease,
+    border-color 1.2s ease,
+    opacity 1.2s ease;
+}
 .app.active .orb { animation: breathe 3.6s ease-in-out infinite; }
 .app.distress .orb { border-color: #e8a68d; animation: call .65s ease-in-out infinite; }
 .app.arrived .orb { border-color: #e7d69e; transform: scale(1.14); }
