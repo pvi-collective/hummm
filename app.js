@@ -15,7 +15,7 @@
 */
 
 const TARGET = { lat: -31.95022, lng: 115.86051 };
-const ARRIVAL_RADIUS_METRES = 10;
+const ARRIVAL_RADIUS_METRES = 15;
 const UPDATE_MS = 1000;
 const MIN_MOVEMENT_METRES = 3;
 
@@ -120,13 +120,19 @@ function distanceBetween(a, b) {
 }
 
 function choosePhrase(distance, movingCloser) {
+
   if (distance <= ARRIVAL_RADIUS_METRES) return 'Relief';
+
   // Silence is deliberate when a wayfinder is moving away.
   if (lastDistance !== null && distance > lastDistance + MIN_MOVEMENT_METRES) return null;
-  if (!movingCloser && distance > 100) return 'Uncertainty';
-  if (distance > 500) return 'Awakening';
-  if (distance > 250) return 'Invitation';
-  if (distance > 100) return 'Curiosity';
+
+  if (!movingCloser && distance > 20) return 'Uncertainty';
+
+  if (distance > 120) return 'Awakening';
+  if (distance > 90) return 'Invitation';
+  if (distance > 70) return 'Curiosity';
+  if (distance > 40) return 'Uncertainty';
+
   return 'Distress';
 }
 
