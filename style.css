@@ -25,6 +25,14 @@ body { display: grid; place-items: center; min-height: 100svh; }
     border-color 1.2s ease,
     opacity 1.2s ease;
 }
+.distance-display {
+  font-size: clamp(2rem, 8vw, 3rem);
+  font-weight: 300;
+  letter-spacing: .03em;
+  line-height: 1;
+  color: #f1efe8;
+  user-select: none;
+}
 .app.active .orb { animation: breathe 3.6s ease-in-out infinite; }
 .app.distress .orb { border-color: #e8a68d; animation: call .65s ease-in-out infinite; }
 .app.arrived .orb { border-color: #e7d69e; transform: scale(1.14); }
