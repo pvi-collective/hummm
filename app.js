@@ -119,14 +119,17 @@ function distanceBetween(a, b) {
   return 2 * earth * Math.asin(Math.sqrt(h));
 }
 
-function choosePhrase(distance, movingCloser) {
+function choosePhrase(distance) {
 
   if (distance <= ARRIVAL_RADIUS_METRES) return 'Relief';
 
   // Silence is deliberate when a wayfinder is moving away.
-  if (lastDistance !== null && distance > lastDistance + MIN_MOVEMENT_METRES) return null;
-
-  if (!movingCloser && distance > 20) return 'Uncertainty';
+  if (
+    lastDistance !== null &&
+    distance > lastDistance + MIN_MOVEMENT_METRES
+  ) {
+    return null;
+  }
 
   if (distance > 120) return 'Awakening';
   if (distance > 90) return 'Invitation';
@@ -137,16 +140,13 @@ function choosePhrase(distance, movingCloser) {
 }
 
 function handlePosition(position) {
-  const point = { lat: position.coords.latitude, lng: position.coords.longitude };
-  const distance = distanceBetween(point, TARGET);
-  const movingCloser = lastDistance === null || distance < lastDistance - MIN_MOVEMENT_METRES;
-  const phrase = choosePhrase(distance, movingCloser);
+  const point = {
+    lat: position.coords.latitude,
+    lng: position.coords.longitude
+  };
 
-  debug.innerHTML = `
-    Distance: ${Math.round(distance)} m<br>
-    Phrase: ${phrase}<br>
-    Moving closer: ${movingCloser}
-  `;
+  const distance = distanceBetween(point, TARGET);
+  const phrase = choosePhrase(distance);
 
   if (distance <= ARRIVAL_RADIUS_METRES) {
     if (!arrived) {
@@ -157,12 +157,20 @@ function handlePosition(position) {
       stopTracking();
     }
   } else if (!arrived) {
-    if (phrase) playPhrase(phrase); else silence();
+    if (phrase) {
+      playPhrase(phrase);
+    } else {
+      silence();
+    }
   }
 
-  debug.textContent = `lat ${point.lat.toFixed(6)} · lng ${point.lng.toFixed(6)}\n` +
-    `distance ${Math.round(distance)} m · accuracy ${Math.round(position.coords.accuracy)} m\n` +
-    `phrase ${phrase || 'silence'} · vibration ${output.supported ? 'available' : 'unavailable'}`;
+  debug.innerHTML = `
+    <strong>${Math.round(distance)}</strong> m<br>
+    accuracy: ${Math.round(position.coords.accuracy)} m<br>
+    phrase: ${phrase || 'silence'}<br>
+    current: ${currentPhrase || 'none'}
+  `;
+
   lastPosition = point;
   lastDistance = distance;
 }
