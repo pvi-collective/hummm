@@ -173,11 +173,14 @@ const phrase = choosePhrase(distance);
     }
   }
 
-  debug.textContent =
-  `${Math.round(distance)}m · ±${Math.round(position.coords.accuracy)}m · ${phrase || 'quiet'} · current: ${currentPhrase || 'none'}`;
+  debug.innerHTML = `
+lat ${point.lat.toFixed(6)} · lng ${point.lng.toFixed(6)}<br>
+distance ${Math.round(distance)} m · accuracy ±${Math.round(position.coords.accuracy)} m<br>
+zone ${currentPhrase || 'none'} · next ${phrase || 'quiet'}
+`;
 
-  lastPosition = point;
-  lastDistance = distance;
+lastPosition = point;
+lastDistance = distance;
 }
 
 function handleError(error) {
