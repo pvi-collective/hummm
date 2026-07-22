@@ -142,6 +142,12 @@ function handlePosition(position) {
   const movingCloser = lastDistance === null || distance < lastDistance - MIN_MOVEMENT_METRES;
   const phrase = choosePhrase(distance, movingCloser);
 
+  debug.innerHTML = `
+    Distance: ${Math.round(distance)} m<br>
+    Phrase: ${phrase}<br>
+    Moving closer: ${movingCloser}
+  `;
+
   if (distance <= ARRIVAL_RADIUS_METRES) {
     if (!arrived) {
       arrived = true;
