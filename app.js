@@ -1,8 +1,8 @@
 /*
-  hummm — Build 002: calling
+  hummm — Build 002: The Calling
 
   Research question:
-  can a living haptic language both guide and move a human wayfinder?
+  Can a living haptic language both guide and move a human wayfinder?
 
   Design principles:
   Human Wayfinding · Trust before autonomy · Rhythm is language ·
@@ -20,12 +20,12 @@ const UPDATE_MS = 1000;
 const MIN_MOVEMENT_METRES = 3;
 
 const PHRASES = Object.freeze({
-  awakening:  { pattern: [90, 140, 90, 2600], text: 'something is near.' },
-  invitation: { pattern: [110, 130, 110, 1500, 110, 2200], text: 'come closer slowly.' },
-  curiosity:  { pattern: [120, 100, 120, 130, 120, 1200], text: 'notice what changes.' },
-  uncertainty:{ pattern: [180, 1800], text: 'maybe try another way.' },
-  distress:   { pattern: [100, 70, 100, 70, 150, 90, 100, 70, 180, 360], text: 'please don\'t leave.' },
-  relief:     { pattern: [700], text: 'you have arrived.' }
+  Awakening:  { pattern: [90, 140, 90, 2600], text: 'something is here.' },
+  Invitation: { pattern: [110, 130, 110, 1500, 110, 2200], text: 'come a little closer.' },
+  Curiosity:  { pattern: [120, 100, 120, 130, 120, 1200], text: 'notice what changes.' },
+  Uncertainty:{ pattern: [180, 1800], text: 'try another way.' },
+  Distress:   { pattern: [100, 70, 100, 70, 150, 90, 100, 70, 180, 360], text: 'please don\'t leave.' },
+  Relief:     { pattern: [700], text: 'you have arrived.' }
 });
 
 const app = document.querySelector('#app');
@@ -59,12 +59,12 @@ let output = phoneOutput;
 function playPhrase(name) {
   const phrase = PHRASES[name];
   if (!phrase) return;
-  if (name === 'uncertainty' && currentPhrase === 'uncertainty') return;
+  if (name === 'Uncertainty' && currentPhrase === 'Uncertainty') return;
   if (name === currentPhrase && name !== 'Distress') return;
   output.stop();
   output.play(phrase.pattern);
   currentPhrase = name;
-  app.classList.toggle('distress', name === 'distress');
+  app.classList.toggle('distress', name === 'Distress');
   instruction.textContent = phrase.text;
   status.textContent = name.toLowerCase();
 }
@@ -88,14 +88,14 @@ function distanceBetween(a, b) {
 }
 
 function choosePhrase(distance, movingCloser) {
-  if (distance <= ARRIVAL_RADIUS_METRES) return 'relief';
+  if (distance <= ARRIVAL_RADIUS_METRES) return 'Relief';
   // Silence is deliberate when a wayfinder is moving away.
   if (lastDistance !== null && distance > lastDistance + MIN_MOVEMENT_METRES) return null;
-  if (!movingCloser && distance > 100) return 'uncertainty';
-  if (distance > 500) return 'awakening';
-  if (distance > 250) return 'invitation';
-  if (distance > 100) return 'curiosity';
-  return 'distress';
+  if (!movingCloser && distance > 100) return 'Uncertainty';
+  if (distance > 500) return 'Awakening';
+  if (distance > 250) return 'Invitation';
+  if (distance > 100) return 'Curiosity';
+  return 'Distress';
 }
 
 function handlePosition(position) {
@@ -107,9 +107,9 @@ function handlePosition(position) {
   if (distance <= ARRIVAL_RADIUS_METRES) {
     if (!arrived) {
       arrived = true;
-      playPhrase('relief');
+      playPhrase('Relief');
       app.classList.add('arrived');
-      instruction.textContent = PHRASES.relief.text;
+      instruction.textContent = PHRASES.Relief.text;
       stopTracking();
     }
   } else if (!arrived) {
@@ -152,7 +152,7 @@ function start() {
     enableHighAccuracy: true, maximumAge: 5000, timeout: 15000
   });
   timerId = window.setInterval(() => {
-    if (!lastPosition && !arrived) status.textContent = 'waiting for gps…';
+    if (!lastPosition && !arrived) status.textContent = 'waiting for GPS…';
   }, UPDATE_MS);
 }
 
