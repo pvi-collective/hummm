@@ -173,10 +173,10 @@ function start() {
     instruction.textContent = 'location is not available in this browser.';
     return;
   }
-  startButton.textContent = 'Explore';
+  startButton.textContent = 'explore';
 startButton.disabled = true;
   app.classList.add('active');
-  instruction.textContent = 'move. pay attention.';
+  instruction.textContent = 'move slowly. pay attention.';
   status.textContent = 'finding your position…';
   debug.hidden = false;
   // Immediate tactile acknowledgement makes it clear that the app is alive.
