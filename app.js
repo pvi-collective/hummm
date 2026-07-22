@@ -173,7 +173,8 @@ function start() {
     instruction.textContent = 'location is not available in this browser.';
     return;
   }
-  startButton.disabled = true;
+  startButton.textContent = 'Explore';
+startButton.disabled = true;
   app.classList.add('active');
   instruction.textContent = 'move. pay attention.';
   status.textContent = 'finding your position…';
