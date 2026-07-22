@@ -7,6 +7,7 @@ body { display: grid; place-items: center; min-height: 100svh; }
 .orb {
   width: 8rem;
   height: 8rem;
+  margin-top: 2rem;
   margin-bottom: 2.5rem;
 
   border: 1px solid #d8d2c4;
