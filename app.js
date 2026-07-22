@@ -20,12 +20,35 @@ const UPDATE_MS = 1000;
 const MIN_MOVEMENT_METRES = 3;
 
 const PHRASES = Object.freeze({
-  Awakening:  { pattern: [90, 140, 90, 2600], text: 'something is here.' },
-  Invitation: { pattern: [110, 130, 110, 1500, 110, 2200], text: 'come a little closer.' },
-  Curiosity:  { pattern: [120, 100, 120, 130, 120, 1200], text: 'notice what changes.' },
-  Uncertainty:{ pattern: [180, 1800], text: 'try another way.' },
-  Distress:   { pattern: [100, 70, 100, 70, 150, 90, 100, 70, 180, 360], text: 'please don\'t leave.' },
-  Relief:     { pattern: [700], text: 'you have arrived.' }
+  Awakening: {
+    pattern: [90, 140, 90, 2600],
+    text: 'something is near'
+  },
+
+  Invitation: {
+    pattern: [110, 130, 110, 1500, 110, 2200],
+    text: 'come find me'
+  },
+
+  Curiosity: {
+    pattern: [120, 100, 120, 130, 120, 1200],
+    text: 'notice what changes and adapt'
+  },
+
+  Uncertainty: {
+    pattern: [180, 1800],
+    text: 'if you feel nothing, find another way'
+  },
+
+  Distress: {
+    pattern: [100, 70, 100, 70, 150, 90, 100, 70, 180, 360],
+    text: 'please don\'t leave, you are so close'
+  },
+
+  Relief: {
+    pattern: [700],
+    text: 'you have arrived'
+  }
 });
 
 const app = document.querySelector('#app');
@@ -66,7 +89,16 @@ function playPhrase(name) {
   currentPhrase = name;
   app.classList.toggle('distress', name === 'Distress');
   instruction.textContent = phrase.text;
-  status.textContent = name.toLowerCase();
+const zoneNames = {
+  Awakening: 'zone 1. awakening',
+  Invitation: 'zone 2. invitation',
+  Curiosity: 'zone 3. curiosity',
+  Uncertainty: 'zone 4. uncertainty',
+  Distress: 'zone 5. distress',
+  Relief: 'zone 6. relief'
+};
+
+status.textContent = zoneNames[name];
 }
 
 function silence() {
