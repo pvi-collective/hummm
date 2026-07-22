@@ -51,6 +51,15 @@ const PHRASES = Object.freeze({
   }
 });
 
+const ZONE_NAMES = Object.freeze({
+  Awakening: 'zone 1. awakening',
+  Invitation: 'zone 2. invitation',
+  Curiosity: 'zone 3. curiosity',
+  Uncertainty: 'zone 4. uncertainty',
+  Distress: 'zone 5. distress',
+  Relief: 'zone 6. relief'
+});
+
 const app = document.querySelector('#app');
 const startButton = document.querySelector('#startButton');
 const instruction = document.querySelector('#instruction');
@@ -83,23 +92,19 @@ let output = phoneOutput;
 function playPhrase(name) {
   const phrase = PHRASES[name];
   if (!phrase) return;
+
   if (name === 'Uncertainty' && currentPhrase === 'Uncertainty') return;
   if (name === currentPhrase && name !== 'Distress') return;
+
   output.stop();
   output.play(phrase.pattern);
-  currentPhrase = name;
-  app.classList.toggle('distress', name === 'Distress');
-  instruction.textContent = phrase.text;
-const zoneNames = {
-  Awakening: 'zone 1. awakening',
-  Invitation: 'zone 2. invitation',
-  Curiosity: 'zone 3. curiosity',
-  Uncertainty: 'zone 4. uncertainty',
-  Distress: 'zone 5. distress',
-  Relief: 'zone 6. relief'
-};
 
-status.textContent = zoneNames[name];
+  currentPhrase = name;
+
+  app.classList.toggle('distress', name === 'Distress');
+
+  instruction.textContent = phrase.text;
+  status.textContent = ZONE_NAMES[name];
 }
 
 function silence() {
