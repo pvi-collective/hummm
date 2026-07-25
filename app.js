@@ -22,7 +22,7 @@ const MIN_MOVEMENT_METRES = 3;
 const PHRASES = Object.freeze({
   Awakening: {
     pattern: [90, 140, 90, 2600],
-    text: 'something is near'
+    text: 'i am not far'
   },
 
   Invitation: {
@@ -55,9 +55,9 @@ const ZONE_NAMES = Object.freeze({
   Awakening: 'zone 1. awakening',
   Invitation: 'zone 2. invitation',
   Curiosity: 'zone 3. curiosity',
-  Uncertainty: 'zone 4. uncertainty',
-  Distress: 'zone 5. distress',
-  Relief: 'zone 6. relief'
+  Uncertainty: 'uncertainty',
+  Distress: 'zone 4. distress',
+  Relief: 'zone 5. relief'
 });
 
 const app = document.querySelector('#app');
