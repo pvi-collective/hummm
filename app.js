@@ -14,7 +14,7 @@
   the GPS and phrase logic do not need to change.
 */
 
-const TARGET = { lat: 31.950101, lng: 115.860381 };
+const TARGET = { lat: -31.950101, lng: 115.860381 };
 const ARRIVAL_RADIUS_METRES = 15;
 const UPDATE_MS = 1000;
 const MIN_MOVEMENT_METRES = 3;
