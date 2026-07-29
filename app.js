@@ -1,5 +1,5 @@
 /*
-  hummm — Build 002: The Calling
+  hummm — Build 003: The Calling
 
   Research question:
   Can a living haptic language both guide and move a human wayfinder?
@@ -8,56 +8,109 @@
   Human Wayfinding · Trust before autonomy · Rhythm is language ·
   Silence is productive · Places express themselves ·
   Wayfinders respond through movement · Arrival is joy not achievement.
-
-  The phrase engine is deliberately hardware-agnostic. Replace the
-  phoneOutput implementation with a Woojer/BLE or audio output later;
-  the GPS and phrase logic do not need to change.
 */
 
-const TARGET = { lat: -31.950943442782748, lng: 115.86049607250894 };
+const TARGET = {
+  lat: -31.950943442782748,
+  lng: 115.86049607250894
+};
+
 const ARRIVAL_RADIUS_METRES = 15;
 const UPDATE_MS = 1000;
 const MIN_MOVEMENT_METRES = 3;
 
-const PHRASES = Object.freeze({
-  Awakening: {
-    pattern: [90, 140, 90, 2600],
-    text: 'i am not far'
+/*
+  Each zone contains its territory, language and heartbeat.
+  Patterns alternate: vibration, pause, vibration, pause...
+*/
+const ZONES = Object.freeze([
+  {
+    name: 'Awakening',
+    min: 91,
+    max: Infinity,
+    label: 'zone 1. awakening',
+    text: 'i am not far',
+    pattern: [120, 1100]
   },
-
-  Invitation: {
-    pattern: [110, 130, 110, 1500, 110, 2200],
-    text: 'come find me'
+  {
+    name: 'Invitation',
+    min: 86,
+    max: 90,
+    label: 'zone 2. invitation',
+    text: 'come closer',
+    pattern: [100, 100, 100, 900]
   },
-
-  Curiosity: {
-    pattern: [120, 100, 120, 130, 120, 1200],
-    text: 'notice what changes and adapt'
+  {
+    name: 'Curiosity',
+    min: 76,
+    max: 85,
+    label: 'zone 3. curiosity',
+    text: 'pay attention',
+    pattern: [90, 110, 90, 110, 90, 750]
   },
-
-  Uncertainty: {
-    pattern: [180, 1800],
-    text: 'if you feel nothing, find another way'
+  {
+    name: 'Ease',
+    min: 66,
+    max: 75,
+    label: 'zone 4. ease',
+    text: 'trust movement',
+    pattern: [100, 300, 100, 650]
   },
-
-  Distress: {
-    pattern: [100, 70, 100, 70, 150, 90, 100, 70, 180, 360],
-    text: 'please don\'t leave, you are so close'
+  {
+    name: 'Purpose',
+    min: 56,
+    max: 65,
+    label: 'zone 5. purpose',
+    text: 'keep moving',
+    pattern: [100, 160, 100, 160, 100, 500]
   },
-
-  Relief: {
-    pattern: [700],
-    text: 'you have arrived'
+  {
+    name: 'Deeper',
+    min: 46,
+    max: 55,
+    label: 'zone 6. deeper',
+    text: 'go deeper',
+    pattern: [90, 110, 90, 110, 90, 110, 130, 400]
+  },
+  {
+    name: 'Concern',
+    min: 36,
+    max: 45,
+    label: 'zone 7. concern',
+    text: 'stay close',
+    pattern: [140, 80, 90, 170, 160, 350]
+  },
+  {
+    name: 'Urgency',
+    min: 26,
+    max: 35,
+    label: 'zone 8. urgency',
+    text: 'almost there',
+    pattern: [90, 70, 90, 70, 90, 70, 90, 280]
+  },
+  {
+    name: 'Distress',
+    min: 16,
+    max: 25,
+    label: 'zone 9. distress',
+    text: "don't leave",
+    pattern: [120, 40, 120, 40, 120, 40, 120, 40, 120, 180]
+  },
+  {
+    name: 'Relief',
+    min: 0,
+    max: 15,
+    label: 'zone 10. relief',
+    text: 'you have arrived',
+    pattern: [800],
+    repeat: false
   }
-});
+]);
 
-const ZONE_NAMES = Object.freeze({
-  Awakening: 'zone 1. awakening',
-  Invitation: 'zone 2. invitation',
-  Curiosity: 'zone 3. curiosity',
-  Uncertainty: 'uncertainty',
-  Distress: 'zone 4. distress',
-  Relief: 'zone 5. relief'
+const UNCERTAINTY = Object.freeze({
+  name: 'Uncertainty',
+  label: 'uncertainty',
+  text: 'find another way'
 });
 
 const app = document.querySelector('#app');
@@ -69,18 +122,23 @@ const distanceDisplay = document.querySelector('#distanceDisplay');
 
 let watchId = null;
 let timerId = null;
+let phraseTimerId = null;
 let lastPosition = null;
 let lastDistance = null;
-let currentPhrase = null;
+let currentState = null;
 let arrived = false;
 
-// Output adapter: this is the only layer that knows about navigator.vibrate.
+// This is the only part that knows about the phone vibration motor.
+// A Woojer or BLE haptic adapter can replace this later.
 const phoneOutput = {
-  supported: typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function',
+  supported: typeof navigator !== 'undefined' &&
+    typeof navigator.vibrate === 'function',
+
   play(pattern) {
     if (!this.supported) return false;
     return navigator.vibrate(pattern);
   },
+
   stop() {
     if (this.supported) navigator.vibrate(0);
   }
@@ -88,34 +146,76 @@ const phoneOutput = {
 
 let output = phoneOutput;
 
-// Hardware-agnostic entry point. A Woojer adapter can replace `output` later.
-function playPhrase(name) {
-  const phrase = PHRASES[name];
-  if (!phrase) return;
-
-  // If we've entered a new zone, stop whatever was happening.
-  if (name !== currentPhrase) {
-    output.stop();
-    currentPhrase = name;
-  }
-
-  // Always (re)play the phrase.
-  // navigator.vibrate() automatically repeats the pattern until
-  // another pattern or vibrate(0) is sent.
-  output.play(phrase.pattern);
-
-  app.classList.toggle('distress', name === 'Distress');
-
-  instruction.textContent = phrase.text;
-  status.textContent = ZONE_NAMES[name];
+function patternDuration(pattern) {
+  return pattern.reduce((total, duration) => total + duration, 0);
 }
 
-function silence() {
+function clearPhraseLoop() {
+  if (phraseTimerId !== null) {
+    window.clearTimeout(phraseTimerId);
+    phraseTimerId = null;
+  }
+}
+
+function findZone(distance) {
+  return ZONES.find((zone) =>
+    distance >= zone.min && distance <= zone.max
+  );
+}
+
+function isMovingAway(distance) {
+  return (
+    lastDistance !== null &&
+    distance > lastDistance + MIN_MOVEMENT_METRES
+  );
+}
+
+function updateInterface(state) {
+  instruction.textContent = state.text;
+  status.textContent = state.label;
+  app.classList.toggle('distress', state.name === 'Distress');
+}
+
+function playZone(zone) {
+  clearPhraseLoop();
   output.stop();
-  currentPhrase = null;
-  app.classList.remove('distress');
-  instruction.textContent = 'pay attention.';
-  status.textContent = 'quiet';
+
+  currentState = zone.name;
+  updateInterface(zone);
+  output.play(zone.pattern);
+
+  if (zone.repeat === false) return;
+
+  const repeat = () => {
+    if (arrived || currentState !== zone.name) return;
+
+    output.play(zone.pattern);
+
+    phraseTimerId = window.setTimeout(
+      repeat,
+      patternDuration(zone.pattern)
+    );
+  };
+
+  phraseTimerId = window.setTimeout(
+    repeat,
+    patternDuration(zone.pattern)
+  );
+}
+
+function enterZone(zone) {
+  if (currentState === zone.name) return;
+  playZone(zone);
+}
+
+function enterUncertainty() {
+  if (currentState === UNCERTAINTY.name) return;
+
+  clearPhraseLoop();
+  output.stop();
+
+  currentState = UNCERTAINTY.name;
+  updateInterface(UNCERTAINTY);
 }
 
 function distanceBetween(a, b) {
@@ -124,28 +224,14 @@ function distanceBetween(a, b) {
   const lat2 = b.lat * Math.PI / 180;
   const dLat = (b.lat - a.lat) * Math.PI / 180;
   const dLon = (b.lng - a.lng) * Math.PI / 180;
-  const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1) *
+    Math.cos(lat2) *
+    Math.sin(dLon / 2) ** 2;
+
   return 2 * earth * Math.asin(Math.sqrt(h));
-}
-
-function choosePhrase(distance) {
-
-  if (distance <= ARRIVAL_RADIUS_METRES) return 'Relief';
-
-  // Silence when the participant is moving away.
-  if (
-    lastDistance !== null &&
-    distance > lastDistance + MIN_MOVEMENT_METRES
-  ) {
-    return null;
-  }
-
-  if (distance > 120) return 'Awakening';
-  if (distance > 90) return 'Invitation';
-  if (distance > 70) return 'Curiosity';
-  if (distance > 40) return 'Uncertainty';
-
-  return 'Distress';
 }
 
 function handlePosition(position) {
@@ -156,45 +242,58 @@ function handlePosition(position) {
 
   const distance = distanceBetween(point, TARGET);
 
-distanceDisplay.textContent = Math.round(distance);
+  if (distanceDisplay) {
+    distanceDisplay.textContent = Math.round(distance);
+  }
 
-const phrase = choosePhrase(distance);
+  const movingAway = isMovingAway(distance);
+  const nextZone = findZone(distance);
 
   if (distance <= ARRIVAL_RADIUS_METRES) {
     if (!arrived) {
       arrived = true;
-      playPhrase('Relief');
+      playZone(nextZone);
       app.classList.add('arrived');
-      instruction.textContent = PHRASES.Relief.text;
       stopTracking();
     }
-  } else if (!arrived) {
-    if (phrase) {
-      playPhrase(phrase);
-    } else {
-      silence();
-    }
+  } else if (movingAway) {
+    enterUncertainty();
+  } else if (nextZone) {
+    enterZone(nextZone);
   }
 
   debug.innerHTML = `
 lat ${point.lat.toFixed(6)} · lng ${point.lng.toFixed(6)}<br>
 distance ${Math.round(distance)} m · accuracy ±${Math.round(position.coords.accuracy)} m<br>
-zone ${currentPhrase || 'none'} · next ${phrase || 'quiet'}
+state ${currentState || 'none'} · next ${movingAway ? 'uncertainty' : nextZone.name}
 `;
 
-lastPosition = point;
-lastDistance = distance;
+  lastPosition = point;
+  lastDistance = distance;
 }
 
 function handleError(error) {
+  clearPhraseLoop();
+  output.stop();
+
   status.textContent = `location unavailable (${error.code})`;
   instruction.textContent = 'allow location, then try again.';
+
+  startButton.disabled = false;
+  startButton.textContent = 'begin';
+
   stopTracking();
 }
 
 function stopTracking() {
-  if (watchId !== null) navigator.geolocation.clearWatch(watchId);
-  if (timerId !== null) window.clearInterval(timerId);
+  if (watchId !== null) {
+    navigator.geolocation.clearWatch(watchId);
+  }
+
+  if (timerId !== null) {
+    window.clearInterval(timerId);
+  }
+
   watchId = null;
   timerId = null;
 }
@@ -204,19 +303,42 @@ function start() {
     instruction.textContent = 'location is not available in this browser.';
     return;
   }
+
+  arrived = false;
+  lastPosition = null;
+  lastDistance = null;
+  currentState = null;
+
   startButton.textContent = 'explore';
-startButton.disabled = true;
+  startButton.disabled = true;
+
+  app.classList.remove('arrived', 'distress');
   app.classList.add('active');
+
   instruction.textContent = 'move slowly. pay attention.';
   status.textContent = 'finding your position…';
   debug.hidden = false;
-  // Immediate tactile acknowledgement makes it clear that the app is alive.
+
+  if (distanceDisplay) {
+    distanceDisplay.textContent = '…';
+  }
+
   output.play([80]);
-  watchId = navigator.geolocation.watchPosition(handlePosition, handleError, {
-    enableHighAccuracy: true, maximumAge: 5000, timeout: 15000
-  });
+
+  watchId = navigator.geolocation.watchPosition(
+    handlePosition,
+    handleError,
+    {
+      enableHighAccuracy: true,
+      maximumAge: 5000,
+      timeout: 15000
+    }
+  );
+
   timerId = window.setInterval(() => {
-    if (!lastPosition && !arrived) status.textContent = 'waiting for GPS…';
+    if (!lastPosition && !arrived) {
+      status.textContent = 'waiting for GPS…';
+    }
   }, UPDATE_MS);
 }
 
