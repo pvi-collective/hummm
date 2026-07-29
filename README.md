@@ -10,7 +10,9 @@ An experiment for composing and comparing tactile states before they are used in
 
 ## Woojer testing
 
-The next commit adds low-frequency Web Audio playback. Pair the Woojer Strap 4 to the test phone and make it the active Bluetooth audio output before opening the composer. The browser plays haptic audio through the selected output device.
+Pair the Woojer Strap 4 to the test phone and make it the active Bluetooth audio output before opening the composer. Each state generates low-frequency Web Audio pulses in the browser. The phone sends that audio to the currently selected output device, which the Woojer translates into touch.
+
+Tap a state to play it once. Turn on **loop** before selecting a state to repeat it until you choose another state or press **stop**.
 
 This build keeps the GPS/arrival interaction from Build 001, but replaces anonymous pulse patterns with named haptic phrases.
 
