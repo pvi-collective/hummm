@@ -1,4 +1,16 @@
-# hummm — Build 002: The Calling
+# hummm — Haptic Composer
+
+An experiment for composing and comparing tactile states before they are used in a navigation walk.
+
+## Version 0.1
+
+- Six selectable haptic states: awakening, invitation, curiosity, purpose, distress and relief.
+- A loop toggle and stop control.
+- Visual design carried across from the hummm navigation prototype.
+
+## Woojer testing
+
+The next commit adds low-frequency Web Audio playback. Pair the Woojer Strap 4 to the test phone and make it the active Bluetooth audio output before opening the composer. The browser plays haptic audio through the selected output device.
 
 This build keeps the GPS/arrival interaction from Build 001, but replaces anonymous pulse patterns with named haptic phrases.
 
