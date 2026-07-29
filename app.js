@@ -93,13 +93,16 @@ function playPhrase(name) {
   const phrase = PHRASES[name];
   if (!phrase) return;
 
-  if (name === 'Uncertainty' && currentPhrase === 'Uncertainty') return;
-  if (name === currentPhrase && name !== 'Distress') return;
+  // If we've entered a new zone, stop whatever was happening.
+  if (name !== currentPhrase) {
+    output.stop();
+    currentPhrase = name;
+  }
 
-  output.stop();
+  // Always (re)play the phrase.
+  // navigator.vibrate() automatically repeats the pattern until
+  // another pattern or vibrate(0) is sent.
   output.play(phrase.pattern);
-
-  currentPhrase = name;
 
   app.classList.toggle('distress', name === 'Distress');
 
@@ -129,7 +132,7 @@ function choosePhrase(distance) {
 
   if (distance <= ARRIVAL_RADIUS_METRES) return 'Relief';
 
-  // Silence is deliberate when a wayfinder is moving away.
+  // Silence when the participant is moving away.
   if (
     lastDistance !== null &&
     distance > lastDistance + MIN_MOVEMENT_METRES
