@@ -12,15 +12,19 @@
     <p class="eyebrow">hummm · haptic composer</p>
     <div class="orb" id="orb" aria-hidden="true"></div>
     <h1>haptic composer</h1>
-    <p class="instruction" id="instruction">choose a state. feel it in your body.</p>
+    <p class="instruction" id="instruction">move slowly. notice where the feeling changes.</p>
 
-    <div class="states" aria-label="haptic states">
-      <button class="state" type="button" data-state="awakening">awakening</button>
-      <button class="state" type="button" data-state="invitation">invitation</button>
-      <button class="state" type="button" data-state="curiosity">curiosity</button>
-      <button class="state" type="button" data-state="purpose">purpose</button>
-      <button class="state state--distress" type="button" data-state="distress">distress</button>
-      <button class="state" type="button" data-state="relief">relief</button>
+    <section class="evolution" aria-labelledby="evolutionLabel">
+      <div class="evolution__labels" aria-hidden="true">
+        <span>far</span>
+        <span>close</span>
+      </div>
+      <label class="sr-only" id="evolutionLabel" for="evolutionSlider">heartbeat evolution, from far to close</label>
+      <input class="evolution__slider" id="evolutionSlider" type="range" min="0" max="100" value="0" step="1">
+      <p class="evolution__hint" id="evolutionHint">distant · spacious · quiet</p>
+    </section>
+
+    <button class="play" id="playButton" type="button">feel the rhythm</button>
     </div>
 
     <div class="controls">
