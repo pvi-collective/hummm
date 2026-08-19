@@ -6,65 +6,25 @@
   to whichever Bluetooth audio output is active. No recorded audio files
   are needed for this first composer.
 
-  Later, each state can be replaced with a richer sound file or a more
-  complex procedural heartbeat without changing the interface.
+  The public `playEvolution` and `getEvolutionParameters` functions are the
+  seam for future procedural sound design or a dedicated Woojer adapter.
 */
 
-const STATES = Object.freeze({
-  awakening: {
-    description: 'slow and distant',
-    frequency: 48,
-    gain: 0.38,
-    pulses: [[0, 150]],
-    cycle: 2400
-  },
-  invitation: {
-    description: 'gently calling',
-    frequency: 52,
-    gain: 0.42,
-    pulses: [[0, 125], [250, 125]],
-    cycle: 1900
-  },
-  curiosity: {
-    description: 'awake and searching',
-    frequency: 56,
-    gain: 0.45,
-    pulses: [[0, 100], [190, 80], [420, 115]],
-    cycle: 1700
-  },
-  purpose: {
-    description: 'steady and present',
-    frequency: 60,
-    gain: 0.5,
-    pulses: [[0, 130], [280, 130], [560, 130]],
-    cycle: 1450
-  },
-  distress: {
-    description: 'urgent and insistent',
-    frequency: 65,
-    gain: 0.62,
-    pulses: [[0, 115], [170, 115], [340, 130], [525, 115], [690, 145]],
-    cycle: 1200
-  },
-  relief: {
-    description: 'long and settling',
-    frequency: 44,
-    gain: 0.46,
-    pulses: [[0, 850]],
-    cycle: 1700
-  }
-});
+const FAR_PARAMETERS = Object.freeze({ tempo: 28, strength: 0.28, pause: 1900, irregularity: 0.02, density: 1, frequency: 46 });
+const CLOSE_PARAMETERS = Object.freeze({ tempo: 128, strength: 0.68, pause: 180, irregularity: 0.28, density: 4.6, frequency: 64 });
 
 const app = document.querySelector('#app');
 const instruction = document.querySelector('#instruction');
 const status = document.querySelector('#status');
 const debug = document.querySelector('#debug');
-const stateButtons = [...document.querySelectorAll('[data-state]')];
+const slider = document.querySelector('#evolutionSlider');
+const evolutionHint = document.querySelector('#evolutionHint');
+const playButton = document.querySelector('#playButton');
 const loopToggle = document.querySelector('#loopToggle');
 const stopButton = document.querySelector('#stopButton');
 
 let audioContext = null;
-let selectedState = null;
+let isPlaying = false;
 let loopTimer = null;
 let activeOscillators = [];
 
@@ -82,17 +42,33 @@ function getAudioContext() {
   return audioContext;
 }
 
-function playPulse(context, state, offsetMs, durationMs) {
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+const lerp = (start, end, amount) => start + (end - start) * amount;
+
+function getEvolutionParameters(value = Number(slider.value) / 100) {
+  const amount = clamp(value, 0, 1);
+  return Object.fromEntries(Object.keys(FAR_PARAMETERS).map((key) => [key, lerp(FAR_PARAMETERS[key], CLOSE_PARAMETERS[key], amount)]));
+}
+
+function describeEvolution(value) {
+  if (value < .2) return 'distant · spacious · quiet';
+  if (value < .45) return 'waking · attentive · gathering';
+  if (value < .7) return 'present · insistent · alive';
+  if (value < .9) return 'near · urgent · restless';
+  return 'close · continuous · intense';
+}
+
+function playPulse(context, parameters, offsetMs, durationMs) {
   const oscillator = context.createOscillator();
   const gain = context.createGain();
   const startTime = context.currentTime + offsetMs / 1000;
   const endTime = startTime + durationMs / 1000;
 
   oscillator.type = 'sine';
-  oscillator.frequency.setValueAtTime(state.frequency, startTime);
+  oscillator.frequency.setValueAtTime(parameters.frequency, startTime);
 
   gain.gain.setValueAtTime(0.0001, startTime);
-  gain.gain.exponentialRampToValueAtTime(state.gain, startTime + 0.025);
+  gain.gain.exponentialRampToValueAtTime(parameters.strength, startTime + 0.025);
   gain.gain.exponentialRampToValueAtTime(0.0001, endTime);
 
   oscillator.connect(gain);
@@ -106,18 +82,34 @@ function playPulse(context, state, offsetMs, durationMs) {
   }, { once: true });
 }
 
-function playStateOnce(name) {
-  const state = STATES[name];
-  const context = getAudioContext();
+function createPhrase(parameters) {
+  const beatMs = 60000 / parameters.tempo;
+  const pulseCount = Math.max(1, Math.round(parameters.density));
+  const usableBeat = Math.max(110, beatMs - parameters.pause);
+  const spacing = pulseCount > 1 ? usableBeat / pulseCount : 0;
 
-  if (!state || !context) {
+  return Array.from({ length: pulseCount }, (_, index) => {
+    const variation = (Math.random() * 2 - 1) * parameters.irregularity * spacing;
+    const offset = index === 0 ? 0 : index * spacing + variation;
+    const duration = clamp(140 - index * 9 + parameters.strength * 42, 75, 185);
+    return [Math.max(0, offset), duration];
+  });
+}
+
+function playEvolution() {
+  const context = getAudioContext();
+  const parameters = getEvolutionParameters();
+
+  if (!context) {
     status.textContent = 'web audio is unavailable in this browser';
     return;
   }
 
-  state.pulses.forEach(([offsetMs, durationMs]) => {
-    playPulse(context, state, offsetMs, durationMs);
+  createPhrase(parameters).forEach(([offsetMs, durationMs]) => {
+    playPulse(context, parameters, offsetMs, durationMs);
   });
+
+  return 60000 / parameters.tempo;
 }
 
 function clearPlayback() {
@@ -134,65 +126,61 @@ function clearPlayback() {
   activeOscillators = [];
 }
 
-function scheduleLoop(name) {
-  const state = STATES[name];
-  if (!state || !loopToggle.checked || selectedState !== name) return;
+function scheduleLoop() {
+  if (!isPlaying || !loopToggle.checked) return;
 
   loopTimer = window.setTimeout(() => {
-    playStateOnce(name);
-    scheduleLoop(name);
-  }, state.cycle);
+    const beatMs = playEvolution();
+    scheduleLoop(beatMs);
+  }, 60000 / getEvolutionParameters().tempo);
 }
 
-function selectState(name) {
+function start() {
   clearPlayback();
-  selectedState = name;
-
-  stateButtons.forEach((button) => {
-    const isSelected = button.dataset.state === name;
-    button.classList.toggle('is-selected', isSelected);
-    button.setAttribute('aria-pressed', String(isSelected));
-  });
-
-  app.classList.toggle('distress', name === 'distress');
-  app.classList.toggle('relief', name === 'relief');
+  isPlaying = true;
   app.classList.add('active');
-  instruction.textContent = STATES[name].description;
-  status.textContent = `${name}${loopToggle.checked ? ' · looping' : ''}`;
+  playButton.classList.add('is-playing');
+  playButton.textContent = 'feeling the rhythm';
+  instruction.textContent = 'move slowly. notice where the feeling changes.';
+  status.textContent = `playing${loopToggle.checked ? ' · looping' : ''}`;
   debug.textContent = 'low-frequency audio is playing through the selected Bluetooth output.';
   stopButton.disabled = false;
 
-  playStateOnce(name);
-  scheduleLoop(name);
+  playEvolution();
+  scheduleLoop();
 }
 
 function stop() {
   clearPlayback();
-  selectedState = null;
-
-  stateButtons.forEach((button) => {
-    button.classList.remove('is-selected');
-    button.setAttribute('aria-pressed', 'false');
-  });
-
-  app.classList.remove('active', 'distress', 'relief');
-  instruction.textContent = 'choose a state. feel it in your body.';
+  isPlaying = false;
+  app.classList.remove('active');
+  playButton.classList.remove('is-playing');
+  playButton.textContent = 'feel the rhythm';
+  instruction.textContent = 'move slowly. notice where the feeling changes.';
   status.textContent = 'stopped';
   debug.textContent = 'audio output follows your phone’s selected Bluetooth device.';
   stopButton.disabled = true;
 }
 
-stateButtons.forEach((button) => {
-  button.addEventListener('click', () => selectState(button.dataset.state));
+slider.addEventListener('input', () => {
+  const value = Number(slider.value) / 100;
+  evolutionHint.textContent = describeEvolution(value);
+  if (!isPlaying) return;
+
+  clearPlayback();
+  playEvolution();
+  scheduleLoop();
+  status.textContent = `playing · ${Math.round(value * 100)}% close${loopToggle.checked ? ' · looping' : ''}`;
 });
 
 loopToggle.addEventListener('change', () => {
-  if (!selectedState) return;
+  if (!isPlaying) return;
 
   clearPlayback();
-  playStateOnce(selectedState);
-  scheduleLoop(selectedState);
-  status.textContent = `${selectedState} · loop ${loopToggle.checked ? 'on' : 'off'}`;
+  playEvolution();
+  scheduleLoop();
+  status.textContent = `playing · loop ${loopToggle.checked ? 'on' : 'off'}`;
 });
 
+playButton.addEventListener('click', start);
 stopButton.addEventListener('click', stop);
