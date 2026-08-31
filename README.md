@@ -2,7 +2,7 @@
 
 An experiment for finding living systems within the concrete jungle around Carriageworks Way, Redfern.
 
-## Version 0.6.3 — Redfern Field
+## Version 0.6.4 — Redfern Field
 
 - Uses phone GPS and a bundled City of Sydney tree inventory around Carriageworks Way and Wilson Street.
 - Builds a nearby living field from individual tree position, canopy, maturity, trunk diameter and species.

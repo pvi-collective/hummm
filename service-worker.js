@@ -1,4 +1,4 @@
-const CACHE = 'hummm-field-v0.6.2';
+const CACHE = 'hummm-field-v0.6.4';
 const FILES = ['./', './index.html', './style.css', './app.js', './manifest.json'];
 
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES)).then(() => self.skipWaiting())));
