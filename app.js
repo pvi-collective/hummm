@@ -114,11 +114,19 @@ async function requestWakeLock() {
 }
 async function releaseWakeLock() { if (wakeLock) { await wakeLock.release(); wakeLock = null; } }
 function locationError(error) { isWalking = false; clearAudio(); releaseWakeLock(); startButton.disabled = false; startButton.textContent = 'try again'; stopButton.disabled = true; status.textContent = 'location unavailable'; gpsPoint.textContent = 'gps point · unavailable'; debug.textContent = error.code === 1 ? 'allow location access, then try again.' : 'move outside or wait for a clearer GPS signal.'; }
+function locationProbeError(error) {
+  if (error.code === 1) locationError(error);
+  else if (isWalking) debug.textContent = 'field 0 · maturity 0 · diversity 0 · GPS still searching';
+}
 function startField() {
   if (!navigator.geolocation) { status.textContent = 'location is unavailable in this browser'; return; }
   isWalking = true; startButton.disabled = true; startButton.textContent = 'reading the street'; stopButton.disabled = false; instruction.textContent = 'walk. let the rhythm pull you.'; app.classList.add('active'); showConcreteBaseline();
   try { getAudioContext(); scheduleFieldCycle(); } catch { status.textContent = 'audio could not begin'; }
-  try { watchId = navigator.geolocation.watchPosition(updateField, locationError, { enableHighAccuracy: true, maximumAge: 4000, timeout: 15000 }); } catch { locationError({ code: 0 }); }
+  const locationOptions = { enableHighAccuracy: true, maximumAge: 4000, timeout: 15000 };
+  try {
+    watchId = navigator.geolocation.watchPosition(updateField, locationError, locationOptions);
+    navigator.geolocation.getCurrentPosition(updateField, locationProbeError, locationOptions);
+  } catch { locationError({ code: 0 }); }
   requestWakeLock();
 }
 function stopField() { isWalking = false; clearAudio(); releaseWakeLock(); if (watchId !== null) navigator.geolocation.clearWatch(watchId); watchId = null; app.classList.remove('active', 'is-threshold', 'is-living', 'is-contact'); startButton.disabled = false; startButton.textContent = 'begin field walk'; stopButton.disabled = true; instruction.textContent = 'let the street speak through the strap.'; fieldValue.textContent = 'waiting'; fieldHint.textContent = 'concrete is never silent.'; status.textContent = 'stopped'; gpsPoint.textContent = 'gps point · stopped'; debug.textContent = 'City of Sydney tree data · GPS stays on this device.'; }
