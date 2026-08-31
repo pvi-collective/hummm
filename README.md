@@ -1,15 +1,16 @@
-# hummm — Marrickville Field
+# hummm — Redfern Field
 
-An experiment for finding living systems within the concrete jungle of Marrickville.
+An experiment for finding living systems within the concrete jungle around Carriageworks Way, Redfern.
 
-## Version 0.4 — Marrickville Field
+## Version 0.5 — Redfern Field
 
-- Uses phone GPS and a bundled local slice of mapped Marrickville green-space features.
-- Builds a nearby living field from parks, gardens, tree rows and wooded areas.
-- Translates that field into a concrete interference pattern and a layered living call.
+- Uses phone GPS and a bundled City of Sydney tree inventory around Carriageworks Way and Wilson Street.
+- Builds a nearby living field from individual tree position, canopy, maturity, trunk diameter and species.
+- Translates the field into four clearly separate haptic states: concrete pressure, threshold, living field and contact.
+- Shows an on-device GPS coordinate and accuracy at the bottom of the field for documenting walks.
 - Location stays in the browser; it is not transmitted or stored.
 
-Initial test data: OpenStreetMap mapped green-space features, filtered to Marrickville. This is deliberately a rapid field test rather than a complete local tree inventory; it is used only to create the local haptic field.
+Initial test data: City of Sydney tree inventory, filtered to the Redfern/Carriageworks area. Coordinates are evaluated locally in the browser and are not transmitted or stored.
 
 ## Woojer testing
 
@@ -17,7 +18,7 @@ Pair the Woojer Strap 4 to the test phone and make it the active Bluetooth audio
 
 Open the prototype on a phone over HTTPS, allow location access, then press **begin field walk**. Move slowly and keep your attention on traffic and the street. The field changes as GPS position changes; press **stop** to end the walk.
 
-The field is deliberately not a route to one tree. Concrete remains a forceful, uneven presence; clusters of canopy introduce deeper, more varied rhythms. At high ecological density, the system moves into **contact** — a more insistent, ritualised response.
+The field is deliberately not a route to one tree. Concrete is a clipped, machine-like double throb; threshold interrupts it with a deeper call; living field becomes a three-part rhythm; and contact is a fuller, ritualised response. The states now have different timing as well as intensity, so they should read distinctly through the Woojer.
 
 Research question: **Can a living haptic language both guide and move a human wayfinder?**
 
@@ -25,15 +26,15 @@ Design principles: Human Wayfinding; Trust before autonomy; Rhythm is language; 
 
 ## Test
 
-1. Open the GitHub Pages URL on an Android phone over HTTPS.
+1. Open the GitHub Pages URL on an iPhone or Android phone over HTTPS.
 2. Pair the Woojer and select it as the phone's audio output.
-3. Allow location access and begin the field walk.
-4. Test within the Marrickville field. Do not rely on the prototype for safety or navigation around traffic.
+3. Allow location access and begin the field walk. If supported on the phone, the app asks the screen to stay awake during the test.
+4. Test around Carriageworks Way, Wilson Street and the surrounding Redfern field. Do not rely on the prototype for safety or navigation around traffic.
 
-The screen remains minimal, but the small debug line shows the live field calculation and GPS accuracy for testing.
+The screen remains minimal, but the GPS coordinate, accuracy and small debug line make screenshots auditable during testing.
 
 ## Hardware boundary
 
 `readField(latitude, longitude)` provides the local ecological reading, while `playFieldCycle()` renders it through Web Audio. A future wearable adapter or richer procedural generator can replace the rendering layer without changing the field calculation.
 
-Serve from HTTPS (GitHub Pages is suitable). Browser vibration support varies by phone and browser; the app gives a short acknowledgement pulse when Begin is pressed.
+Serve from HTTPS (GitHub Pages is suitable). On iPhone, a web page cannot continue generating browser audio or GPS updates after the device is actually locked. The best browser-level option is the Screen Wake Lock request included here; for a true locked-screen experience, the work would need a native iOS app with background audio and location capabilities.
