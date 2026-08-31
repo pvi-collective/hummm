@@ -1,186 +1,80 @@
-/*
-  hummm — Haptic Composer
-
-  The Woojer Strap 4 behaves as a Bluetooth audio device. This file
-  creates low-frequency audio pulses in the browser; the phone sends them
-  to whichever Bluetooth audio output is active. No recorded audio files
-  are needed for this first composer.
-
-  The public `playEvolution` and `getEvolutionParameters` functions are the
-  seam for future procedural sound design or a dedicated Woojer adapter.
-*/
-
-const FAR_PARAMETERS = Object.freeze({ tempo: 28, strength: 0.28, pause: 1900, irregularity: 0.02, density: 1, frequency: 46 });
-const CLOSE_PARAMETERS = Object.freeze({ tempo: 128, strength: 0.68, pause: 180, irregularity: 0.28, density: 4.6, frequency: 64 });
-
+/* hummm — Redfern Field: data and GPS are evaluated locally in the browser. */
+const DATA_URL = 'data/redfern-trees.geojson';
+const INFLUENCE_RADIUS_METRES = 90;
 const app = document.querySelector('#app');
 const instruction = document.querySelector('#instruction');
+const fieldValue = document.querySelector('#fieldValue');
+const fieldHint = document.querySelector('#fieldHint');
 const status = document.querySelector('#status');
 const debug = document.querySelector('#debug');
-const slider = document.querySelector('#evolutionSlider');
-const evolutionHint = document.querySelector('#evolutionHint');
-const playButton = document.querySelector('#playButton');
-const loopToggle = document.querySelector('#loopToggle');
+const startButton = document.querySelector('#startButton');
 const stopButton = document.querySelector('#stopButton');
-
-let audioContext = null;
-let isPlaying = false;
-let loopTimer = null;
-let activeOscillators = [];
+let trees = [], audioContext = null, activeOscillators = [], fieldTimer = null, watchId = null, isWalking = false;
+let field = { life: 0, maturity: 0, diversity: 0, nearby: 0 };
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+const ageWeight = (age = '') => ({ Young: .35, 'Semi-Mature': .7, Mature: 1, Overmature: 1.25 }[age] || .6);
 
 function getAudioContext() {
-  if (!audioContext) {
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContextClass) return null;
-    audioContext = new AudioContextClass();
-  }
-
-  if (audioContext.state === 'suspended') {
-    audioContext.resume();
-  }
-
+  if (!audioContext) { const Audio = window.AudioContext || window.webkitAudioContext; if (!Audio) return null; audioContext = new Audio(); }
+  if (audioContext.state === 'suspended') audioContext.resume();
   return audioContext;
 }
-
-const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-const lerp = (start, end, amount) => start + (end - start) * amount;
-
-function getEvolutionParameters(value = Number(slider.value) / 100) {
-  const amount = clamp(value, 0, 1);
-  return Object.fromEntries(Object.keys(FAR_PARAMETERS).map((key) => [key, lerp(FAR_PARAMETERS[key], CLOSE_PARAMETERS[key], amount)]));
+function distanceInMetres(latA, lonA, latB, lonB) {
+  const r = Math.PI / 180, lat = (latB - latA) * r, lon = (lonB - lonA) * r;
+  const a = Math.sin(lat / 2) ** 2 + Math.cos(latA * r) * Math.cos(latB * r) * Math.sin(lon / 2) ** 2;
+  return 6371000 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
-
-function describeEvolution(value) {
-  if (value < .2) return 'distant · spacious · quiet';
-  if (value < .45) return 'waking · attentive · gathering';
-  if (value < .7) return 'present · insistent · alive';
-  if (value < .9) return 'near · urgent · restless';
-  return 'close · continuous · intense';
-}
-
-function playPulse(context, parameters, offsetMs, durationMs) {
-  const oscillator = context.createOscillator();
-  const gain = context.createGain();
-  const startTime = context.currentTime + offsetMs / 1000;
-  const endTime = startTime + durationMs / 1000;
-
-  oscillator.type = 'sine';
-  oscillator.frequency.setValueAtTime(parameters.frequency, startTime);
-
-  gain.gain.setValueAtTime(0.0001, startTime);
-  gain.gain.exponentialRampToValueAtTime(parameters.strength, startTime + 0.025);
-  gain.gain.exponentialRampToValueAtTime(0.0001, endTime);
-
-  oscillator.connect(gain);
-  gain.connect(context.destination);
-  oscillator.start(startTime);
-  oscillator.stop(endTime + 0.03);
-
-  activeOscillators.push(oscillator);
-  oscillator.addEventListener('ended', () => {
-    activeOscillators = activeOscillators.filter((item) => item !== oscillator);
-  }, { once: true });
-}
-
-function createPhrase(parameters) {
-  const beatMs = 60000 / parameters.tempo;
-  const pulseCount = Math.max(1, Math.round(parameters.density));
-  const usableBeat = Math.max(110, beatMs - parameters.pause);
-  const spacing = pulseCount > 1 ? usableBeat / pulseCount : 0;
-
-  return Array.from({ length: pulseCount }, (_, index) => {
-    const variation = (Math.random() * 2 - 1) * parameters.irregularity * spacing;
-    const offset = index === 0 ? 0 : index * spacing + variation;
-    const duration = clamp(140 - index * 9 + parameters.strength * 42, 75, 185);
-    return [Math.max(0, offset), duration];
+function readField(latitude, longitude) {
+  let canopy = 0, maturity = 0, nearby = 0; const species = new Set();
+  trees.forEach((tree) => {
+    const [lon, lat] = tree.geometry.coordinates;
+    const distance = distanceInMetres(latitude, longitude, lat, lon);
+    if (distance > INFLUENCE_RADIUS_METRES) return;
+    const p = tree.properties, reach = Math.exp(-distance / 30), canopySize = clamp(Number(p.TreeCanopyNS) || 1, 1, 22);
+    canopy += canopySize * reach;
+    maturity += ageWeight(p.Tree_Age) * clamp((Number(p.DBH_in_cm) || 10) / 70, .12, 1.4) * reach;
+    if (distance < 55 && p.SpeciesName) species.add(p.SpeciesName);
+    nearby += 1;
   });
+  return { life: clamp(Math.sqrt(canopy / 56), 0, 1), maturity: clamp(maturity / 4.2, 0, 1), diversity: clamp(species.size / 7, 0, 1), nearby };
 }
-
-function playEvolution() {
-  const context = getAudioContext();
-  const parameters = getEvolutionParameters();
-
-  if (!context) {
-    status.textContent = 'web audio is unavailable in this browser';
-    return;
-  }
-
-  createPhrase(parameters).forEach(([offsetMs, durationMs]) => {
-    playPulse(context, parameters, offsetMs, durationMs);
-  });
-
-  return 60000 / parameters.tempo;
+function describeField(reading) {
+  if (reading.life < .23) return ['concrete pressure', 'dense · electric · unsettled'];
+  if (reading.life < .5) return ['threshold', 'a living rhythm is breaking through'];
+  if (reading.life < .78) return ['living field', 'canopy gathers · the rhythm deepens'];
+  return ['contact', 'the street answers in rhythm'];
 }
-
-function clearPlayback() {
-  window.clearTimeout(loopTimer);
-  loopTimer = null;
-
-  activeOscillators.forEach((oscillator) => {
-    try {
-      oscillator.stop();
-    } catch {
-      // The pulse may already have ended.
-    }
-  });
-  activeOscillators = [];
+function updateField(position) {
+  field = readField(position.coords.latitude, position.coords.longitude);
+  const [name, description] = describeField(field); fieldValue.textContent = name; fieldHint.textContent = description;
+  app.classList.toggle('is-threshold', field.life >= .23 && field.life < .5); app.classList.toggle('is-living', field.life >= .5 && field.life < .78); app.classList.toggle('is-contact', field.life >= .78);
+  status.textContent = `${field.nearby} trees within ${INFLUENCE_RADIUS_METRES}m`;
+  debug.textContent = `field ${Math.round(field.life * 100)} · maturity ${Math.round(field.maturity * 100)} · diversity ${Math.round(field.diversity * 100)} · GPS ±${Math.round(position.coords.accuracy)}m`;
 }
-
-function scheduleLoop() {
-  if (!isPlaying || !loopToggle.checked) return;
-
-  loopTimer = window.setTimeout(() => {
-    const beatMs = playEvolution();
-    scheduleLoop(beatMs);
-  }, 60000 / getEvolutionParameters().tempo);
+function playPulse(context, { frequency, strength, offset, duration, type = 'sine' }) {
+  const oscillator = context.createOscillator(), gain = context.createGain(), start = context.currentTime + offset / 1000, end = start + duration / 1000;
+  oscillator.type = type; oscillator.frequency.setValueAtTime(frequency, start); gain.gain.setValueAtTime(.0001, start); gain.gain.exponentialRampToValueAtTime(strength, start + .018); gain.gain.exponentialRampToValueAtTime(.0001, end);
+  oscillator.connect(gain); gain.connect(context.destination); oscillator.start(start); oscillator.stop(end + .03); activeOscillators.push(oscillator);
+  oscillator.addEventListener('ended', () => { activeOscillators = activeOscillators.filter((active) => active !== oscillator); }, { once: true });
 }
-
-function start() {
-  clearPlayback();
-  isPlaying = true;
-  app.classList.add('active');
-  playButton.classList.add('is-playing');
-  playButton.textContent = 'feeling the rhythm';
-  instruction.textContent = 'move slowly. notice where the feeling changes.';
-  status.textContent = `playing${loopToggle.checked ? ' · looping' : ''}`;
-  debug.textContent = 'low-frequency audio is playing through the selected Bluetooth output.';
-  stopButton.disabled = false;
-
-  playEvolution();
-  scheduleLoop();
+function createConcretePattern(context, intensity) {
+  const base = 48 + Math.random() * 11, interruptions = intensity > .65 ? 4 : 3;
+  for (let index = 0; index < interruptions; index += 1) playPulse(context, { frequency: base + (index % 2) * 7, strength: .08 + intensity * .14, offset: index * (105 + Math.random() * 58), duration: 65 + Math.random() * 70, type: index % 2 ? 'triangle' : 'sine' });
 }
-
-function stop() {
-  clearPlayback();
-  isPlaying = false;
-  app.classList.remove('active');
-  playButton.classList.remove('is-playing');
-  playButton.textContent = 'feel the rhythm';
-  instruction.textContent = 'move slowly. notice where the feeling changes.';
-  status.textContent = 'stopped';
-  debug.textContent = 'audio output follows your phone’s selected Bluetooth device.';
-  stopButton.disabled = true;
+function createLivingPattern(context, reading) {
+  const pulseCount = 1 + Math.round(reading.diversity * 2), spacing = 185 + (1 - reading.life) * 90;
+  for (let index = 0; index < pulseCount; index += 1) playPulse(context, { frequency: 40 + reading.maturity * 11 + index * 1.5, strength: .14 + reading.life * .28 + reading.maturity * .12, offset: 410 + index * spacing + (Math.random() - .5) * 44 * reading.diversity, duration: 125 + reading.maturity * 145 });
+  if (reading.life > .78) playPulse(context, { frequency: 38, strength: .38 + reading.maturity * .12, offset: 1040, duration: 260 });
 }
-
-slider.addEventListener('input', () => {
-  const value = Number(slider.value) / 100;
-  evolutionHint.textContent = describeEvolution(value);
-  if (!isPlaying) return;
-
-  clearPlayback();
-  playEvolution();
-  scheduleLoop();
-  status.textContent = `playing · ${Math.round(value * 100)}% close${loopToggle.checked ? ' · looping' : ''}`;
-});
-
-loopToggle.addEventListener('change', () => {
-  if (!isPlaying) return;
-
-  clearPlayback();
-  playEvolution();
-  scheduleLoop();
-  status.textContent = `playing · loop ${loopToggle.checked ? 'on' : 'off'}`;
-});
-
-playButton.addEventListener('click', start);
-stopButton.addEventListener('click', stop);
+function playFieldCycle() { const context = getAudioContext(); if (!context) return; createConcretePattern(context, 1 - field.life * .65); if (field.life > .12) createLivingPattern(context, field); }
+function scheduleFieldCycle() { if (!isWalking) return; playFieldCycle(); fieldTimer = window.setTimeout(scheduleFieldCycle, field.life > .72 ? 1450 : 1100 + Math.random() * 280); }
+function clearAudio() { window.clearTimeout(fieldTimer); fieldTimer = null; activeOscillators.forEach((oscillator) => { try { oscillator.stop(); } catch { /* already ended */ } }); activeOscillators = []; }
+function locationError(error) { isWalking = false; clearAudio(); startButton.disabled = false; startButton.textContent = 'try again'; stopButton.disabled = true; status.textContent = 'location unavailable'; debug.textContent = error.code === 1 ? 'allow location access, then try again.' : 'move outside or wait for a clearer GPS signal.'; }
+function startField() {
+  if (!navigator.geolocation) { status.textContent = 'location is unavailable in this browser'; return; }
+  getAudioContext(); isWalking = true; startButton.disabled = true; startButton.textContent = 'reading the street'; stopButton.disabled = false; instruction.textContent = 'walk. let the rhythm pull you.'; app.classList.add('active'); status.textContent = 'finding your position'; debug.textContent = 'allow location access to begin the field.';
+  watchId = navigator.geolocation.watchPosition(updateField, locationError, { enableHighAccuracy: true, maximumAge: 4000, timeout: 15000 }); scheduleFieldCycle();
+}
+function stopField() { isWalking = false; clearAudio(); if (watchId !== null) navigator.geolocation.clearWatch(watchId); watchId = null; app.classList.remove('active', 'is-threshold', 'is-living', 'is-contact'); startButton.disabled = false; startButton.textContent = 'begin field walk'; stopButton.disabled = true; instruction.textContent = 'let the street speak through the strap.'; fieldValue.textContent = 'waiting'; fieldHint.textContent = 'concrete is never silent.'; status.textContent = 'stopped'; debug.textContent = 'City of Sydney tree data · GPS stays on this device.'; }
+fetch(DATA_URL).then((response) => { if (!response.ok) throw new Error('Tree data could not load'); return response.json(); }).then((data) => { trees = data.features.filter((tree) => tree.geometry?.type === 'Point' && tree.properties?.Tree_Status === 'Tree'); startButton.disabled = false; startButton.textContent = 'begin field walk'; status.textContent = `${trees.length} trees ready`; }).catch(() => { status.textContent = 'tree field could not load'; debug.textContent = 'check your connection, then reload.'; });
+startButton.addEventListener('click', startField); stopButton.addEventListener('click', stopField);

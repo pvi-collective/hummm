@@ -1,21 +1,23 @@
-# hummm — Haptic Composer
+# hummm — Redfern Field
 
-An experiment for composing and comparing tactile states before they are used in a navigation walk.
+An experiment for finding living systems within the concrete jungle around Carriageworks and Wilson Street, Redfern.
 
-## Version 0.2 — Heartbeat Evolution
+## Version 0.3 — Redfern Field
 
-- One continuous **far → close** control rather than discrete states.
-- The slider smoothly interpolates tempo, strength, pause, irregularity, density, and low-frequency pitch.
-- A loop toggle and stop control.
-- Visual design carried across from the hummm navigation prototype.
+- Uses phone GPS and a bundled local slice of City of Sydney tree data.
+- Builds a nearby canopy field from tree location, canopy size, maturity and species variety.
+- Translates that field into a concrete interference pattern and a layered living call.
+- Location stays in the browser; it is not transmitted or stored.
+
+Tree data: City of Sydney asset register, filtered to the Redfern / Carriageworks testing area. The source records park and street trees and are used here only to create the local haptic field.
 
 ## Woojer testing
 
-Pair the Woojer Strap 4 to the test phone and make it the active Bluetooth audio output before opening the composer. Each state generates low-frequency Web Audio pulses in the browser. The phone sends that audio to the currently selected output device, which the Woojer translates into touch.
+Pair the Woojer Strap 4 to the test phone and make it the active Bluetooth audio output before opening the field. The browser generates low-frequency audio pulses and the phone sends them to the currently selected Bluetooth output, which the Woojer translates into touch.
 
-Move the slider and press **feel the rhythm** to play the current expression once. Turn on **loop** to keep the engine alive while you explore the slider; it reschedules the next beat using the new values each time the relationship changes. Press **stop** to end it.
+Open the prototype on a phone over HTTPS, allow location access, then press **begin field walk**. Move slowly and keep your attention on traffic and the street. The field changes as GPS position changes; press **stop** to end the walk.
 
-This build removes named haptic phrases in favour of a relationship value, expressed as a continuously evolving tactile rhythm.
+The field is deliberately not a route to one tree. Concrete remains a forceful, uneven presence; clusters of canopy introduce deeper, more varied rhythms. At high ecological density, the system moves into **contact** — a more insistent, ritualised response.
 
 Research question: **Can a living haptic language both guide and move a human wayfinder?**
 
@@ -25,12 +27,13 @@ Design principles: Human Wayfinding; Trust before autonomy; Rhythm is language; 
 
 1. Open the GitHub Pages URL on an Android phone over HTTPS.
 2. Pair the Woojer and select it as the phone's audio output.
-3. Start at **far** and move the slider towards **close**, listening for the moment it changes from calm to urgent.
+3. Allow location access and begin the field walk.
+4. Test along Carriageworks Way and Wilson Street. Do not rely on the prototype for safety or navigation around traffic.
 
-The screen remains minimal, but the small debug line is visible during this prototype so Bluetooth output can be checked.
+The screen remains minimal, but the small debug line shows the live field calculation and GPS accuracy for testing.
 
 ## Hardware boundary
 
-`getEvolutionParameters(value)` provides the current haptic expression, while `playEvolution()` renders it through Web Audio. A future Woojer adapter or richer procedural generator can replace the rendering layer without changing the relationship control.
+`readField(latitude, longitude)` provides the local ecological reading, while `playFieldCycle()` renders it through Web Audio. A future wearable adapter or richer procedural generator can replace the rendering layer without changing the field calculation.
 
 Serve from HTTPS (GitHub Pages is suitable). Browser vibration support varies by phone and browser; the app gives a short acknowledgement pulse when Begin is pressed.
