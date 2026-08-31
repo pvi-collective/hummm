@@ -18,7 +18,7 @@ Pair the Woojer Strap 4 to the test phone and make it the active Bluetooth audio
 
 Open the prototype on a phone over HTTPS, allow location access, then press **begin field walk**. Move slowly and keep your attention on traffic and the street. The field changes as GPS position changes; press **stop** to end the walk.
 
-The field is deliberately not a route to one tree. Concrete is a clipped, machine-like double throb; threshold interrupts it with a deeper call; living field becomes a three-part rhythm; and contact is a fuller, ritualised response. The states now have different timing as well as intensity, so they should read distinctly through the Woojer.
+The field is deliberately not a route to one tree. Concrete is a sparse, machine-like low hum that gently ebbs and flows; threshold interrupts it with a deeper call; living field becomes a three-part rhythm; and contact is a fuller, ritualised response. The states now have different timing as well as intensity, so they should read distinctly through the Woojer.
 
 Research question: **Can a living haptic language both guide and move a human wayfinder?**
 

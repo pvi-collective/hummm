@@ -53,7 +53,7 @@ function updateField(position) {
   app.classList.toggle('is-threshold', field.life >= .23 && field.life < .5); app.classList.toggle('is-living', field.life >= .5 && field.life < .78); app.classList.toggle('is-contact', field.life >= .78);
   status.textContent = `${field.nearby} trees within ${INFLUENCE_RADIUS_METRES}m`;
   gpsPoint.textContent = `gps point · ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)} · ±${Math.round(position.coords.accuracy)}m`;
-  debug.textContent = `field ${Math.round(field.life * 100)} · maturity ${Math.round(field.maturity * 100)} · diversity ${Math.round(field.diversity * 100)}${wakeLock ? ' · screen awake' : ''}`;
+  debug.textContent = `field ${Math.round(field.life * 100)} · maturity ${Math.round(field.maturity * 100)} · diversity ${Math.round(field.diversity * 100)} · GPS ±${Math.round(position.coords.accuracy)}m${wakeLock ? ' · screen awake' : ''}`;
 }
 function playPulse(context, { frequency, strength, offset, duration, type = 'sine' }) {
   const oscillator = context.createOscillator(), gain = context.createGain(), start = context.currentTime + offset / 1000, end = start + duration / 1000;
@@ -62,10 +62,16 @@ function playPulse(context, { frequency, strength, offset, duration, type = 'sin
   oscillator.addEventListener('ended', () => { activeOscillators = activeOscillators.filter((active) => active !== oscillator); }, { once: true });
 }
 function createConcretePattern(context, reading) {
-  const base = 52 + Math.random() * 9, strength = .22 + (1 - reading.life) * .14;
-  playPulse(context, { frequency: base, strength, offset: 0, duration: 90, type: 'triangle' });
-  playPulse(context, { frequency: base + 7, strength: strength * .88, offset: 155 + Math.random() * 55, duration: 78, type: 'triangle' });
-  if (reading.life < .12) playPulse(context, { frequency: base - 4, strength: strength * .62, offset: 440 + Math.random() * 90, duration: 55, type: 'sine' });
+  const oscillator = context.createOscillator(), gain = context.createGain(), start = context.currentTime;
+  const strength = .14 + (1 - reading.life) * .12, end = start + 1.55;
+  oscillator.type = 'sine'; oscillator.frequency.setValueAtTime(47 + Math.random() * 4, start);
+  gain.gain.setValueAtTime(.0001, start);
+  gain.gain.exponentialRampToValueAtTime(strength, start + .05);
+  gain.gain.linearRampToValueAtTime(strength * .68, start + .52);
+  gain.gain.linearRampToValueAtTime(strength * 1.08, start + 1.04);
+  gain.gain.linearRampToValueAtTime(.0001, end);
+  oscillator.connect(gain); gain.connect(context.destination); oscillator.start(start); oscillator.stop(end + .03); activeOscillators.push(oscillator);
+  oscillator.addEventListener('ended', () => { activeOscillators = activeOscillators.filter((active) => active !== oscillator); }, { once: true });
 }
 function createThresholdPattern(context, reading) {
   createConcretePattern(context, reading);
