@@ -1,5 +1,5 @@
-/* hummm — Redfern Field: data and GPS are evaluated locally in the browser. */
-const DATA_URL = 'data/redfern-trees.geojson';
+/* hummm — Marrickville Field: data and GPS are evaluated locally in the browser. */
+const DATA_URL = 'data/marrickville-green.osm.json';
 const INFLUENCE_RADIUS_METRES = 90;
 const app = document.querySelector('#app');
 const instruction = document.querySelector('#instruction');
@@ -75,6 +75,18 @@ function startField() {
   getAudioContext(); isWalking = true; startButton.disabled = true; startButton.textContent = 'reading the street'; stopButton.disabled = false; instruction.textContent = 'walk. let the rhythm pull you.'; app.classList.add('active'); status.textContent = 'finding your position'; debug.textContent = 'allow location access to begin the field.';
   watchId = navigator.geolocation.watchPosition(updateField, locationError, { enableHighAccuracy: true, maximumAge: 4000, timeout: 15000 }); scheduleFieldCycle();
 }
-function stopField() { isWalking = false; clearAudio(); if (watchId !== null) navigator.geolocation.clearWatch(watchId); watchId = null; app.classList.remove('active', 'is-threshold', 'is-living', 'is-contact'); startButton.disabled = false; startButton.textContent = 'begin field walk'; stopButton.disabled = true; instruction.textContent = 'let the street speak through the strap.'; fieldValue.textContent = 'waiting'; fieldHint.textContent = 'concrete is never silent.'; status.textContent = 'stopped'; debug.textContent = 'City of Sydney tree data · GPS stays on this device.'; }
-fetch(DATA_URL).then((response) => { if (!response.ok) throw new Error('Tree data could not load'); return response.json(); }).then((data) => { trees = data.features.filter((tree) => tree.geometry?.type === 'Point' && tree.properties?.Tree_Status === 'Tree'); startButton.disabled = false; startButton.textContent = 'begin field walk'; status.textContent = `${trees.length} trees ready`; }).catch(() => { status.textContent = 'tree field could not load'; debug.textContent = 'check your connection, then reload.'; });
+function stopField() { isWalking = false; clearAudio(); if (watchId !== null) navigator.geolocation.clearWatch(watchId); watchId = null; app.classList.remove('active', 'is-threshold', 'is-living', 'is-contact'); startButton.disabled = false; startButton.textContent = 'begin field walk'; stopButton.disabled = true; instruction.textContent = 'let the street speak through the strap.'; fieldValue.textContent = 'waiting'; fieldHint.textContent = 'concrete is never silent.'; status.textContent = 'stopped'; debug.textContent = 'OpenStreetMap green-space data · GPS stays on this device.'; }
+function greenFeatureWeight(tags = {}) {
+  if (tags.natural === 'wood' || tags.landuse === 'forest') return 14;
+  if (tags.leisure === 'park') return 10;
+  if (tags.leisure === 'garden') return 8;
+  return 5;
+}
+fetch(DATA_URL).then((response) => { if (!response.ok) throw new Error('Green-space data could not load'); return response.json(); }).then((data) => {
+  trees = data.elements.filter((element) => element.center).map((element) => ({
+    geometry: { type: 'Point', coordinates: [element.center.lon, element.center.lat] },
+    properties: { TreeCanopyNS: greenFeatureWeight(element.tags), Tree_Age: element.tags.natural === 'wood' ? 'Mature' : 'Semi-Mature', DBH_in_cm: greenFeatureWeight(element.tags) * 5, SpeciesName: element.tags.name || element.tags.natural || element.tags.leisure || element.tags.landuse, Tree_Status: 'Tree' }
+  }));
+  startButton.disabled = false; startButton.textContent = 'begin field walk'; status.textContent = `${trees.length} green features ready`;
+}).catch(() => { status.textContent = 'green field could not load'; debug.textContent = 'check your connection, then reload.'; });
 startButton.addEventListener('click', startField); stopButton.addEventListener('click', stopField);

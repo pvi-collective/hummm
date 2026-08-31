@@ -1,0 +1,6033 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.11 87bfad18",
+  "osm3s": {
+    "timestamp_osm_base": "2026-08-31T01:24:00Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "way",
+  "id": 4332381,
+  "center": {
+    "lat": -33.8945118,
+    "lon": 151.1789849
+  },
+  "tags": {
+    "access": "yes",
+    "dog": "yes",
+    "leisure": "park",
+    "name": "Camperdown Memorial Rest Park",
+    "source:name": "NSW LPI Base Map",
+    "website": "https://www.innerwest.nsw.gov.au/newtown-parks/camperdown-memorial-rest-park",
+    "wikidata": "Q21927960"
+  }
+},
+{
+  "type": "way",
+  "id": 4375583,
+  "center": {
+    "lat": -33.8783270,
+    "lon": 151.1472013
+  },
+  "tags": {
+    "layer": "-1",
+    "leisure": "park",
+    "name": "Richard Murden Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 4375602,
+  "center": {
+    "lat": -33.8796171,
+    "lon": 151.1465836
+  },
+  "tags": {
+    "layer": "-1",
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 4688664,
+  "center": {
+    "lat": -33.9089687,
+    "lon": 151.1769826
+  },
+  "tags": {
+    "addr:postcode": "2044",
+    "addr:street": "May Street",
+    "addr:suburb": "St Peters",
+    "leisure": "park",
+    "name": "Camdenville Park",
+    "website": "http://www.marrickville.nsw.gov.au/en/outandabout/parks-and-reserves/park-locations-and-facilities/"
+  }
+},
+{
+  "type": "way",
+  "id": 15652877,
+  "center": {
+    "lat": -33.8998208,
+    "lon": 151.1400999
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Hoskins Park"
+  }
+},
+{
+  "type": "way",
+  "id": 30805651,
+  "center": {
+    "lat": -33.8949148,
+    "lon": 151.1393495
+  },
+  "tags": {
+    "addr:housenumber": "45-51",
+    "addr:postcode": "2130",
+    "addr:state": "NSW",
+    "addr:street": "Carrington Street",
+    "addr:suburb": "Summer Hill",
+    "leisure": "park",
+    "name": "Carrington Street Playground"
+  }
+},
+{
+  "type": "way",
+  "id": 34353819,
+  "center": {
+    "lat": -33.9038047,
+    "lon": 151.1417677
+  },
+  "tags": {
+    "leisure": "park",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 48534164,
+  "center": {
+    "lat": -33.8909887,
+    "lon": 151.1444900
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Cadigal Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 48534215,
+  "center": {
+    "lat": -33.8936814,
+    "lon": 151.1431800
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 50539525,
+  "center": {
+    "lat": -33.8796819,
+    "lon": 151.1826317
+  },
+  "tags": {
+    "addr:housenumber": "55A",
+    "addr:postcode": "2037",
+    "addr:street": "Hereford Street",
+    "addr:suburb": "Glebe",
+    "leisure": "park",
+    "name": "Arthur (Paddy) Gray Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 52741758,
+  "center": {
+    "lat": -33.8965172,
+    "lon": 151.1369317
+  },
+  "tags": {
+    "leisure": "park",
+    "source": "nearmap"
+  }
+},
+{
+  "type": "way",
+  "id": 131359103,
+  "center": {
+    "lat": -33.9096043,
+    "lon": 151.1390203
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Jack Shanahan Park",
+    "source:location": "bing",
+    "source:name": "survey",
+    "source_ref:name": "inas:gopr5047.jpg",
+    "wikidata": "Q21930980"
+  }
+},
+{
+  "type": "way",
+  "id": 137071989,
+  "center": {
+    "lat": -33.8956218,
+    "lon": 151.1820184
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 164695182,
+  "center": {
+    "lat": -33.8811733,
+    "lon": 151.1812880
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Ross Street Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 168821175,
+  "center": {
+    "lat": -33.8915309,
+    "lon": 151.1506170
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Petersham Park",
+    "source": "Bing",
+    "wikidata": "Q21933567"
+  }
+},
+{
+  "type": "way",
+  "id": 172324394,
+  "center": {
+    "lat": -33.9044722,
+    "lon": 151.1693074
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Enmore Park",
+    "wikidata": "Q21928509"
+  }
+},
+{
+  "type": "way",
+  "id": 172324395,
+  "center": {
+    "lat": -33.8786422,
+    "lon": 151.1574510
+  },
+  "tags": {
+    "addr:housenumber": "217-219",
+    "addr:postcode": "2040",
+    "addr:state": "NSW",
+    "addr:street": "Norton Street",
+    "addr:suburb": "Leichhardt",
+    "leisure": "park",
+    "name": "Pioneers Memorial Park",
+    "website": "https://www.innerwest.nsw.gov.au/explore/parks-sport-and-recreation/parks-and-playgrounds/parks-by-suburb/leichhardt-parks/pioneers-memorial-park",
+    "wikidata": "Q21935200"
+  }
+},
+{
+  "type": "way",
+  "id": 172734774,
+  "center": {
+    "lat": -33.8891631,
+    "lon": 151.1763729
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Camperdown Park",
+    "source:boundary": "LPI Base Map June 2018",
+    "website": "https://www.innerwest.nsw.gov.au/camperdown-parks/camperdown-park",
+    "wikidata": "Q21927961"
+  }
+},
+{
+  "type": "way",
+  "id": 172734776,
+  "center": {
+    "lat": -33.8906868,
+    "lon": 151.1736621
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "O’Dea Reserve",
+    "website": "https://www.innerwest.nsw.gov.au/camperdown-parks/odea-reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 173524888,
+  "center": {
+    "lat": -33.9043333,
+    "lon": 151.1584764
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Henson Park",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 174137106,
+  "center": {
+    "lat": -33.9110522,
+    "lon": 151.1854672
+  },
+  "tags": {
+    "boundary": "hazard",
+    "description": "Dogs not allowed in: Wetlands, Alan Davidson Oval, Sydney Park Cycling Centre, playground, barbecue areas.",
+    "dog": "unleashed",
+    "hazard": "contamination",
+    "leisure": "park",
+    "name": "Sydney Park",
+    "operator": "City of Sydney",
+    "operator:type": "government",
+    "operator:wikidata": "Q1094194",
+    "related_law": "Contaminated Land Management Act 1997",
+    "website": "https://www.cityofsydney.nsw.gov.au/parks/sydney-park",
+    "wikidata": "Q7660094",
+    "wikipedia": "en:Sydney Park"
+  }
+},
+{
+  "type": "way",
+  "id": 174378614,
+  "center": {
+    "lat": -33.8971090,
+    "lon": 151.1571388
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 174378726,
+  "center": {
+    "lat": -33.8957844,
+    "lon": 151.1591368
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Maundrell Park",
+    "wikidata": "Q21933087"
+  }
+},
+{
+  "type": "way",
+  "id": 174545568,
+  "center": {
+    "lat": -33.8866459,
+    "lon": 151.1479035
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Kegworth Public School Playground"
+  }
+},
+{
+  "type": "way",
+  "id": 174575906,
+  "center": {
+    "lat": -33.9023520,
+    "lon": 151.1367480
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Arlington Recreation Reserve",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 174575994,
+  "center": {
+    "lat": -33.9011208,
+    "lon": 151.1375819
+  },
+  "tags": {
+    "addr:street": "Constitution Road",
+    "leisure": "park",
+    "name": "Johnson Park",
+    "operator": "Inner West Council",
+    "operator:type": "public",
+    "source": "Bing;Website"
+  }
+},
+{
+  "type": "way",
+  "id": 174590627,
+  "center": {
+    "lat": -33.9033914,
+    "lon": 151.1364752
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Laxton Reserve",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 174592748,
+  "center": {
+    "lat": -33.9080920,
+    "lon": 151.1444063
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Gilbert Barry Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 174597236,
+  "center": {
+    "lat": -33.9096429,
+    "lon": 151.1630969
+  },
+  "tags": {
+    "check_date": "2023-11-11",
+    "leisure": "park",
+    "lit": "yes",
+    "name": "Wicks Park"
+  }
+},
+{
+  "type": "way",
+  "id": 174617934,
+  "center": {
+    "lat": -33.8951017,
+    "lon": 151.1622648
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Crammond Park"
+  }
+},
+{
+  "type": "way",
+  "id": 174693853,
+  "center": {
+    "lat": -33.8858019,
+    "lon": 151.1344284
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Ashfield Park",
+    "source": "Bing",
+    "wikidata": "Q21924903"
+  }
+},
+{
+  "type": "way",
+  "id": 174694447,
+  "center": {
+    "lat": -33.8772970,
+    "lon": 151.1373599
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Algie Park",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 174756473,
+  "center": {
+    "lat": -33.8919284,
+    "lon": 151.1554685
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Brighton Street Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 174756690,
+  "center": {
+    "lat": -33.8912410,
+    "lon": 151.1656174
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Weekley Park"
+  }
+},
+{
+  "type": "way",
+  "id": 174756964,
+  "center": {
+    "lat": -33.8938668,
+    "lon": 151.1651659
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 174909297,
+  "center": {
+    "lat": -33.9074462,
+    "lon": 151.1562447
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Jarvie Park"
+  }
+},
+{
+  "type": "way",
+  "id": 175697930,
+  "center": {
+    "lat": -33.8889250,
+    "lon": 151.1577425
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Quinn Playground"
+  }
+},
+{
+  "type": "way",
+  "id": 175699422,
+  "center": {
+    "lat": -33.8980758,
+    "lon": 151.1657752
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Ryan Park"
+  }
+},
+{
+  "type": "way",
+  "id": 175699482,
+  "center": {
+    "lat": -33.9008804,
+    "lon": 151.1662216
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Newington Road Playground"
+  }
+},
+{
+  "type": "way",
+  "id": 175699928,
+  "center": {
+    "lat": -33.8980234,
+    "lon": 151.1819593
+  },
+  "tags": {
+    "dog": "yes",
+    "leisure": "park",
+    "name": "Green Bans Park",
+    "website": "https://www.cityofsydney.nsw.gov.au/parks/green-bans-parks"
+  }
+},
+{
+  "type": "way",
+  "id": 175699935,
+  "center": {
+    "lat": -33.8983734,
+    "lon": 151.1822727
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Green Bans Park"
+  }
+},
+{
+  "type": "way",
+  "id": 175998123,
+  "center": {
+    "lat": -33.9029975,
+    "lon": 151.1773362
+  },
+  "tags": {
+    "addr:postcode": "2042",
+    "addr:street": "Alice Street",
+    "addr:suburb": "Newtown",
+    "leisure": "park",
+    "name": "Matt Hogan Reserve",
+    "website": "http://www.marrickville.nsw.gov.au/en/outandabout/parks-and-reserves/park-locations-and-facilities/"
+  }
+},
+{
+  "type": "way",
+  "id": 175998189,
+  "center": {
+    "lat": -33.9022399,
+    "lon": 151.1741886
+  },
+  "tags": {
+    "addr:postcode": "2042",
+    "addr:suburb": "Enmore",
+    "leisure": "park",
+    "name": "Enmore TAFE Park",
+    "website": "http://www.marrickville.nsw.gov.au/en/outandabout/parks-and-reserves/park-locations-and-facilities/"
+  }
+},
+{
+  "type": "way",
+  "id": 176324408,
+  "center": {
+    "lat": -33.8978494,
+    "lon": 151.1697681
+  },
+  "tags": {
+    "addr:street": "Liberty Street",
+    "leisure": "park",
+    "name": "Eve Sharpe Reserve",
+    "website": "http://www.marrickville.nsw.gov.au/en/outandabout/parks-and-reserves/park-locations-and-facilities/"
+  }
+},
+{
+  "type": "way",
+  "id": 176603256,
+  "center": {
+    "lat": -33.8961841,
+    "lon": 151.1668134
+  },
+  "tags": {
+    "addr:housenumber": "80",
+    "addr:postcode": "2048",
+    "addr:street": "Cambridge Street",
+    "addr:suburb": "Stanmore",
+    "leisure": "park",
+    "name": "Montague Gardens",
+    "website": "http://www.marrickville.nsw.gov.au/en/outandabout/parks-and-reserves/park-locations-and-facilities/"
+  }
+},
+{
+  "type": "way",
+  "id": 178409370,
+  "center": {
+    "lat": -33.8905534,
+    "lon": 151.1358044
+  },
+  "tags": {
+    "addr:housenumber": "91",
+    "addr:postcode": "2130",
+    "addr:state": "NSW",
+    "addr:street": "Carlton Crescent",
+    "addr:suburb": "Summer Hill",
+    "leisure": "park",
+    "name": "Darrell Jackson Gardens",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 178411575,
+  "center": {
+    "lat": -33.8784251,
+    "lon": 151.1637432
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "War Memorial Park",
+    "wikidata": "Q21937814"
+  }
+},
+{
+  "type": "way",
+  "id": 178930971,
+  "center": {
+    "lat": -33.8764998,
+    "lon": 151.1503682
+  },
+  "tags": {
+    "leisure": "park",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 178940721,
+  "center": {
+    "lat": -33.8807755,
+    "lon": 151.1609396
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "36th Battalion Park",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 178940724,
+  "center": {
+    "lat": -33.8805882,
+    "lon": 151.1588991
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Ibrox Park",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 182304901,
+  "center": {
+    "lat": -33.9222035,
+    "lon": 151.1547092
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Mackey Park",
+    "source": "Bing",
+    "wikidata": "Q21931440"
+  }
+},
+{
+  "type": "way",
+  "id": 182314990,
+  "center": {
+    "lat": -33.8846005,
+    "lon": 151.1471366
+  },
+  "tags": {
+    "designation": "RESERVE",
+    "leisure": "park",
+    "name": "Lambert Park",
+    "source": "NSW GNB",
+    "wikidata": "Q21931494"
+  }
+},
+{
+  "type": "way",
+  "id": 183250811,
+  "center": {
+    "lat": -33.9202600,
+    "lon": 151.1368792
+  },
+  "tags": {
+    "leisure": "park",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 183373116,
+  "center": {
+    "lat": -33.9208218,
+    "lon": 151.1451120
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Steel Park",
+    "source": "Bing",
+    "wikidata": "Q21936159"
+  }
+},
+{
+  "type": "way",
+  "id": 183373358,
+  "center": {
+    "lat": -33.9214825,
+    "lon": 151.1415012
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "H J Mahony Memorial Reserve",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 183385207,
+  "center": {
+    "lat": -33.9163968,
+    "lon": 151.1374073
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Beaman Park",
+    "source": "Bing",
+    "wikidata": "Q21925264"
+  }
+},
+{
+  "type": "way",
+  "id": 183385595,
+  "center": {
+    "lat": -33.9220028,
+    "lon": 151.1497739
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Warren Park",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 183385598,
+  "center": {
+    "lat": -33.9224612,
+    "lon": 151.1517456
+  },
+  "tags": {
+    "leisure": "park",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 183385601,
+  "center": {
+    "lat": -33.9212981,
+    "lon": 151.1501342
+  },
+  "tags": {
+    "leisure": "park",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 183499282,
+  "center": {
+    "lat": -33.9158441,
+    "lon": 151.1488274
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Louisa Lawson Reserve",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 183499285,
+  "center": {
+    "lat": -33.9133805,
+    "lon": 151.1509211
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "McNeilly Park",
+    "source": "Bing",
+    "wikidata": "Q21931411"
+  }
+},
+{
+  "type": "way",
+  "id": 185697150,
+  "center": {
+    "lat": -33.9083114,
+    "lon": 151.1372743
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Alison Playground"
+  }
+},
+{
+  "type": "way",
+  "id": 195195475,
+  "center": {
+    "lat": -33.8792234,
+    "lon": 151.1476207
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Hawthorne Canal Reserve",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 196960992,
+  "center": {
+    "lat": -33.8783372,
+    "lon": 151.1845733
+  },
+  "tags": {
+    "barrier": "fence",
+    "leisure": "park",
+    "name": "Kirsova 3 Playground",
+    "name:etymology": "Hélène Kirsova",
+    "name:etymology:wikidata": "Q4958915",
+    "name:etymology:wikipedia": "en:Hélène Kirsova",
+    "website": "https://www.cityofsydney.nsw.gov.au/playgrounds/kirsova-3-playground"
+  }
+},
+{
+  "type": "way",
+  "id": 197713330,
+  "center": {
+    "lat": -33.8788056,
+    "lon": 151.1727580
+  },
+  "tags": {
+    "access": "yes",
+    "addr:housenumber": "11",
+    "addr:postcode": "2038",
+    "addr:state": "NSW",
+    "addr:street": "Piper Street North",
+    "addr:suburb": "Annandale",
+    "leisure": "park",
+    "name": "Hinsby Park",
+    "source": "Bing",
+    "wikidata": "Q21928946"
+  }
+},
+{
+  "type": "way",
+  "id": 197990967,
+  "center": {
+    "lat": -33.8801644,
+    "lon": 151.1758461
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Smith, Hogan & Spindler Parks",
+    "note": "3 parks from South->North: Smith (to old Tramway Bridge), Hogan (to Aqueduct), Spindler. Commonly they are bundled together or used interchangibly/incorrectly, even on official documents/maps. Best to use a single joint name for the area",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 202623013,
+  "center": {
+    "lat": -33.9031197,
+    "lon": 151.1792928
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Peace Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 209322024,
+  "center": {
+    "lat": -33.8752463,
+    "lon": 151.1762242
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 209322025,
+  "center": {
+    "lat": -33.8756745,
+    "lon": 151.1764077
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 226835671,
+  "center": {
+    "lat": -33.8747812,
+    "lon": 151.1504999
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Blackmore Park",
+    "source": "Bing",
+    "wikidata": "Q21925375"
+  }
+},
+{
+  "type": "way",
+  "id": 226836765,
+  "center": {
+    "lat": -33.8911681,
+    "lon": 151.1364388
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Daryl Jackson Gardens",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 232953457,
+  "center": {
+    "lat": -33.8866135,
+    "lon": 151.1501047
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Wangal Nura Park"
+  }
+},
+{
+  "type": "way",
+  "id": 247424750,
+  "center": {
+    "lat": -33.9148962,
+    "lon": 151.1595416
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Braddock Playground"
+  }
+},
+{
+  "type": "way",
+  "id": 247424751,
+  "center": {
+    "lat": -33.9137638,
+    "lon": 151.1558938
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "O'Hara Street Playground"
+  }
+},
+{
+  "type": "way",
+  "id": 247424754,
+  "center": {
+    "lat": -33.9105832,
+    "lon": 151.1482828
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Ness Park"
+  }
+},
+{
+  "type": "way",
+  "id": 247764388,
+  "center": {
+    "lat": -33.9167449,
+    "lon": 151.1641619
+  },
+  "tags": {
+    "addr:postcode": "2044",
+    "addr:street": "Unwins Bridge Road",
+    "leisure": "park",
+    "name": "Tillman Park"
+  }
+},
+{
+  "type": "way",
+  "id": 247764392,
+  "center": {
+    "lat": -33.9185857,
+    "lon": 151.1680293
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Sydenham Green",
+    "source:name": "sign in park."
+  }
+},
+{
+  "type": "way",
+  "id": 247764393,
+  "center": {
+    "lat": -33.9165666,
+    "lon": 151.1681339
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Sydenham Green",
+    "source:name": "sign in park."
+  }
+},
+{
+  "type": "way",
+  "id": 269467696,
+  "center": {
+    "lat": -33.9258543,
+    "lon": 151.1521801
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Waterworth Park",
+    "source": "Bing",
+    "wikidata": "Q21935668"
+  }
+},
+{
+  "type": "way",
+  "id": 269467701,
+  "center": {
+    "lat": -33.9234077,
+    "lon": 151.1507576
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Gough Whitlam Park",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 273252070,
+  "center": {
+    "lat": -33.8800794,
+    "lon": 151.1844132
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "St James Park"
+  }
+},
+{
+  "type": "way",
+  "id": 273252073,
+  "center": {
+    "lat": -33.8804855,
+    "lon": 151.1837542
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "John Street Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 273906835,
+  "center": {
+    "lat": -33.8916789,
+    "lon": 151.1750161
+  },
+  "tags": {
+    "addr:postcode": "2050",
+    "addr:street": "Salisbury Road",
+    "addr:suburb": "Camperdown",
+    "leisure": "park",
+    "name": "Peter Cotter Reserve",
+    "website": "https://www.innerwest.nsw.gov.au/camperdown-parks/peter-cotter-reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 273948530,
+  "center": {
+    "lat": -33.8916545,
+    "lon": 151.1694053
+  },
+  "tags": {
+    "addr:postcode": "2048",
+    "addr:street": "Lincoln Street",
+    "addr:suburb": "Stanmore",
+    "leisure": "park",
+    "name": "Bain Playground",
+    "website": "http://www.marrickville.nsw.gov.au/en/outandabout/parks-and-reserves/park-locations-and-facilities/"
+  }
+},
+{
+  "type": "way",
+  "id": 273948531,
+  "center": {
+    "lat": -33.8914865,
+    "lon": 151.1684088
+  },
+  "tags": {
+    "addr:postcode": "2048",
+    "addr:street": "Salisbury Road",
+    "addr:suburb": "Stanmore",
+    "leisure": "park",
+    "name": "Whiteley Reserve",
+    "website": "http://www.marrickville.nsw.gov.au/en/outandabout/parks-and-reserves/park-locations-and-facilities/"
+  }
+},
+{
+  "type": "way",
+  "id": 273948536,
+  "center": {
+    "lat": -33.8941758,
+    "lon": 151.1744027
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "George Smith Playground",
+    "website": "http://www.marrickville.nsw.gov.au/en/outandabout/parks-and-reserves/park-locations-and-facilities/"
+  }
+},
+{
+  "type": "way",
+  "id": 273948537,
+  "center": {
+    "lat": -33.8968523,
+    "lon": 151.1752791
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Oxford Street Reserve",
+    "website": "http://www.marrickville.nsw.gov.au/en/outandabout/parks-and-reserves/park-locations-and-facilities/"
+  }
+},
+{
+  "type": "way",
+  "id": 273997651,
+  "center": {
+    "lat": -33.9054986,
+    "lon": 151.1777297
+  },
+  "tags": {
+    "addr:housenumber": "48",
+    "addr:postcode": "2042",
+    "addr:street": "Pearl Street",
+    "addr:suburb": "Newtown",
+    "leisure": "park",
+    "name": "Pearl St Reserve",
+    "website": "http://marrickville.nsw.gov.au/en/outandabout/parks-and-reserves/park-locations-and-facilities/"
+  }
+},
+{
+  "type": "way",
+  "id": 275010270,
+  "center": {
+    "lat": -33.8857372,
+    "lon": 151.1529962
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Marr Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 279681991,
+  "center": {
+    "lat": -33.8943722,
+    "lon": 151.1811369
+  },
+  "tags": {
+    "addr:housenumber": "24",
+    "addr:postcode": "2042",
+    "addr:street": "Hordern Street",
+    "addr:suburb": "Newtown",
+    "leisure": "park",
+    "name": "Ernest Wright Playground"
+  }
+},
+{
+  "type": "way",
+  "id": 279681992,
+  "center": {
+    "lat": -33.8940854,
+    "lon": 151.1820689
+  },
+  "tags": {
+    "addr:housenumber": "3",
+    "addr:postcode": "2042",
+    "addr:street": "Egan Street",
+    "addr:suburb": "Newtown",
+    "leisure": "park",
+    "name": "M.J Hayes Playground"
+  }
+},
+{
+  "type": "way",
+  "id": 279681993,
+  "center": {
+    "lat": -33.9010340,
+    "lon": 151.1778089
+  },
+  "tags": {
+    "addr:housenumber": "104",
+    "addr:postcode": "2042",
+    "addr:street": "Station Street",
+    "addr:suburb": "Newtown",
+    "leisure": "park",
+    "name": "Salmon Playground",
+    "website": "http://www.marrickville.nsw.gov.au/en/outandabout/parks-and-reserves/park-locations-and-facilities/"
+  }
+},
+{
+  "type": "way",
+  "id": 282853373,
+  "center": {
+    "lat": -33.9051160,
+    "lon": 151.1403509
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 292661101,
+  "center": {
+    "lat": -33.9090924,
+    "lon": 151.1800864
+  },
+  "tags": {
+    "addr:housenumber": "14",
+    "addr:street": "May Street",
+    "addr:suburb": "St Peters",
+    "leisure": "park",
+    "name": "May Street Reserve",
+    "operator": "Inner West Council",
+    "website": "https://www.innerwest.nsw.gov.au/explore/parks-sport-and-recreation/parks-and-playgrounds/parks-by-suburb/st-peters-parks/may-street-reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 297368632,
+  "center": {
+    "lat": -33.9011752,
+    "lon": 151.1813188
+  },
+  "tags": {
+    "addr:housenumber": "75",
+    "addr:postcode": "2042",
+    "addr:street": "Union Street",
+    "addr:suburb": "Newtown",
+    "dog": "yes",
+    "leisure": "park",
+    "name": "Mrs Isabella Hill Rest Area",
+    "website": "https://www.cityofsydney.nsw.gov.au/parks/isabella-hills-rest-area"
+  }
+},
+{
+  "type": "way",
+  "id": 297368977,
+  "center": {
+    "lat": -33.9021855,
+    "lon": 151.1820944
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Rochford Street Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 297368978,
+  "center": {
+    "lat": -33.9028310,
+    "lon": 151.1809726
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Union Street Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 301177709,
+  "center": {
+    "lat": -33.9044367,
+    "lon": 151.1831476
+  },
+  "tags": {
+    "addr:housenumber": "29",
+    "addr:postcode": "2043",
+    "addr:street": "Flora Street",
+    "addr:suburb": "Erskineville",
+    "leisure": "park",
+    "name": "Flora and Knight Reserve",
+    "website": "https://www.cityofsydney.nsw.gov.au/explore/facilities/parks/playgrounds"
+  }
+},
+{
+  "type": "way",
+  "id": 301177713,
+  "center": {
+    "lat": -33.9038484,
+    "lon": 151.1825329
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 301881295,
+  "center": {
+    "lat": -33.9109994,
+    "lon": 151.1774916
+  },
+  "tags": {
+    "addr:postcode": "2044",
+    "addr:street": "Campbell Road",
+    "addr:suburb": "St Peters",
+    "leisure": "park",
+    "name": "Simpson Park",
+    "website": "http://www.marrickville.nsw.gov.au/en/outandabout/parks-and-reserves/park-locations-and-facilities/"
+  }
+},
+{
+  "type": "way",
+  "id": 305548961,
+  "center": {
+    "lat": -33.9179521,
+    "lon": 151.1683754
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Sydenham Green",
+    "source": "mapbox",
+    "source:name": "sign in park."
+  }
+},
+{
+  "type": "way",
+  "id": 389505396,
+  "center": {
+    "lat": -33.9218106,
+    "lon": 151.1557626
+  },
+  "tags": {
+    "leaf_type": "mixed",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 413079017,
+  "center": {
+    "lat": -33.8850480,
+    "lon": 151.1598389
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Pine Square Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 414320466,
+  "center": {
+    "lat": -33.9184057,
+    "lon": 151.1470749
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Day Street Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 414321449,
+  "center": {
+    "lat": -33.9120231,
+    "lon": 151.1427554
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Tom Kenny Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 452953652,
+  "center": {
+    "lat": -33.9147249,
+    "lon": 151.1694178
+  },
+  "tags": {
+    "access": "yes",
+    "addr:housenumber": "186",
+    "addr:postcode": "2044",
+    "addr:street": "Unwins Bridge Road",
+    "addr:suburb": "Sydenham",
+    "leisure": "park",
+    "name": "Francis Playground",
+    "operator": "Inner West Council",
+    "website": "https://www.innerwest.nsw.gov.au/explore/parks-sport-and-recreation/parks-and-playgrounds/parks-by-suburb/st-peters-parks/francis-playground"
+  }
+},
+{
+  "type": "way",
+  "id": 460248372,
+  "center": {
+    "lat": -33.9076757,
+    "lon": 151.1547274
+  },
+  "tags": {
+    "addr:housenumber": "68",
+    "addr:postcode": "2204",
+    "addr:street": "Petersham Road",
+    "addr:suburb": "Marrickville",
+    "leisure": "park",
+    "name": "Petersham Road Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 460473789,
+  "center": {
+    "lat": -33.8849472,
+    "lon": 151.1817900
+  },
+  "tags": {
+    "addr:housenumber": "181",
+    "addr:postcode": "2037",
+    "addr:state": "NSW",
+    "addr:street": "Arundel Street",
+    "addr:suburb": "Forest Lodge",
+    "dog": "leashed",
+    "email": "council@cityofsydney.nsw.gov.au",
+    "leisure": "park",
+    "name": "Arundel Street Reserve",
+    "operator": "City of Sydney",
+    "operator:type": "government",
+    "operator:wikidata": "Q1094194",
+    "phone": "+61 2 9265 9333",
+    "website": "https://www.cityofsydney.nsw.gov.au/"
+  }
+},
+{
+  "type": "way",
+  "id": 473928726,
+  "center": {
+    "lat": -33.8832419,
+    "lon": 151.1652767
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Evan Jones Playground"
+  }
+},
+{
+  "type": "way",
+  "id": 473928727,
+  "center": {
+    "lat": -33.8831993,
+    "lon": 151.1660368
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Mayes Street Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 473930174,
+  "center": {
+    "lat": -33.8784560,
+    "lon": 151.1681378
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Whites Creek Valley Park",
+    "website": "https://www.innerwest.nsw.gov.au/explore/parks-sport-and-recreation/parks-and-playgrounds/parks-by-suburb/annandale-parks/whites-creek-valley-park"
+  }
+},
+{
+  "type": "way",
+  "id": 493654437,
+  "center": {
+    "lat": -33.8947514,
+    "lon": 151.1702757
+  },
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "mixed",
+    "natural": "wood",
+    "operator": "Sydney Trains",
+    "source": "local knowledge + LPI"
+  }
+},
+{
+  "type": "way",
+  "id": 532634098,
+  "center": {
+    "lat": -33.9013975,
+    "lon": 151.1846900
+  },
+  "tags": {
+    "addr:housenumber": "136-140",
+    "addr:street": "George Street",
+    "leisure": "park",
+    "name": "Kirsova 2 Playground",
+    "name:etymology": "Hélène Kirsova",
+    "name:etymology:wikidata": "Q4958915",
+    "name:etymology:wikipedia": "en:Hélène Kirsova",
+    "website": "https://www.cityofsydney.nsw.gov.au/playgrounds/kirsova-2-playground"
+  }
+},
+{
+  "type": "way",
+  "id": 533068250,
+  "center": {
+    "lat": -33.9001753,
+    "lon": 151.1802308
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Lillian Fowler Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 537565774,
+  "center": {
+    "lat": -33.9063142,
+    "lon": 151.1841827
+  },
+  "tags": {
+    "access": "private",
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 544236182,
+  "center": {
+    "lat": -33.9044284,
+    "lon": 151.1451897
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Graeme Green"
+  }
+},
+{
+  "type": "way",
+  "id": 545367554,
+  "center": {
+    "lat": -33.8880793,
+    "lon": 151.1384079
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 545367557,
+  "center": {
+    "lat": -33.8879641,
+    "lon": 151.1392616
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 548781428,
+  "center": {
+    "lat": -33.9063821,
+    "lon": 151.1846828
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 550183743,
+  "center": {
+    "lat": -33.8942802,
+    "lon": 151.1846584
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Michael Kelly Rest Area",
+    "operator": "City of Sydney",
+    "operator:type": "government",
+    "operator:wikidata": "Q1094194",
+    "ref": "MI01"
+  }
+},
+{
+  "type": "way",
+  "id": 550183744,
+  "center": {
+    "lat": -33.8951382,
+    "lon": 151.1849327
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Jack Haynes Rest Area",
+    "operator": "City of Sydney",
+    "operator:type": "government",
+    "operator:wikidata": "Q1094194",
+    "ref": "JK01"
+  }
+},
+{
+  "type": "way",
+  "id": 551201748,
+  "center": {
+    "lat": -33.8777467,
+    "lon": 151.1528833
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "North Street Playground"
+  }
+},
+{
+  "type": "way",
+  "id": 551510679,
+  "center": {
+    "lat": -33.9079115,
+    "lon": 151.1553938
+  },
+  "tags": {
+    "garden:type": "residential",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 553196309,
+  "center": {
+    "lat": -33.9083539,
+    "lon": 151.1587416
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Murdoch Playground"
+  }
+},
+{
+  "type": "way",
+  "id": 559767025,
+  "center": {
+    "lat": -33.9062421,
+    "lon": 151.1772027
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Seating Area and Garden"
+  }
+},
+{
+  "type": "way",
+  "id": 560066437,
+  "center": {
+    "lat": -33.8847434,
+    "lon": 151.1739279
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Douglas Grant Memorial Park"
+  }
+},
+{
+  "type": "way",
+  "id": 560066442,
+  "center": {
+    "lat": -33.8771461,
+    "lon": 151.1706125
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Hudson Street Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 560066443,
+  "center": {
+    "lat": -33.8763420,
+    "lon": 151.1709720
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Gray Street Reserve",
+    "website": "https://www.innerwest.nsw.gov.au/explore/parks-sport-and-recreation/parks-and-playgrounds/parks-by-suburb/annandale-parks/gray-street-reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 560880967,
+  "center": {
+    "lat": -33.8776498,
+    "lon": 151.1565198
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 560880968,
+  "center": {
+    "lat": -33.8775630,
+    "lon": 151.1565969
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 560880969,
+  "center": {
+    "lat": -33.8777821,
+    "lon": 151.1567356
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 560880984,
+  "center": {
+    "lat": -33.8791938,
+    "lon": 151.1577401
+  },
+  "tags": {
+    "landcover": "trees",
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 560880985,
+  "center": {
+    "lat": -33.8785296,
+    "lon": 151.1581015
+  },
+  "tags": {
+    "landcover": "trees",
+    "leaf_type": "mixed",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 560880986,
+  "center": {
+    "lat": -33.8781774,
+    "lon": 151.1579896
+  },
+  "tags": {
+    "landcover": "trees",
+    "leaf_type": "mixed",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 560880987,
+  "center": {
+    "lat": -33.8777051,
+    "lon": 151.1581756
+  },
+  "tags": {
+    "landcover": "trees",
+    "leaf_type": "mixed",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 560880988,
+  "center": {
+    "lat": -33.8775466,
+    "lon": 151.1576553
+  },
+  "tags": {
+    "landcover": "trees",
+    "leaf_type": "mixed",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 560880989,
+  "center": {
+    "lat": -33.8779236,
+    "lon": 151.1577751
+  },
+  "tags": {
+    "landcover": "trees",
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 560880990,
+  "center": {
+    "lat": -33.8779976,
+    "lon": 151.1573441
+  },
+  "tags": {
+    "landcover": "trees",
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 560880991,
+  "center": {
+    "lat": -33.8794792,
+    "lon": 151.1571108
+  },
+  "tags": {
+    "landcover": "trees",
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 561510651,
+  "center": {
+    "lat": -33.8751856,
+    "lon": 151.1547297
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 561510656,
+  "center": {
+    "lat": -33.8752254,
+    "lon": 151.1529162
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 579406680,
+  "center": {
+    "lat": -33.8863253,
+    "lon": 151.1379670
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Explorers Park"
+  }
+},
+{
+  "type": "way",
+  "id": 585993657,
+  "center": {
+    "lat": -33.8996066,
+    "lon": 151.1846903
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 597945881,
+  "center": {
+    "lat": -33.9103900,
+    "lon": 151.1403531
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 598226511,
+  "center": {
+    "lat": -33.9093738,
+    "lon": 151.1401290
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Rowe Playground"
+  }
+},
+{
+  "type": "way",
+  "id": 598422593,
+  "center": {
+    "lat": -33.8758136,
+    "lon": 151.1777534
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 598698820,
+  "center": {
+    "lat": -33.9096178,
+    "lon": 151.1629707
+  },
+  "tags": {
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 600064756,
+  "center": {
+    "lat": -33.9140211,
+    "lon": 151.1398085
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "AB Crofts Playground"
+  }
+},
+{
+  "type": "way",
+  "id": 608947509,
+  "center": {
+    "lat": -33.9021401,
+    "lon": 151.1625040
+  },
+  "tags": {
+    "addr:housenumber": "142",
+    "addr:postcode": "2204",
+    "addr:state": "NSW",
+    "addr:street": "Addison Road",
+    "addr:suburb": "Marrickville",
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 608947510,
+  "center": {
+    "lat": -33.9021329,
+    "lon": 151.1623785
+  },
+  "tags": {
+    "addr:housenumber": "142",
+    "addr:postcode": "2204",
+    "addr:state": "NSW",
+    "addr:street": "Addison Road",
+    "addr:suburb": "Marrickville",
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 608947511,
+  "center": {
+    "lat": -33.9032447,
+    "lon": 151.1619909
+  },
+  "tags": {
+    "addr:housenumber": "142",
+    "addr:postcode": "2204",
+    "addr:state": "NSW",
+    "addr:street": "Addison Road",
+    "addr:suburb": "Marrickville",
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 608947512,
+  "center": {
+    "lat": -33.9024820,
+    "lon": 151.1609844
+  },
+  "tags": {
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 608947513,
+  "center": {
+    "lat": -33.9024452,
+    "lon": 151.1607906
+  },
+  "tags": {
+    "addr:housenumber": "142",
+    "addr:postcode": "2204",
+    "addr:state": "NSW",
+    "addr:street": "Addison Road",
+    "addr:suburb": "Marrickville",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 608947514,
+  "center": {
+    "lat": -33.9020475,
+    "lon": 151.1603386
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 608947516,
+  "center": {
+    "lat": -33.9031334,
+    "lon": 151.1617989
+  },
+  "tags": {
+    "addr:housenumber": "142",
+    "addr:postcode": "2204",
+    "addr:state": "NSW",
+    "addr:street": "Addison Road",
+    "addr:suburb": "Marrickville",
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 608947517,
+  "center": {
+    "lat": -33.9027612,
+    "lon": 151.1620014
+  },
+  "tags": {
+    "addr:housenumber": "142",
+    "addr:postcode": "2204",
+    "addr:state": "NSW",
+    "addr:street": "Addison Road",
+    "addr:suburb": "Marrickville",
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 608947518,
+  "center": {
+    "lat": -33.9018907,
+    "lon": 151.1613268
+  },
+  "tags": {
+    "addr:housenumber": "142",
+    "addr:postcode": "2204",
+    "addr:state": "NSW",
+    "addr:street": "Addison Road",
+    "addr:suburb": "Marrickville",
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 608947519,
+  "center": {
+    "lat": -33.9019318,
+    "lon": 151.1609605
+  },
+  "tags": {
+    "addr:housenumber": "142",
+    "addr:postcode": "2204",
+    "addr:state": "NSW",
+    "addr:street": "Addison Road",
+    "addr:suburb": "Marrickville",
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 608947520,
+  "center": {
+    "lat": -33.9017317,
+    "lon": 151.1607507
+  },
+  "tags": {
+    "addr:housenumber": "142",
+    "addr:postcode": "2204",
+    "addr:state": "NSW",
+    "addr:street": "Addison Road",
+    "addr:suburb": "Marrickville",
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 608947521,
+  "center": {
+    "lat": -33.9024676,
+    "lon": 151.1611977
+  },
+  "tags": {
+    "addr:housenumber": "142",
+    "addr:postcode": "2204",
+    "addr:state": "NSW",
+    "addr:street": "Addison Road",
+    "addr:suburb": "Marrickville",
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 610166678,
+  "center": {
+    "lat": -33.8845668,
+    "lon": 151.1809084
+  },
+  "tags": {
+    "addr:housenumber": "2-10",
+    "addr:postcode": "2050",
+    "addr:state": "NSW",
+    "addr:street": "Larkin Street",
+    "addr:suburb": "Camperdown",
+    "check_date": "2023-11-15",
+    "dog": "leashed",
+    "leisure": "park",
+    "name": "Larkin Street Park",
+    "operator": "City of Sydney",
+    "operator:type": "government",
+    "operator:wikidata": "Q1094194",
+    "source": "local knowledge;http://www.cityofsydney.nsw.gov.au/__data/assets/pdf_file/0004/138748/Appendix-D5-Site-Nos-400-498,-644-and-647.pdf"
+  }
+},
+{
+  "type": "way",
+  "id": 613577342,
+  "center": {
+    "lat": -33.9095120,
+    "lon": 151.1810653
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 617724973,
+  "center": {
+    "lat": -33.8953734,
+    "lon": 151.1729147
+  },
+  "tags": {
+    "access": "private",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 617749743,
+  "center": {
+    "lat": -33.9036460,
+    "lon": 151.1776040
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 617749745,
+  "center": {
+    "lat": -33.9039770,
+    "lon": 151.1773687
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 617749746,
+  "center": {
+    "lat": -33.9039973,
+    "lon": 151.1772166
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 617749747,
+  "center": {
+    "lat": -33.9039892,
+    "lon": 151.1775238
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 617749749,
+  "center": {
+    "lat": -33.9044145,
+    "lon": 151.1771954
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 617907267,
+  "center": {
+    "lat": -33.8950249,
+    "lon": 151.1517879
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 623603349,
+  "center": {
+    "lat": -33.9056338,
+    "lon": 151.1815961
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 623603350,
+  "center": {
+    "lat": -33.9055566,
+    "lon": 151.1815864
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 623603353,
+  "center": {
+    "lat": -33.9058108,
+    "lon": 151.1827017
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 623603355,
+  "center": {
+    "lat": -33.9057356,
+    "lon": 151.1828790
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 623603357,
+  "center": {
+    "lat": -33.9057464,
+    "lon": 151.1829514
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 623603358,
+  "center": {
+    "lat": -33.9057391,
+    "lon": 151.1827845
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 623603360,
+  "center": {
+    "lat": -33.9055591,
+    "lon": 151.1831026
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Devine Street Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 628274665,
+  "center": {
+    "lat": -33.9049662,
+    "lon": 151.1807731
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 658975670,
+  "center": {
+    "lat": -33.9180280,
+    "lon": 151.1479453
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Premier Street Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 671450546,
+  "center": {
+    "lat": -33.8939075,
+    "lon": 151.1445418
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 678330323,
+  "center": {
+    "lat": -33.8780702,
+    "lon": 151.1788550
+  },
+  "tags": {
+    "check_date": "2023-11-15",
+    "leisure": "park",
+    "name": "Harold Park"
+  }
+},
+{
+  "type": "way",
+  "id": 682335550,
+  "center": {
+    "lat": -33.8972751,
+    "lon": 151.1786363
+  },
+  "tags": {
+    "check_date": "2025-04-21",
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 685526817,
+  "center": {
+    "lat": -33.8989501,
+    "lon": 151.1465086
+  },
+  "tags": {
+    "leisure": "park",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 704880956,
+  "center": {
+    "lat": -33.9255029,
+    "lon": 151.1540829
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 714263490,
+  "center": {
+    "lat": -33.8933530,
+    "lon": 151.1428164
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Harvest Park"
+  }
+},
+{
+  "type": "way",
+  "id": 721040401,
+  "center": {
+    "lat": -33.8786242,
+    "lon": 151.1574571
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 721060126,
+  "center": {
+    "lat": -33.8825668,
+    "lon": 151.1663692
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Style Street Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 723620167,
+  "center": {
+    "lat": -33.8791061,
+    "lon": 151.1673451
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 723937102,
+  "center": {
+    "lat": -33.9224721,
+    "lon": 151.1847385
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 723937103,
+  "center": {
+    "lat": -33.9227250,
+    "lon": 151.1846974
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 738379349,
+  "center": {
+    "lat": -33.8748600,
+    "lon": 151.1355837
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 755772542,
+  "center": {
+    "lat": -33.8939584,
+    "lon": 151.1420647
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 768997316,
+  "center": {
+    "lat": -33.8904061,
+    "lon": 151.1405242
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 770821117,
+  "center": {
+    "lat": -33.8935027,
+    "lon": 151.1459620
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 770825081,
+  "center": {
+    "lat": -33.8942666,
+    "lon": 151.1467828
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 770926135,
+  "center": {
+    "lat": -33.8953346,
+    "lon": 151.1433046
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 777403755,
+  "center": {
+    "lat": -33.8927942,
+    "lon": 151.1436195
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 783977176,
+  "center": {
+    "lat": -33.8786908,
+    "lon": 151.1766266
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "AV Henry Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 785162736,
+  "center": {
+    "lat": -33.9099453,
+    "lon": 151.1390484
+  },
+  "tags": {
+    "leaf_type": "mixed",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 785162737,
+  "center": {
+    "lat": -33.9095675,
+    "lon": 151.1396499
+  },
+  "tags": {
+    "leaf_type": "mixed",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 785162738,
+  "center": {
+    "lat": -33.9092505,
+    "lon": 151.1387111
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 785162739,
+  "center": {
+    "lat": -33.9090781,
+    "lon": 151.1384072
+  },
+  "tags": {
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 785168445,
+  "center": {
+    "lat": -33.9014007,
+    "lon": 151.1373496
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 785168455,
+  "center": {
+    "lat": -33.8991245,
+    "lon": 151.1401894
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 786611387,
+  "center": {
+    "lat": -33.8755291,
+    "lon": 151.1786656
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 786611388,
+  "center": {
+    "lat": -33.8755378,
+    "lon": 151.1785347
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 791886322,
+  "center": {
+    "lat": -33.9222063,
+    "lon": 151.1673878
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 791886332,
+  "center": {
+    "lat": -33.9216587,
+    "lon": 151.1656043
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 791886333,
+  "center": {
+    "lat": -33.9217198,
+    "lon": 151.1658049
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 791886334,
+  "center": {
+    "lat": -33.9217103,
+    "lon": 151.1649120
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 791886335,
+  "center": {
+    "lat": -33.9212331,
+    "lon": 151.1663597
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 791886336,
+  "center": {
+    "lat": -33.9214039,
+    "lon": 151.1661272
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 809807225,
+  "center": {
+    "lat": -33.8942553,
+    "lon": 151.1634297
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 809807226,
+  "center": {
+    "lat": -33.8939444,
+    "lon": 151.1666371
+  },
+  "tags": {
+    "leaf_type": "mixed",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 809807227,
+  "center": {
+    "lat": -33.8940413,
+    "lon": 151.1652920
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 809807232,
+  "center": {
+    "lat": -33.8945518,
+    "lon": 151.1646268
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 809807233,
+  "center": {
+    "lat": -33.8947847,
+    "lon": 151.1634216
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 809818406,
+  "center": {
+    "lat": -33.8964273,
+    "lon": 151.1558597
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 809818407,
+  "center": {
+    "lat": -33.8962044,
+    "lon": 151.1556469
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 809818408,
+  "center": {
+    "lat": -33.8960952,
+    "lon": 151.1558241
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 809818409,
+  "center": {
+    "lat": -33.8961691,
+    "lon": 151.1560199
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 815574417,
+  "center": {
+    "lat": -33.9205988,
+    "lon": 151.1852873
+  },
+  "tags": {
+    "garden:type": "residential",
+    "leisure": "garden",
+    "location": "rooftop"
+  }
+},
+{
+  "type": "way",
+  "id": 816392152,
+  "center": {
+    "lat": -33.8806986,
+    "lon": 151.1762710
+  },
+  "tags": {
+    "dog": "yes",
+    "leisure": "park",
+    "name": "Canal Reserve",
+    "website": "https://www.cityofsydney.nsw.gov.au/parks/canal-reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 817425268,
+  "center": {
+    "lat": -33.8803646,
+    "lon": 151.1770164
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Minogue Crescent Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 817428310,
+  "center": {
+    "lat": -33.8807706,
+    "lon": 151.1762581
+  },
+  "tags": {
+    "addr:housenumber": "11-13",
+    "addr:street": "Minogue Crescent",
+    "check_date": "2023-11-15",
+    "dog": "yes",
+    "leisure": "park",
+    "name": "John Victor McMahon Reserve",
+    "website": "https://www.cityofsydney.nsw.gov.au/parks/jv-mcmahon-reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 817428312,
+  "center": {
+    "lat": -33.8832995,
+    "lon": 151.1751777
+  },
+  "tags": {
+    "alt_name": "Badu Reserve",
+    "leisure": "park",
+    "name": "Badu Park",
+    "website": "https://www.innerwest.nsw.gov.au/explore/parks-sport-and-recreation/parks-and-playgrounds/parks-by-suburb/annandale-parks/badu-reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 817954557,
+  "center": {
+    "lat": -33.8830732,
+    "lon": 151.1778114
+  },
+  "tags": {
+    "alt_name": "Caldwell Park",
+    "description": "On the border of Forest Lodge and Camperdown Orphan School Creek features a restored natural creek and a children's playground.",
+    "leisure": "park",
+    "name": "Orphan School Creek",
+    "operator": "City of Sydney Council",
+    "operator:phone:AU": "1300 651 301",
+    "operator:type": "public",
+    "operator:website": "https://www.sydney.nsw.gov.au",
+    "operator:wikidata": "Q56477532",
+    "website": "https://www.cityofsydney.nsw.gov.au/parks/orphan-school-creek"
+  }
+},
+{
+  "type": "way",
+  "id": 823991293,
+  "center": {
+    "lat": -33.8846926,
+    "lon": 151.1741179
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 824012787,
+  "center": {
+    "lat": -33.9209348,
+    "lon": 151.1848189
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Reverend Soo Park"
+  }
+},
+{
+  "type": "way",
+  "id": 828676202,
+  "center": {
+    "lat": -33.8772629,
+    "lon": 151.1767304
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 829588961,
+  "center": {
+    "lat": -33.8768720,
+    "lon": 151.1784984
+  },
+  "tags": {
+    "check_date": "2023-11-15",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 829919495,
+  "center": {
+    "lat": -33.8802547,
+    "lon": 151.1786125
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Lewis Hoad Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 830145455,
+  "center": {
+    "lat": -33.8777293,
+    "lon": 151.1849807
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 830633149,
+  "center": {
+    "lat": -33.8774084,
+    "lon": 151.1797054
+  },
+  "tags": {
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 830633150,
+  "center": {
+    "lat": -33.8763795,
+    "lon": 151.1814629
+  },
+  "tags": {
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 831770041,
+  "center": {
+    "lat": -33.8765908,
+    "lon": 151.1810990
+  },
+  "tags": {
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 831770043,
+  "center": {
+    "lat": -33.8769858,
+    "lon": 151.1804195
+  },
+  "tags": {
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 839493877,
+  "center": {
+    "lat": -33.8900944,
+    "lon": 151.1815301
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 844101352,
+  "center": {
+    "lat": -33.8869464,
+    "lon": 151.1449359
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 852012665,
+  "center": {
+    "lat": -33.8792153,
+    "lon": 151.1682859
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 876551615,
+  "center": {
+    "lat": -33.9221402,
+    "lon": 151.1662618
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 876551616,
+  "center": {
+    "lat": -33.9220959,
+    "lon": 151.1661990
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 876551617,
+  "center": {
+    "lat": -33.9221315,
+    "lon": 151.1669908
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 876551618,
+  "center": {
+    "lat": -33.9221809,
+    "lon": 151.1670591
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 876551619,
+  "center": {
+    "lat": -33.9224893,
+    "lon": 151.1667286
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 876551620,
+  "center": {
+    "lat": -33.9224405,
+    "lon": 151.1666608
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 876551621,
+  "center": {
+    "lat": -33.9217320,
+    "lon": 151.1666833
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 876551622,
+  "center": {
+    "lat": -33.9221985,
+    "lon": 151.1667001
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 876551623,
+  "center": {
+    "lat": -33.9216876,
+    "lon": 151.1664556
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 876551624,
+  "center": {
+    "lat": -33.9218482,
+    "lon": 151.1665793
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 876551625,
+  "center": {
+    "lat": -33.9220902,
+    "lon": 151.1665543
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 876554941,
+  "center": {
+    "lat": -33.9218592,
+    "lon": 151.1662182
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 876559761,
+  "center": {
+    "lat": -33.9225127,
+    "lon": 151.1672063
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 876559762,
+  "center": {
+    "lat": -33.9224225,
+    "lon": 151.1670317
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 879593141,
+  "center": {
+    "lat": -33.9032014,
+    "lon": 151.1422172
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Mallam Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 879594594,
+  "center": {
+    "lat": -33.9012188,
+    "lon": 151.1404582
+  },
+  "tags": {
+    "garden:type": "community",
+    "leisure": "garden",
+    "name": "Denison Road Playground Community Garden"
+  }
+},
+{
+  "type": "way",
+  "id": 882734028,
+  "center": {
+    "lat": -33.8827404,
+    "lon": 151.1540272
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Marlborough Street Playground"
+  }
+},
+{
+  "type": "way",
+  "id": 892184196,
+  "center": {
+    "lat": -33.9201784,
+    "lon": 151.1855250
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 892616332,
+  "center": {
+    "lat": -33.8967394,
+    "lon": 151.1849752
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Burren Street Reserve",
+    "operator": "City of Sydney",
+    "operator:type": "government",
+    "operator:wikidata": "Q1094194",
+    "operator:wikipedia": "en:City of Sydney",
+    "surface": "grass",
+    "survey:date": "2022-02-16"
+  }
+},
+{
+  "type": "way",
+  "id": 937482385,
+  "center": {
+    "lat": -33.8862450,
+    "lon": 151.1728513
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Matheison Street Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 937482392,
+  "center": {
+    "lat": -33.8866126,
+    "lon": 151.1725529
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 937507793,
+  "center": {
+    "lat": -33.9041179,
+    "lon": 151.1847629
+  },
+  "tags": {
+    "addr:housenumber": "67",
+    "addr:street": "MacDonald Street",
+    "leisure": "park",
+    "name": "Kirsova 1 Playground",
+    "name:etymology": "Hélène Kirsova",
+    "name:etymology:wikidata": "Q4958915",
+    "name:etymology:wikipedia": "en:Hélène Kirsova",
+    "website": "https://www.cityofsydney.nsw.gov.au/playgrounds/kirsova-1-playground"
+  }
+},
+{
+  "type": "way",
+  "id": 938290228,
+  "center": {
+    "lat": -33.8859650,
+    "lon": 151.1789275
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Lyons Road Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 940858249,
+  "center": {
+    "lat": -33.8869780,
+    "lon": 151.1725661
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 942468101,
+  "center": {
+    "lat": -33.8841609,
+    "lon": 151.1772233
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 942468102,
+  "center": {
+    "lat": -33.8840996,
+    "lon": 151.1765716
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 956073177,
+  "center": {
+    "lat": -33.9197413,
+    "lon": 151.1385801
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 956073178,
+  "center": {
+    "lat": -33.9199838,
+    "lon": 151.1380243
+  },
+  "tags": {
+    "leaf_type": "mixed",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 956073179,
+  "center": {
+    "lat": -33.9201858,
+    "lon": 151.1374373
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 956073180,
+  "center": {
+    "lat": -33.9204802,
+    "lon": 151.1382674
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 956073181,
+  "center": {
+    "lat": -33.9207404,
+    "lon": 151.1390454
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 956073182,
+  "center": {
+    "lat": -33.9208706,
+    "lon": 151.1395343
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 956073183,
+  "center": {
+    "lat": -33.9209647,
+    "lon": 151.1380828
+  },
+  "tags": {
+    "leaf_type": "mixed",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 956073184,
+  "center": {
+    "lat": -33.9213706,
+    "lon": 151.1382451
+  },
+  "tags": {
+    "leaf_type": "mixed",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 956073185,
+  "center": {
+    "lat": -33.9216135,
+    "lon": 151.1393223
+  },
+  "tags": {
+    "leaf_type": "mixed",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 956073186,
+  "center": {
+    "lat": -33.9212033,
+    "lon": 151.1395987
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 956073187,
+  "center": {
+    "lat": -33.9202136,
+    "lon": 151.1390821
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 956073201,
+  "center": {
+    "lat": -33.9145374,
+    "lon": 151.1387282
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 956073203,
+  "center": {
+    "lat": -33.9125233,
+    "lon": 151.1353849
+  },
+  "tags": {
+    "leaf_type": "mixed",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 956073206,
+  "center": {
+    "lat": -33.9118753,
+    "lon": 151.1353171
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 956073207,
+  "center": {
+    "lat": -33.9117626,
+    "lon": 151.1359869
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 956073208,
+  "center": {
+    "lat": -33.9128347,
+    "lon": 151.1365573
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 956073209,
+  "center": {
+    "lat": -33.9124140,
+    "lon": 151.1367121
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 956073210,
+  "center": {
+    "lat": -33.9122810,
+    "lon": 151.1370863
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 960023174,
+  "center": {
+    "lat": -33.9029177,
+    "lon": 151.1844096
+  },
+  "tags": {
+    "fixme": "this place has a name",
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 965505356,
+  "center": {
+    "lat": -33.9023302,
+    "lon": 151.1803791
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Gowrie Street Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 991854038,
+  "center": {
+    "lat": -33.8796841,
+    "lon": 151.1751342
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 998887587,
+  "center": {
+    "lat": -33.9270454,
+    "lon": 151.1640434
+  },
+  "tags": {
+    "alt_name": "Tempe Recreation Lands",
+    "description": "former shale quarry",
+    "leisure": "park",
+    "name": "Tempe Lands",
+    "operator": "Inner West Council",
+    "operator:wikidata": "Q56477648"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515963,
+  "center": {
+    "lat": -33.8777102,
+    "lon": 151.1776559
+  },
+  "tags": {
+    "area:highway": "traffic_island",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515964,
+  "center": {
+    "lat": -33.8779451,
+    "lon": 151.1779524
+  },
+  "tags": {
+    "area:highway": "traffic_island",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515966,
+  "center": {
+    "lat": -33.8785223,
+    "lon": 151.1786791
+  },
+  "tags": {
+    "area:highway": "traffic_island",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515967,
+  "center": {
+    "lat": -33.8789539,
+    "lon": 151.1792224
+  },
+  "tags": {
+    "area:highway": "traffic_island",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515968,
+  "center": {
+    "lat": -33.8791436,
+    "lon": 151.1794698
+  },
+  "tags": {
+    "area:highway": "traffic_island",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515972,
+  "center": {
+    "lat": -33.8795686,
+    "lon": 151.1800051
+  },
+  "tags": {
+    "area:highway": "traffic_island",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515973,
+  "center": {
+    "lat": -33.8798127,
+    "lon": 151.1803218
+  },
+  "tags": {
+    "area:highway": "traffic_island",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515975,
+  "center": {
+    "lat": -33.8791859,
+    "lon": 151.1783796
+  },
+  "tags": {
+    "area:highway": "traffic_island",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515977,
+  "center": {
+    "lat": -33.8778411,
+    "lon": 151.1777102
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515978,
+  "center": {
+    "lat": -33.8777622,
+    "lon": 151.1778091
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515979,
+  "center": {
+    "lat": -33.8781781,
+    "lon": 151.1781467
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515980,
+  "center": {
+    "lat": -33.8783345,
+    "lon": 151.1783433
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515981,
+  "center": {
+    "lat": -33.8782594,
+    "lon": 151.1784430
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515982,
+  "center": {
+    "lat": -33.8787509,
+    "lon": 151.1788709
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515983,
+  "center": {
+    "lat": -33.8788027,
+    "lon": 151.1791199
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515984,
+  "center": {
+    "lat": -33.8788710,
+    "lon": 151.1792141
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515985,
+  "center": {
+    "lat": -33.8789424,
+    "lon": 151.1791108
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515986,
+  "center": {
+    "lat": -33.8793881,
+    "lon": 151.1798804
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515987,
+  "center": {
+    "lat": -33.8795023,
+    "lon": 151.1798239
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515990,
+  "center": {
+    "lat": -33.8800449,
+    "lon": 151.1804719
+  },
+  "tags": {
+    "area:highway": "traffic_island",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515991,
+  "center": {
+    "lat": -33.8799583,
+    "lon": 151.1806198
+  },
+  "tags": {
+    "area:highway": "traffic_island",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515993,
+  "center": {
+    "lat": -33.8798640,
+    "lon": 151.1789758
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515998,
+  "center": {
+    "lat": -33.8787313,
+    "lon": 151.1773465
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007515999,
+  "center": {
+    "lat": -33.8786767,
+    "lon": 151.1775451
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007516000,
+  "center": {
+    "lat": -33.8782777,
+    "lon": 151.1781405
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1007516001,
+  "center": {
+    "lat": -33.8783407,
+    "lon": 151.1782015
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1008974197,
+  "center": {
+    "lat": -33.8839270,
+    "lon": 151.1746157
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 1016631267,
+  "center": {
+    "lat": -33.8750699,
+    "lon": 151.1529554
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1016631268,
+  "center": {
+    "lat": -33.8751242,
+    "lon": 151.1518459
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1020615347,
+  "center": {
+    "lat": -33.8810972,
+    "lon": 151.1544967
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1020615348,
+  "center": {
+    "lat": -33.8810278,
+    "lon": 151.1544826
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1020615349,
+  "center": {
+    "lat": -33.8808937,
+    "lon": 151.1565585
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1020615350,
+  "center": {
+    "lat": -33.8809670,
+    "lon": 151.1565700
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1020615351,
+  "center": {
+    "lat": -33.8809780,
+    "lon": 151.1566440
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1029168896,
+  "center": {
+    "lat": -33.9155899,
+    "lon": 151.1775436
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 1035597353,
+  "center": {
+    "lat": -33.9174356,
+    "lon": 151.1687271
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Sydenham Green"
+  }
+},
+{
+  "type": "way",
+  "id": 1035597360,
+  "center": {
+    "lat": -33.9180810,
+    "lon": 151.1683011
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1035597361,
+  "center": {
+    "lat": -33.9177972,
+    "lon": 151.1680197
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1035602278,
+  "center": {
+    "lat": -33.9181912,
+    "lon": 151.1681382
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1037885790,
+  "center": {
+    "lat": -33.9046140,
+    "lon": 151.1750515
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 1050569263,
+  "center": {
+    "lat": -33.9130728,
+    "lon": 151.1824677
+  },
+  "tags": {
+    "access": "yes",
+    "fenced": "yes",
+    "garden:type": "community",
+    "leisure": "garden",
+    "name": "Sydney City Farm",
+    "operator": "City of Sydney",
+    "operator:type": "public",
+    "website": "https://www.cityofsydney.nsw.gov.au/community-gardens/sydney-city-farm"
+  }
+},
+{
+  "type": "way",
+  "id": 1050600756,
+  "center": {
+    "lat": -33.9098293,
+    "lon": 151.1815704
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1050600757,
+  "center": {
+    "lat": -33.9099543,
+    "lon": 151.1819498
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1050600758,
+  "center": {
+    "lat": -33.9114467,
+    "lon": 151.1826402
+  },
+  "tags": {
+    "leaf_type": "mixed",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1050600759,
+  "center": {
+    "lat": -33.9102944,
+    "lon": 151.1830028
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1050600762,
+  "center": {
+    "lat": -33.9090719,
+    "lon": 151.1819605
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1050600763,
+  "center": {
+    "lat": -33.9088529,
+    "lon": 151.1839900
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1050600764,
+  "center": {
+    "lat": -33.9104200,
+    "lon": 151.1846386
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1050600765,
+  "center": {
+    "lat": -33.9106348,
+    "lon": 151.1849102
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1050600766,
+  "center": {
+    "lat": -33.9113756,
+    "lon": 151.1847235
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1050600769,
+  "center": {
+    "lat": -33.9089941,
+    "lon": 151.1817153
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1050600771,
+  "center": {
+    "lat": -33.9073535,
+    "lon": 151.1826225
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1050600772,
+  "center": {
+    "lat": -33.9132721,
+    "lon": 151.1824030
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1050606489,
+  "center": {
+    "lat": -33.9143498,
+    "lon": 151.1843276
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1050606492,
+  "center": {
+    "lat": -33.9130940,
+    "lon": 151.1823956
+  },
+  "tags": {
+    "garden:type": "vegetable_garden",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1050606493,
+  "center": {
+    "lat": -33.9130045,
+    "lon": 151.1824753
+  },
+  "tags": {
+    "garden:type": "vegetable_garden",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1050606494,
+  "center": {
+    "lat": -33.9131451,
+    "lon": 151.1825101
+  },
+  "tags": {
+    "garden:type": "vegetable_garden",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1050606495,
+  "center": {
+    "lat": -33.9131200,
+    "lon": 151.1825738
+  },
+  "tags": {
+    "garden:type": "vegetable_garden",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1050606496,
+  "center": {
+    "lat": -33.9131698,
+    "lon": 151.1824420
+  },
+  "tags": {
+    "garden:type": "vegetable_garden",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1050606497,
+  "center": {
+    "lat": -33.9131817,
+    "lon": 151.1823753
+  },
+  "tags": {
+    "garden:type": "vegetable_garden",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1050606498,
+  "center": {
+    "lat": -33.9131877,
+    "lon": 151.1823046
+  },
+  "tags": {
+    "garden:type": "vegetable_garden",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1050606499,
+  "center": {
+    "lat": -33.9127933,
+    "lon": 151.1823742
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1050606500,
+  "center": {
+    "lat": -33.9127986,
+    "lon": 151.1825086
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1050606501,
+  "center": {
+    "lat": -33.9128875,
+    "lon": 151.1823237
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1050606502,
+  "center": {
+    "lat": -33.9127278,
+    "lon": 151.1823329
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1050606503,
+  "center": {
+    "lat": -33.9130366,
+    "lon": 151.1822935
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1050606504,
+  "center": {
+    "lat": -33.9132338,
+    "lon": 151.1824647
+  },
+  "tags": {
+    "garden:type": "vegetable_garden",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1050617382,
+  "center": {
+    "lat": -33.9124451,
+    "lon": 151.1858804
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1050725855,
+  "center": {
+    "lat": -33.9131918,
+    "lon": 151.1510637
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1050732922,
+  "center": {
+    "lat": -33.8914969,
+    "lon": 151.1494942
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 1050732923,
+  "center": {
+    "lat": -33.8922589,
+    "lon": 151.1514006
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 1050732924,
+  "center": {
+    "lat": -33.8922885,
+    "lon": 151.1513111
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 1050732925,
+  "center": {
+    "lat": -33.8923999,
+    "lon": 151.1509839
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 1078411577,
+  "center": {
+    "lat": -33.8904504,
+    "lon": 151.1838350
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 1079900957,
+  "center": {
+    "lat": -33.8859714,
+    "lon": 151.1837272
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 1085036365,
+  "center": {
+    "lat": -33.9160966,
+    "lon": 151.1666320
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Memory Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 1091970487,
+  "center": {
+    "lat": -33.8781136,
+    "lon": 151.1674215
+  },
+  "tags": {
+    "access": "yes",
+    "email": "fowcvp13@gmail.com",
+    "garden:type": "community",
+    "leisure": "garden",
+    "name": "Whites Creek Food Forest",
+    "website": "https://www.facebook.com/whitescreekfoodforest/"
+  }
+},
+{
+  "type": "way",
+  "id": 1091970488,
+  "center": {
+    "lat": -33.8782779,
+    "lon": 151.1679446
+  },
+  "tags": {
+    "access": "yes",
+    "email": "fowcvp13@gmail.com",
+    "garden:type": "community",
+    "leisure": "garden",
+    "name": "Whites Creek Food Forest",
+    "website": "https://www.facebook.com/whitescreekfoodforest/"
+  }
+},
+{
+  "type": "way",
+  "id": 1091970489,
+  "center": {
+    "lat": -33.8787077,
+    "lon": 151.1673536
+  },
+  "tags": {
+    "access": "yes",
+    "email": "whites.creek.community.garden@gmail.com",
+    "garden:type": "community",
+    "leisure": "garden",
+    "name": "Whites Creek Community Garden",
+    "website": "https://www.facebook.com/WhitesCreekCommunity/"
+  }
+},
+{
+  "type": "way",
+  "id": 1102759225,
+  "center": {
+    "lat": -33.9079397,
+    "lon": 151.1535028
+  },
+  "tags": {
+    "garden:type": "residential",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1110223324,
+  "center": {
+    "lat": -33.8782978,
+    "lon": 151.1816407
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1110223325,
+  "center": {
+    "lat": -33.8784328,
+    "lon": 151.1814110
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1110223326,
+  "center": {
+    "lat": -33.8786076,
+    "lon": 151.1811072
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1110223327,
+  "center": {
+    "lat": -33.8787638,
+    "lon": 151.1808379
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1125530677,
+  "center": {
+    "lat": -33.9166406,
+    "lon": 151.1638483
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1125530678,
+  "center": {
+    "lat": -33.9165883,
+    "lon": 151.1649277
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1158431586,
+  "center": {
+    "lat": -33.8838650,
+    "lon": 151.1445340
+  },
+  "tags": {
+    "leisure": "garden",
+    "name": "Richard Stanton Memorial Garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1187042178,
+  "center": {
+    "lat": -33.8854372,
+    "lon": 151.1649904
+  },
+  "tags": {
+    "garden:type": "community",
+    "leisure": "garden",
+    "name": "Magic Lane"
+  }
+},
+{
+  "type": "way",
+  "id": 1187042180,
+  "center": {
+    "lat": -33.8868363,
+    "lon": 151.1627003
+  },
+  "tags": {
+    "barrier": "fence",
+    "leisure": "park",
+    "name": "Nestor Park"
+  }
+},
+{
+  "type": "way",
+  "id": 1187042720,
+  "center": {
+    "lat": -33.8828763,
+    "lon": 151.1661555
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Style Street Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 1192800676,
+  "center": {
+    "lat": -33.9104631,
+    "lon": 151.1374123
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1198209023,
+  "center": {
+    "lat": -33.8846159,
+    "lon": 151.1474860
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 1198209024,
+  "center": {
+    "lat": -33.8842919,
+    "lon": 151.1471363
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 1206858531,
+  "center": {
+    "lat": -33.9119045,
+    "lon": 151.1371590
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 1208217915,
+  "center": {
+    "lat": -33.9041209,
+    "lon": 151.1378525
+  },
+  "tags": {
+    "access": "private",
+    "garden:type": "residential",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1210015544,
+  "center": {
+    "lat": -33.9216806,
+    "lon": 151.1844726
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1210015546,
+  "center": {
+    "lat": -33.9215515,
+    "lon": 151.1845733
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1215286540,
+  "center": {
+    "lat": -33.9022667,
+    "lon": 151.1378869
+  },
+  "tags": {
+    "access": "no",
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 1216921148,
+  "center": {
+    "lat": -33.9107437,
+    "lon": 151.1410277
+  },
+  "tags": {
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 1219478894,
+  "center": {
+    "lat": -33.9017022,
+    "lon": 151.1849559
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1219478899,
+  "center": {
+    "lat": -33.9045634,
+    "lon": 151.1842792
+  },
+  "tags": {
+    "leaf_type": "mixed",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1219478902,
+  "center": {
+    "lat": -33.9027393,
+    "lon": 151.1850835
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 1219478903,
+  "center": {
+    "lat": -33.9031826,
+    "lon": 151.1846938
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1220440661,
+  "center": {
+    "lat": -33.8870323,
+    "lon": 151.1835497
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1220440662,
+  "center": {
+    "lat": -33.8873043,
+    "lon": 151.1831083
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1220440663,
+  "center": {
+    "lat": -33.8868741,
+    "lon": 151.1835230
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1220440665,
+  "center": {
+    "lat": -33.8868178,
+    "lon": 151.1838112
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1220440666,
+  "center": {
+    "lat": -33.8868303,
+    "lon": 151.1841475
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1220440667,
+  "center": {
+    "lat": -33.8868679,
+    "lon": 151.1842326
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1220440668,
+  "center": {
+    "lat": -33.8867374,
+    "lon": 151.1839501
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1220440671,
+  "center": {
+    "lat": -33.8879930,
+    "lon": 151.1829432
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1221245110,
+  "center": {
+    "lat": -33.9016371,
+    "lon": 151.1541096
+  },
+  "tags": {
+    "access": "permit",
+    "email": "wilkinsgreenmarrickville@gmail.com",
+    "garden:type": "community",
+    "leisure": "garden",
+    "name": "Wilkins Green",
+    "operator": "WIlkins Public School P&C",
+    "operator:type": "school",
+    "source": "local knowledge;streetlevel imagery",
+    "website": "https://www.innerwest.nsw.gov.au/explore/parks-sport-and-recreation/community-gardens/wilkins-green"
+  }
+},
+{
+  "type": "way",
+  "id": 1221245939,
+  "center": {
+    "lat": -33.9016343,
+    "lon": 151.1525759
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1221245940,
+  "center": {
+    "lat": -33.9016226,
+    "lon": 151.1515701
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1221245941,
+  "center": {
+    "lat": -33.9013534,
+    "lon": 151.1522183
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 1221245942,
+  "center": {
+    "lat": -33.9020658,
+    "lon": 151.1532129
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 1222380681,
+  "center": {
+    "lat": -33.9059605,
+    "lon": 151.1352396
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1222380684,
+  "center": {
+    "lat": -33.9059733,
+    "lon": 151.1355917
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1222652411,
+  "center": {
+    "lat": -33.9098350,
+    "lon": 151.1630205
+  },
+  "tags": {
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 1222652412,
+  "center": {
+    "lat": -33.9097028,
+    "lon": 151.1628882
+  },
+  "tags": {
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 1227790311,
+  "center": {
+    "lat": -33.8757357,
+    "lon": 151.1782243
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1227790312,
+  "center": {
+    "lat": -33.8757395,
+    "lon": 151.1776384
+  },
+  "tags": {
+    "abandoned": "yes",
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1231642939,
+  "center": {
+    "lat": -33.8749731,
+    "lon": 151.1787052
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1234194970,
+  "center": {
+    "lat": -33.8999879,
+    "lon": 151.1392503
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1235181808,
+  "center": {
+    "lat": -33.9036167,
+    "lon": 151.1377708
+  },
+  "tags": {
+    "garden:type": "residential",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1235182201,
+  "center": {
+    "lat": -33.9039979,
+    "lon": 151.1378323
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1242416200,
+  "center": {
+    "lat": -33.9164446,
+    "lon": 151.1651549
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1243100618,
+  "center": {
+    "lat": -33.8980844,
+    "lon": 151.1800114
+  },
+  "tags": {
+    "crop": "vegetable",
+    "email": "mc@alfalfahouse.org",
+    "garden:style": "kitchen",
+    "leisure": "garden",
+    "name": "Newtown Station Kitchen Garden",
+    "operator": "Alfalfa House Community Food Co-op",
+    "produce": "honey"
+  }
+},
+{
+  "type": "way",
+  "id": 1272463229,
+  "center": {
+    "lat": -33.8799669,
+    "lon": 151.1379959
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Federation Place"
+  }
+},
+{
+  "type": "way",
+  "id": 1272463243,
+  "center": {
+    "lat": -33.8795282,
+    "lon": 151.1391605
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1281859814,
+  "center": {
+    "lat": -33.9135789,
+    "lon": 151.1670253
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1281859839,
+  "center": {
+    "lat": -33.9161520,
+    "lon": 151.1596692
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1281859840,
+  "center": {
+    "lat": -33.9160311,
+    "lon": 151.1613508
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1281859841,
+  "center": {
+    "lat": -33.9155409,
+    "lon": 151.1593118
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1281859869,
+  "center": {
+    "lat": -33.9170743,
+    "lon": 151.1585980
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1282128413,
+  "center": {
+    "lat": -33.9150687,
+    "lon": 151.1515750
+  },
+  "tags": {
+    "garden:type": "residential",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1299462398,
+  "center": {
+    "lat": -33.8863939,
+    "lon": 151.1390767
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 1303266950,
+  "center": {
+    "lat": -33.9220225,
+    "lon": 151.1576509
+  },
+  "tags": {
+    "leaf_type": "mixed",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1303266964,
+  "center": {
+    "lat": -33.9223997,
+    "lon": 151.1574137
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1303266972,
+  "center": {
+    "lat": -33.9197408,
+    "lon": 151.1594938
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 1310866355,
+  "center": {
+    "lat": -33.9210330,
+    "lon": 151.1686580
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1312401971,
+  "center": {
+    "lat": -33.9203558,
+    "lon": 151.1672190
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1312401972,
+  "center": {
+    "lat": -33.9202964,
+    "lon": 151.1672967
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1312409385,
+  "center": {
+    "lat": -33.9171507,
+    "lon": 151.1770411
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1312409389,
+  "center": {
+    "lat": -33.9169703,
+    "lon": 151.1776719
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1312409391,
+  "center": {
+    "lat": -33.9166975,
+    "lon": 151.1774097
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1312409395,
+  "center": {
+    "lat": -33.9173126,
+    "lon": 151.1765572
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1356653891,
+  "center": {
+    "lat": -33.9077773,
+    "lon": 151.1716992
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1356653893,
+  "center": {
+    "lat": -33.9077762,
+    "lon": 151.1719072
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1369804698,
+  "center": {
+    "lat": -33.8855086,
+    "lon": 151.1786082
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "Daranggara Park",
+    "source:name": "https://meetings.cityofsydney.nsw.gov.au/ieDecisionDetails.aspx?AIId=18944"
+  }
+},
+{
+  "type": "way",
+  "id": 1385471396,
+  "center": {
+    "lat": -33.8912612,
+    "lon": 151.1828360
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 1385695857,
+  "center": {
+    "lat": -33.8926732,
+    "lon": 151.1452519
+  },
+  "tags": {
+    "leaf_type": "mixed",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1385695858,
+  "center": {
+    "lat": -33.8919539,
+    "lon": 151.1429325
+  },
+  "tags": {
+    "leaf_type": "mixed",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1385695859,
+  "center": {
+    "lat": -33.8920958,
+    "lon": 151.1436383
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1385695860,
+  "center": {
+    "lat": -33.8916749,
+    "lon": 151.1433128
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1385695869,
+  "center": {
+    "lat": -33.8902331,
+    "lon": 151.1478322
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1385695870,
+  "center": {
+    "lat": -33.8904400,
+    "lon": 151.1478582
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1385695876,
+  "center": {
+    "lat": -33.8764371,
+    "lon": 151.1504506
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1385695877,
+  "center": {
+    "lat": -33.8783257,
+    "lon": 151.1479443
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1417209194,
+  "center": {
+    "lat": -33.9110216,
+    "lon": 151.1764312
+  },
+  "tags": {
+    "leisure": "garden",
+    "name": "Brown Street Community Garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1417209237,
+  "center": {
+    "lat": -33.9178924,
+    "lon": 151.1683246
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1417209238,
+  "center": {
+    "lat": -33.9180626,
+    "lon": 151.1685032
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1443645280,
+  "center": {
+    "lat": -33.8777718,
+    "lon": 151.1518664
+  },
+  "tags": {
+    "access": "yes",
+    "leisure": "park",
+    "name": "Square Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 1444815397,
+  "center": {
+    "lat": -33.8945221,
+    "lon": 151.1797952
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1444815398,
+  "center": {
+    "lat": -33.8950577,
+    "lon": 151.1799530
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 1444815399,
+  "center": {
+    "lat": -33.8953132,
+    "lon": 151.1798854
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 1444815400,
+  "center": {
+    "lat": -33.8956343,
+    "lon": 151.1787163
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1444815401,
+  "center": {
+    "lat": -33.8947614,
+    "lon": 151.1783140
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1451357814,
+  "center": {
+    "lat": -33.9234984,
+    "lon": 151.1846551
+  },
+  "tags": {
+    "access": "private",
+    "garden:type": "residential",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1456463355,
+  "center": {
+    "lat": -33.8955894,
+    "lon": 151.1417423
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1456463373,
+  "center": {
+    "lat": -33.8937980,
+    "lon": 151.1426775
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1456463374,
+  "center": {
+    "lat": -33.8938115,
+    "lon": 151.1426674
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1456463375,
+  "center": {
+    "lat": -33.8938258,
+    "lon": 151.1426575
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1456463376,
+  "center": {
+    "lat": -33.8937865,
+    "lon": 151.1426858
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1456463377,
+  "center": {
+    "lat": -33.8938798,
+    "lon": 151.1426179
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1456463400,
+  "center": {
+    "lat": -33.8938083,
+    "lon": 151.1436839
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1456463401,
+  "center": {
+    "lat": -33.8937388,
+    "lon": 151.1436195
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1456463402,
+  "center": {
+    "lat": -33.8939173,
+    "lon": 151.1434803
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1456469681,
+  "center": {
+    "lat": -33.8942275,
+    "lon": 151.1550177
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1456469691,
+  "center": {
+    "lat": -33.8940274,
+    "lon": 151.1544881
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1456469692,
+  "center": {
+    "lat": -33.8940153,
+    "lon": 151.1545691
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1459938002,
+  "center": {
+    "lat": -33.9073955,
+    "lon": 151.1394246
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 1459938010,
+  "center": {
+    "lat": -33.8970188,
+    "lon": 151.1419477
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1459938012,
+  "center": {
+    "lat": -33.8958400,
+    "lon": 151.1425948
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1459938013,
+  "center": {
+    "lat": -33.8994482,
+    "lon": 151.1395053
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1464253890,
+  "center": {
+    "lat": -33.9090307,
+    "lon": 151.1766209
+  },
+  "tags": {
+    "leisure": "garden",
+    "natural": "shrubbery"
+  }
+},
+{
+  "type": "way",
+  "id": 1464253903,
+  "center": {
+    "lat": -33.9094965,
+    "lon": 151.1769395
+  },
+  "tags": {
+    "leisure": "garden",
+    "natural": "shrubbery"
+  }
+},
+{
+  "type": "way",
+  "id": 1489606088,
+  "center": {
+    "lat": -33.9153890,
+    "lon": 151.1658971
+  },
+  "tags": {
+    "access": "no",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1495976710,
+  "center": {
+    "lat": -33.9072728,
+    "lon": 151.1857136
+  },
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 1531335471,
+  "center": {
+    "lat": -33.9204206,
+    "lon": 151.1615718
+  },
+  "tags": {
+    "access": "private",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1533887514,
+  "center": {
+    "lat": -33.8956000,
+    "lon": 151.1505959
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1535665324,
+  "center": {
+    "lat": -33.8750443,
+    "lon": 151.1800021
+  },
+  "tags": {
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 1535665325,
+  "center": {
+    "lat": -33.8752623,
+    "lon": 151.1796236
+  },
+  "tags": {
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 1535665326,
+  "center": {
+    "lat": -33.8755213,
+    "lon": 151.1791748
+  },
+  "tags": {
+    "natural": "tree_row"
+  }
+},
+{
+  "type": "way",
+  "id": 1552464426,
+  "center": {
+    "lat": -33.8824023,
+    "lon": 151.1380911
+  },
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1553088203,
+  "center": {
+    "lat": -33.8849580,
+    "lon": 151.1351497
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1553088204,
+  "center": {
+    "lat": -33.8851760,
+    "lon": 151.1357630
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1553088205,
+  "center": {
+    "lat": -33.8854537,
+    "lon": 151.1361596
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1553088231,
+  "center": {
+    "lat": -33.8846548,
+    "lon": 151.1350987
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1553088232,
+  "center": {
+    "lat": -33.8850152,
+    "lon": 151.1360037
+  },
+  "tags": {
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1553090967,
+  "center": {
+    "lat": -33.8848841,
+    "lon": 151.1363721
+  },
+  "tags": {
+    "garden:type": "landscaping",
+    "leisure": "garden"
+  }
+},
+{
+  "type": "way",
+  "id": 1553090971,
+  "center": {
+    "lat": -33.8844178,
+    "lon": 151.1360884
+  },
+  "tags": {
+    "garden:type": "landscaping",
+    "leisure": "garden"
+  }
+}
+
+  ]
+}

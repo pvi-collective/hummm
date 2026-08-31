@@ -1,15 +1,15 @@
-# hummm — Redfern Field
+# hummm — Marrickville Field
 
-An experiment for finding living systems within the concrete jungle around Carriageworks and Wilson Street, Redfern.
+An experiment for finding living systems within the concrete jungle of Marrickville.
 
-## Version 0.3 — Redfern Field
+## Version 0.4 — Marrickville Field
 
-- Uses phone GPS and a bundled local slice of City of Sydney tree data.
-- Builds a nearby canopy field from tree location, canopy size, maturity and species variety.
+- Uses phone GPS and a bundled local slice of mapped Marrickville green-space features.
+- Builds a nearby living field from parks, gardens, tree rows and wooded areas.
 - Translates that field into a concrete interference pattern and a layered living call.
 - Location stays in the browser; it is not transmitted or stored.
 
-Tree data: City of Sydney asset register, filtered to the Redfern / Carriageworks testing area. The source records park and street trees and are used here only to create the local haptic field.
+Initial test data: OpenStreetMap mapped green-space features, filtered to Marrickville. This is deliberately a rapid field test rather than a complete local tree inventory; it is used only to create the local haptic field.
 
 ## Woojer testing
 
@@ -28,7 +28,7 @@ Design principles: Human Wayfinding; Trust before autonomy; Rhythm is language; 
 1. Open the GitHub Pages URL on an Android phone over HTTPS.
 2. Pair the Woojer and select it as the phone's audio output.
 3. Allow location access and begin the field walk.
-4. Test along Carriageworks Way and Wilson Street. Do not rely on the prototype for safety or navigation around traffic.
+4. Test within the Marrickville field. Do not rely on the prototype for safety or navigation around traffic.
 
 The screen remains minimal, but the small debug line shows the live field calculation and GPS accuracy for testing.
 
