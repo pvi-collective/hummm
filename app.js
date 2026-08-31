@@ -47,6 +47,14 @@ function describeField(reading) {
   if (reading.life < .78) return ['living field', 'canopy gathers · the rhythm deepens'];
   return ['contact', 'the street answers in rhythm'];
 }
+function showConcreteBaseline() {
+  field = { life: 0, maturity: 0, diversity: 0, nearby: 0 };
+  fieldValue.textContent = 'concrete pressure'; fieldHint.textContent = 'dense · electric · unsettled';
+  app.classList.remove('is-threshold', 'is-living', 'is-contact');
+  status.textContent = 'concrete signal active · finding position';
+  gpsPoint.textContent = 'gps point · acquiring';
+  debug.textContent = 'field 0 · maturity 0 · diversity 0 · GPS waiting';
+}
 function updateField(position) {
   field = readField(position.coords.latitude, position.coords.longitude);
   const [name, description] = describeField(field); fieldValue.textContent = name; fieldHint.textContent = description;
@@ -63,12 +71,12 @@ function playPulse(context, { frequency, strength, offset, duration, type = 'sin
 }
 function createConcretePattern(context, reading) {
   const oscillator = context.createOscillator(), gain = context.createGain(), start = context.currentTime;
-  const strength = .14 + (1 - reading.life) * .12, end = start + 1.55;
+  const strength = .34 + (1 - reading.life) * .14, end = start + 1.55;
   oscillator.type = 'sine'; oscillator.frequency.setValueAtTime(47 + Math.random() * 4, start);
   gain.gain.setValueAtTime(.0001, start);
   gain.gain.exponentialRampToValueAtTime(strength, start + .05);
-  gain.gain.linearRampToValueAtTime(strength * .68, start + .52);
-  gain.gain.linearRampToValueAtTime(strength * 1.08, start + 1.04);
+  gain.gain.linearRampToValueAtTime(strength * .84, start + .52);
+  gain.gain.linearRampToValueAtTime(strength * 1.02, start + 1.04);
   gain.gain.linearRampToValueAtTime(.0001, end);
   oscillator.connect(gain); gain.connect(context.destination); oscillator.start(start); oscillator.stop(end + .03); activeOscillators.push(oscillator);
   oscillator.addEventListener('ended', () => { activeOscillators = activeOscillators.filter((active) => active !== oscillator); }, { once: true });
@@ -108,9 +116,9 @@ async function releaseWakeLock() { if (wakeLock) { await wakeLock.release(); wak
 function locationError(error) { isWalking = false; clearAudio(); releaseWakeLock(); startButton.disabled = false; startButton.textContent = 'try again'; stopButton.disabled = true; status.textContent = 'location unavailable'; gpsPoint.textContent = 'gps point · unavailable'; debug.textContent = error.code === 1 ? 'allow location access, then try again.' : 'move outside or wait for a clearer GPS signal.'; }
 function startField() {
   if (!navigator.geolocation) { status.textContent = 'location is unavailable in this browser'; return; }
-  getAudioContext(); isWalking = true; startButton.disabled = true; startButton.textContent = 'reading the street'; stopButton.disabled = false; instruction.textContent = 'walk. let the rhythm pull you.'; app.classList.add('active'); status.textContent = 'finding your position'; gpsPoint.textContent = 'gps point · acquiring'; debug.textContent = 'allow location access to begin the field.';
-  watchId = navigator.geolocation.watchPosition(updateField, locationError, { enableHighAccuracy: true, maximumAge: 4000, timeout: 15000 });
-  scheduleFieldCycle();
+  isWalking = true; startButton.disabled = true; startButton.textContent = 'reading the street'; stopButton.disabled = false; instruction.textContent = 'walk. let the rhythm pull you.'; app.classList.add('active'); showConcreteBaseline();
+  try { getAudioContext(); scheduleFieldCycle(); } catch { status.textContent = 'audio could not begin'; }
+  try { watchId = navigator.geolocation.watchPosition(updateField, locationError, { enableHighAccuracy: true, maximumAge: 4000, timeout: 15000 }); } catch { locationError({ code: 0 }); }
   requestWakeLock();
 }
 function stopField() { isWalking = false; clearAudio(); releaseWakeLock(); if (watchId !== null) navigator.geolocation.clearWatch(watchId); watchId = null; app.classList.remove('active', 'is-threshold', 'is-living', 'is-contact'); startButton.disabled = false; startButton.textContent = 'begin field walk'; stopButton.disabled = true; instruction.textContent = 'let the street speak through the strap.'; fieldValue.textContent = 'waiting'; fieldHint.textContent = 'concrete is never silent.'; status.textContent = 'stopped'; gpsPoint.textContent = 'gps point · stopped'; debug.textContent = 'City of Sydney tree data · GPS stays on this device.'; }
