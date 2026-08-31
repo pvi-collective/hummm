@@ -9,6 +9,8 @@ const status = document.querySelector('#status');
 const debug = document.querySelector('#debug');
 const startButton = document.querySelector('#startButton');
 const stopButton = document.querySelector('#stopButton');
+const loader = document.querySelector('#loader');
+const loaderText = document.querySelector('#loaderText');
 let trees = [], audioContext = null, activeOscillators = [], fieldTimer = null, watchId = null, isWalking = false;
 let field = { life: 0, maturity: 0, diversity: 0, nearby: 0 };
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
@@ -87,6 +89,6 @@ fetch(DATA_URL).then((response) => { if (!response.ok) throw new Error('Green-sp
     geometry: { type: 'Point', coordinates: [element.center.lon, element.center.lat] },
     properties: { TreeCanopyNS: greenFeatureWeight(element.tags), Tree_Age: element.tags.natural === 'wood' ? 'Mature' : 'Semi-Mature', DBH_in_cm: greenFeatureWeight(element.tags) * 5, SpeciesName: element.tags.name || element.tags.natural || element.tags.leisure || element.tags.landuse, Tree_Status: 'Tree' }
   }));
-  startButton.disabled = false; startButton.textContent = 'begin field walk'; status.textContent = `${trees.length} green features ready`;
-}).catch(() => { status.textContent = 'green field could not load'; debug.textContent = 'check your connection, then reload.'; });
+  app.setAttribute('aria-busy', 'false'); loader.hidden = true; startButton.disabled = false; startButton.textContent = 'begin field walk'; status.textContent = `${trees.length} green features ready`;
+}).catch(() => { app.setAttribute('aria-busy', 'false'); loaderText.textContent = 'field unavailable'; status.textContent = 'green field could not load'; debug.textContent = 'check your connection, then reload.'; });
 startButton.addEventListener('click', startField); stopButton.addEventListener('click', stopField);

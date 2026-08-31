@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="app" id="app">
+  <main class="app" id="app" aria-busy="true">
     <p class="eyebrow">hummm · marrickville field</p>
     <div class="orb" id="orb" aria-hidden="true"></div>
     <h1>move and connect</h1>
@@ -18,7 +18,11 @@
       <p class="field-reading__value" id="fieldValue">waiting</p>
       <p class="field-reading__hint" id="fieldHint">concrete is never silent.</p>
     </section>
-    <button class="play" id="startButton" type="button" disabled>loading field</button>
+    <div class="loader" id="loader" role="status" aria-live="polite">
+      <span class="loader__line" aria-hidden="true"></span>
+      <span id="loaderText">preparing local field</span>
+    </div>
+    <button class="play" id="startButton" type="button" disabled>preparing field</button>
     <div class="controls"><button class="stop" id="stopButton" type="button" disabled>stop</button></div>
     <p class="status" id="status" role="status" aria-live="polite">loading Marrickville green field</p>
     <p class="debug" id="debug">OpenStreetMap green-space data · GPS stays on this device.</p>
