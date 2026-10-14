@@ -1,4 +1,4 @@
-/* hummm — Perth Cultural Centre Field: tree data and GPS stay local in the browser. */
+/* hummm — pcc test field: tree data and GPS stay local in the browser. */
 const DATA_URL = 'data/perth-cultural-centre-trees.geojson';
 const INFLUENCE_RADIUS_METRES = 90;
 const CONTACT_RADIUS_METRES = 15;
