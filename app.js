@@ -46,9 +46,9 @@ function readField(latitude, longitude) {
 }
 function describeField(reading) {
   if (!reading.nearest || reading.life < .2) return ['concrete bed', 'sparse · low · uneasy'];
-  if (reading.nearest.distance > 15 || reading.life < .48) return ['disturbance', 'something living is entering the field'];
-  if (reading.nearest.distance > 5 || reading.life < .78) return ['cascading field', 'pulses gather · the tree enters the body'];
-  return ['contact', 'hold the rhythm · several lives overlap'];
+  if (reading.nearest.distance > 15 || reading.life < .48) return ['disturbance', 'what is living is near'];
+  if (reading.nearest.distance > 5 || reading.life < .78) return ['cascading', 'pulses gather · allow a tree to enters your body'];
+  return ['contact', 'hold the rhythm · be one and be still . move on when ready'];
 }
 function showConcreteBaseline() {
   field = { life: 0, maturity: 0, diversity: 0, nearby: 0, nearest: null, canopy: 0 };
@@ -127,7 +127,7 @@ function locationProbeError(error) {
 }
 function startField() {
   if (!navigator.geolocation) { status.textContent = 'location is unavailable in this browser'; return; }
-  isWalking = true; startButton.disabled = true; startButton.textContent = 'reading the street'; stopButton.disabled = false; instruction.textContent = 'walk. let the rhythm pull you.'; app.classList.add('active'); showConcreteBaseline();
+  isWalking = true; startButton.disabled = true; startButton.textContent = 'reading beyond concrete'; stopButton.disabled = false; instruction.textContent = 'walk. let the rhythm pull you.'; app.classList.add('active'); showConcreteBaseline();
   try { getAudioContext(); scheduleFieldCycle(); } catch { status.textContent = 'audio could not begin'; }
   const locationOptions = { enableHighAccuracy: true, maximumAge: 4000, timeout: 15000 };
   try {
@@ -140,6 +140,6 @@ function stopField() { isWalking = false; clearAudio(); releaseWakeLock(); if (w
 document.addEventListener('visibilitychange', () => { if (isWalking && document.visibilityState === 'visible' && !wakeLock) requestWakeLock(); });
 fetch(DATA_URL).then((response) => { if (!response.ok) throw new Error('Tree data could not load'); return response.json(); }).then((data) => {
   trees = data.features.filter((tree) => tree.geometry?.type === 'Point' && tree.properties?.RETIRED !== 'Yes');
-  app.setAttribute('aria-busy', 'false'); loader.hidden = true; startButton.disabled = false; startButton.textContent = 'begin field walk'; status.textContent = `${trees.length} Perth trees ready`;
+  app.setAttribute('aria-busy', 'false'); loader.hidden = true; startButton.disabled = false; startButton.textContent = 'begin concrete walk'; status.textContent = `${trees.length} perth trees ready`;
 }).catch(() => { app.setAttribute('aria-busy', 'false'); loaderText.textContent = 'field unavailable'; status.textContent = 'tree field could not load'; debug.textContent = 'check your connection, then reload.'; });
 startButton.addEventListener('click', startField); stopButton.addEventListener('click', stopField);
