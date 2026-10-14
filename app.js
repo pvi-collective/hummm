@@ -197,8 +197,8 @@ function locationProbeError(error) {
 }
 function startField() {
   if (!navigator.geolocation) { status.textContent = 'location is unavailable in this browser'; return; }
-  isWalking = true; startButton.disabled = true; startButton.textContent = 'reading the street'; stopButton.disabled = false; instruction.textContent = 'walk. find a tree. wait for contact.'; app.classList.add('active'); showConcreteBaseline();
-  try { getAudioContext(); } catch { status.textContent = 'audio could not begin'; }
+  isWalking = true; startButton.disabled = true; startButton.textContent = 'reading the street'; stopButton.disabled = false; instruction.textContent = 'move. find a tree. wait for contact.'; app.classList.add('active'); showConcreteBaseline();
+  try { getAudioContext(); } catch { status.textContent = 'connection could not begin'; }
   const locationOptions = { enableHighAccuracy: true, maximumAge: 4000, timeout: 15000 };
   try {
     watchId = navigator.geolocation.watchPosition(updateField, locationError, locationOptions);
@@ -210,6 +210,6 @@ function stopField() { isWalking = false; clearAudio(); releaseWakeLock(); if (w
 document.addEventListener('visibilitychange', () => { if (isWalking && document.visibilityState === 'visible' && !wakeLock) requestWakeLock(); });
 fetch(DATA_URL).then((response) => { if (!response.ok) throw new Error('Tree data could not load'); return response.json(); }).then((data) => {
   trees = data.features.filter((tree) => tree.geometry?.type === 'Point' && tree.properties?.RETIRED !== 'Yes').concat(manualContactTrees);
-  app.setAttribute('aria-busy', 'false'); loader.hidden = true; startButton.disabled = false; startButton.textContent = 'begin field walk'; status.textContent = `${trees.length} Perth trees ready`;
+  app.setAttribute('aria-busy', 'false'); loader.hidden = true; startButton.disabled = false; startButton.textContent = 'begin'; status.textContent = `${trees.length} Perth trees ready`;
 }).catch(() => { app.setAttribute('aria-busy', 'false'); loaderText.textContent = 'field unavailable'; status.textContent = 'tree field could not load'; debug.textContent = 'check your connection, then reload.'; });
 startButton.addEventListener('click', startField); stopButton.addEventListener('click', stopField);
