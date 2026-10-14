@@ -1,7 +1,9 @@
 /* hummm — pcc test field: tree data and GPS stay local in the browser. */
 const DATA_URL = 'data/perth-cultural-centre-trees.geojson';
 const INFLUENCE_RADIUS_METRES = 90;
-const CONTACT_RADIUS_METRES = 15;
+const CONTACT_RADIUS_METRES = 18;
+const CONTACT_EXIT_RADIUS_METRES = 28;
+const LISTEN_DURATION_MS = 3200;
 const app = document.querySelector('#app');
 const instruction = document.querySelector('#instruction');
 const fieldValue = document.querySelector('#fieldValue');
@@ -13,8 +15,14 @@ const startButton = document.querySelector('#startButton');
 const stopButton = document.querySelector('#stopButton');
 const loader = document.querySelector('#loader');
 const loaderText = document.querySelector('#loaderText');
+const contactState = document.querySelector('#contactState');
 let trees = [], audioContext = null, activeOscillators = [], fieldTimer = null, watchId = null, wakeLock = null, isWalking = false;
 let field = { life: 0, maturity: 0, diversity: 0, nearby: 0, nearest: null, canopy: 0 };
+let contactPhase = 'silent', contactTimer = null, presenceOscillator = null, presenceGain = null, microphoneStream = null, analyser = null, voiceDetected = false;
+const manualContactTrees = [
+  { type: 'Feature', geometry: { type: 'Point', coordinates: [115.86011825711716, -31.950042702115724] }, properties: { TREE_ID: 'hummm-contact-a', BOTANICAL_NAME: 'local tree · northbridge contact', COMMON_NAME: 'contact tree', TREE_HEIGHT: 12, MANUAL_CONTACT: true } },
+  { type: 'Feature', geometry: { type: 'Point', coordinates: [115.860145, -31.950025] }, properties: { TREE_ID: 'hummm-contact-b', BOTANICAL_NAME: 'local tree · northbridge contact', COMMON_NAME: 'contact tree', TREE_HEIGHT: 9, MANUAL_CONTACT: true } }
+];
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 const treeHeight = (tree) => clamp(Number(tree.properties?.TREE_HEIGHT) || 8, 3, 30);
 const canopyRadius = (tree) => clamp(treeHeight(tree) * .42, 2.5, 13);
@@ -45,10 +53,10 @@ function readField(latitude, longitude) {
   return { life: clamp(Math.sqrt(canopy / 42), 0, 1), maturity: clamp(maturity / 4.5, 0, 1), diversity: clamp(species.size / 5, 0, 1), nearby, nearest, canopy: clamp(canopy / 42, 0, 1) };
 }
 function describeField(reading) {
-  if (!reading.nearest || reading.life < .2) return ['concrete bed', 'sparse · low · uneasy'];
-  if (reading.nearest.distance > 15 || reading.life < .48) return ['disturbance', 'what is living is near'];
-  if (reading.nearest.distance > 5 || reading.life < .78) return ['cascading', 'pulses gather · allow a tree to enters your body'];
-  return ['contact', 'hold the rhythm · be one and be still . move on when ready'];
+  if (!reading.nearest || reading.nearest.distance > 45) return ['concrete bed', 'sparse · low · uneasy'];
+  if (reading.nearest.distance > CONTACT_RADIUS_METRES) return ['disturbance', 'something living is entering the field'];
+  if (reading.nearest.distance > 5) return ['cascading field', 'pulses gather · the tree enters the body'];
+  return ['contact', 'hold the rhythm · several lives overlap'];
 }
 function showConcreteBaseline() {
   field = { life: 0, maturity: 0, diversity: 0, nearby: 0, nearest: null, canopy: 0 };
@@ -57,15 +65,19 @@ function showConcreteBaseline() {
   status.textContent = 'concrete signal active · finding position';
   gpsPoint.textContent = 'gps point · acquiring';
   debug.textContent = 'field 0 · maturity 0 · diversity 0 · GPS waiting';
+  contactState.textContent = 'the field is quiet until you arrive';
 }
 function updateField(position) {
   field = readField(position.coords.latitude, position.coords.longitude);
   const [name, description] = describeField(field); fieldValue.textContent = name; fieldHint.textContent = description;
-  app.classList.toggle('is-threshold', field.life >= .23 && field.life < .5); app.classList.toggle('is-living', field.life >= .5 && field.life < .78); app.classList.toggle('is-contact', field.life >= .78);
+  const nearTree = field.nearest?.distance || Infinity;
+  app.classList.toggle('is-threshold', nearTree <= 45 && nearTree > CONTACT_RADIUS_METRES); app.classList.toggle('is-living', field.life >= .5 || (nearTree <= CONTACT_RADIUS_METRES && nearTree > 5)); app.classList.toggle('is-contact', nearTree <= 5);
   const nearestText = field.nearest ? ` · nearest ${Math.round(field.nearest.distance)}m` : '';
   status.textContent = `${field.nearby} trees within ${INFLUENCE_RADIUS_METRES}m${nearestText}`;
   gpsPoint.textContent = `gps point · ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)} · ±${Math.round(position.coords.accuracy)}m`;
   debug.textContent = `field ${Math.round(field.life * 100)} · maturity ${Math.round(field.maturity * 100)} · diversity ${Math.round(field.diversity * 100)} · GPS ±${Math.round(position.coords.accuracy)}m${wakeLock ? ' · screen awake' : ''}`;
+  if (isWalking && field.nearest && field.nearest.distance <= CONTACT_RADIUS_METRES) enterContact();
+  else if (isWalking && (!field.nearest || field.nearest.distance > CONTACT_EXIT_RADIUS_METRES)) leaveContact();
 }
 function playPulse(context, { frequency, strength, offset, duration, type = 'sine' }) {
   const oscillator = context.createOscillator(), gain = context.createGain(), start = context.currentTime + offset / 1000, end = start + duration / 1000;
@@ -108,13 +120,71 @@ function createContactPattern(context, reading) {
 }
 function playFieldCycle() {
   const context = getAudioContext(); if (!context) return;
+  if (contactPhase !== 'responding') return;
   if (field.life < .23) createConcretePattern(context, field);
   else if (field.life < .5) createThresholdPattern(context, field);
   else if (field.life < .78) createLivingPattern(context, field);
   else createContactPattern(context, field);
 }
-function scheduleFieldCycle() { if (!isWalking) return; playFieldCycle(); fieldTimer = window.setTimeout(scheduleFieldCycle, field.nearest && field.nearest.distance <= CONTACT_RADIUS_METRES ? 2600 : 1450); }
-function clearAudio() { window.clearTimeout(fieldTimer); fieldTimer = null; activeOscillators.forEach((oscillator) => { try { oscillator.stop(); } catch { /* already ended */ } }); activeOscillators = []; }
+function scheduleFieldCycle() { if (!isWalking || contactPhase !== 'responding') return; playFieldCycle(); fieldTimer = window.setTimeout(scheduleFieldCycle, 2600); }
+function stopPresence() {
+  if (presenceOscillator) { try { presenceOscillator.stop(); } catch { /* already ended */ } }
+  presenceOscillator = null; presenceGain = null;
+}
+function closeMicrophone() {
+  if (microphoneStream) microphoneStream.getTracks().forEach((track) => track.stop());
+  microphoneStream = null; analyser = null;
+}
+function clearAudio() {
+  window.clearTimeout(fieldTimer); fieldTimer = null; window.clearTimeout(contactTimer); contactTimer = null;
+  activeOscillators.forEach((oscillator) => { try { oscillator.stop(); } catch { /* already ended */ } });
+  activeOscillators = []; stopPresence(); closeMicrophone(); contactPhase = 'silent';
+}
+function startPresence() {
+  const context = getAudioContext(); if (!context || presenceOscillator) return;
+  presenceOscillator = context.createOscillator(); presenceGain = context.createGain();
+  presenceOscillator.type = 'sine'; presenceOscillator.frequency.setValueAtTime(41, context.currentTime);
+  presenceGain.gain.setValueAtTime(.0001, context.currentTime); presenceGain.gain.exponentialRampToValueAtTime(.27, context.currentTime + .25);
+  presenceOscillator.connect(presenceGain); presenceGain.connect(context.destination); presenceOscillator.start();
+}
+async function prepareMicrophone() {
+  if (microphoneStream || !navigator.mediaDevices?.getUserMedia) return;
+  try {
+    microphoneStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true }, video: false });
+    const context = getAudioContext(); analyser = context?.createAnalyser() || null;
+    if (analyser) { analyser.fftSize = 256; const source = context.createMediaStreamSource(microphoneStream); source.connect(analyser); }
+    if (contactPhase === 'listening') monitorVoice();
+  } catch { contactState.textContent = 'the tree is present · listening remains quiet'; }
+}
+function monitorVoice() {
+  if (contactPhase !== 'listening' || !analyser) return;
+  const samples = new Uint8Array(analyser.fftSize); analyser.getByteTimeDomainData(samples);
+  let energy = 0; samples.forEach((sample) => { const value = (sample - 128) / 128; energy += value * value; });
+  if (Math.sqrt(energy / samples.length) > .045) voiceDetected = true;
+  window.requestAnimationFrame(monitorVoice);
+}
+function finishListening() {
+  if (contactPhase !== 'listening') return;
+  contactPhase = 'responding'; contactState.textContent = voiceDetected ? 'the tree is answering' : 'the tree shifts in response';
+  const context = getAudioContext(); if (context) createContactPattern(context, { ...field, maturity: clamp(field.maturity + (voiceDetected ? .15 : 0), 0, 1) });
+  contactTimer = window.setTimeout(beginListening, 2300);
+}
+async function beginListening() {
+  if (!isWalking || contactPhase === 'silent') return;
+  contactPhase = 'listening'; voiceDetected = false; contactState.textContent = 'listening · make a sound or speak';
+  prepareMicrophone(); monitorVoice();
+  window.clearTimeout(contactTimer); contactTimer = window.setTimeout(finishListening, LISTEN_DURATION_MS);
+}
+function enterContact() {
+  if (contactPhase !== 'silent') return;
+  contactPhase = 'presence'; startPresence(); contactState.textContent = 'contact · the tree is here';
+  contactTimer = window.setTimeout(beginListening, 900);
+}
+function leaveContact() {
+  if (contactPhase === 'silent') return;
+  contactPhase = 'silent'; window.clearTimeout(contactTimer); contactTimer = null; stopPresence(); closeMicrophone();
+  contactState.textContent = 'the contact fades into the street';
+}
 async function requestWakeLock() {
   if (!('wakeLock' in navigator)) return;
   try { wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); } catch { wakeLock = null; }
@@ -127,8 +197,8 @@ function locationProbeError(error) {
 }
 function startField() {
   if (!navigator.geolocation) { status.textContent = 'location is unavailable in this browser'; return; }
-  isWalking = true; startButton.disabled = true; startButton.textContent = 'reading beyond concrete'; stopButton.disabled = false; instruction.textContent = 'walk. let the rhythm pull you.'; app.classList.add('active'); showConcreteBaseline();
-  try { getAudioContext(); scheduleFieldCycle(); } catch { status.textContent = 'audio could not begin'; }
+  isWalking = true; startButton.disabled = true; startButton.textContent = 'reading the street'; stopButton.disabled = false; instruction.textContent = 'walk. find a tree. wait for contact.'; app.classList.add('active'); showConcreteBaseline();
+  try { getAudioContext(); } catch { status.textContent = 'audio could not begin'; }
   const locationOptions = { enableHighAccuracy: true, maximumAge: 4000, timeout: 15000 };
   try {
     watchId = navigator.geolocation.watchPosition(updateField, locationError, locationOptions);
@@ -136,10 +206,10 @@ function startField() {
   } catch { locationError({ code: 0 }); }
   requestWakeLock();
 }
-function stopField() { isWalking = false; clearAudio(); releaseWakeLock(); if (watchId !== null) navigator.geolocation.clearWatch(watchId); watchId = null; app.classList.remove('active', 'is-threshold', 'is-living', 'is-contact'); startButton.disabled = false; startButton.textContent = 'begin field walk'; stopButton.disabled = true; instruction.textContent = 'let the street speak through the strap.'; fieldValue.textContent = 'waiting'; fieldHint.textContent = 'concrete is never silent.'; status.textContent = 'stopped'; gpsPoint.textContent = 'gps point · stopped'; debug.textContent = 'City of Perth tree data · GPS stays on this device.'; }
+function stopField() { isWalking = false; clearAudio(); releaseWakeLock(); if (watchId !== null) navigator.geolocation.clearWatch(watchId); watchId = null; app.classList.remove('active', 'is-threshold', 'is-living', 'is-contact'); startButton.disabled = false; startButton.textContent = 'begin field walk'; stopButton.disabled = true; instruction.textContent = 'let the street speak through the strap.'; fieldValue.textContent = 'waiting'; fieldHint.textContent = 'concrete is never silent.'; status.textContent = 'stopped'; gpsPoint.textContent = 'gps point · stopped'; contactState.textContent = 'the field is quiet until you arrive'; debug.textContent = 'City of Perth tree data · GPS stays on this device.'; }
 document.addEventListener('visibilitychange', () => { if (isWalking && document.visibilityState === 'visible' && !wakeLock) requestWakeLock(); });
 fetch(DATA_URL).then((response) => { if (!response.ok) throw new Error('Tree data could not load'); return response.json(); }).then((data) => {
-  trees = data.features.filter((tree) => tree.geometry?.type === 'Point' && tree.properties?.RETIRED !== 'Yes');
-  app.setAttribute('aria-busy', 'false'); loader.hidden = true; startButton.disabled = false; startButton.textContent = 'begin concrete walk'; status.textContent = `${trees.length} perth trees ready`;
+  trees = data.features.filter((tree) => tree.geometry?.type === 'Point' && tree.properties?.RETIRED !== 'Yes').concat(manualContactTrees);
+  app.setAttribute('aria-busy', 'false'); loader.hidden = true; startButton.disabled = false; startButton.textContent = 'begin field walk'; status.textContent = `${trees.length} Perth trees ready`;
 }).catch(() => { app.setAttribute('aria-busy', 'false'); loaderText.textContent = 'field unavailable'; status.textContent = 'tree field could not load'; debug.textContent = 'check your connection, then reload.'; });
 startButton.addEventListener('click', startField); stopButton.addEventListener('click', stopField);
