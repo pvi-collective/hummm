@@ -65,7 +65,7 @@ function readField(latitude, longitude) {
 function describeField(reading) {
   if (!reading.nearest || reading.nearest.distance > 45) return ['concrete bed', 'find a marked tree'];
   if (reading.nearest.distance > CONTACT_RADIUS_METRES) return ['tree nearby', 'move closer · the field will notice'];
-  if (!encounterConfirmed) return ['encounter', 'hold the phone out · turn slowly once'];
+  if (!encounterConfirmed) return ['encounter', 'hold the phone out · rotate once through a full circle'];
   return ['contact', `${reading.nearest.signature.name} · ${Math.round(reading.nearest.distance)}m`];
 }
 function showConcreteBaseline() {
@@ -221,7 +221,7 @@ async function beginListening() {
 }
 function enterContact() {
   if (contactPhase !== 'silent') return;
-  encounterConfirmed = false; orientationHeading = null; orientationTravel = 0; contactPhase = 'presence'; startPresence(field); contactState.textContent = 'tree nearby · turn slowly once';
+  encounterConfirmed = false; orientationHeading = null; orientationTravel = 0; contactPhase = 'presence'; startPresence(field); contactState.textContent = 'tree nearby · hold the phone out · rotate once through a full circle';
   if (!orientationListening) requestOrientation();
   contactTimer = window.setTimeout(() => { if (!encounterConfirmed) confirmEncounter('contact · movement sensor unavailable'); }, CONTACT_CONFIRM_FALLBACK_MS);
 }
@@ -242,7 +242,7 @@ function locationProbeError(error) {
 }
 function startField() {
   if (!navigator.geolocation) { status.textContent = 'location is unavailable in this browser'; return; }
-  isWalking = true; startButton.disabled = true; startButton.textContent = 'reading the field'; stopButton.disabled = false; instruction.textContent = 'move. find a tree. turn slowly once.'; app.classList.add('active'); showConcreteBaseline();
+  isWalking = true; startButton.disabled = true; startButton.textContent = 'reading the field'; stopButton.disabled = false; instruction.textContent = 'move. find a tree. hold the phone out · rotate once through a full circle.'; app.classList.add('active'); showConcreteBaseline();
   try { getAudioContext(); requestOrientation(); } catch { status.textContent = 'connection could not begin'; }
   const locationOptions = { enableHighAccuracy: true, maximumAge: 4000, timeout: 15000 };
   try {
@@ -251,7 +251,7 @@ function startField() {
   } catch { locationError({ code: 0 }); }
   requestWakeLock();
 }
-function stopField() { isWalking = false; clearAudio(); releaseWakeLock(); if (watchId !== null) navigator.geolocation.clearWatch(watchId); watchId = null; app.classList.remove('active', 'is-threshold', 'is-living', 'is-contact'); startButton.disabled = false; startButton.textContent = 'begin encounter'; stopButton.disabled = true; instruction.textContent = 'find a tree · stand nearby · turn slowly once.'; fieldValue.textContent = 'waiting'; fieldHint.textContent = 'the field is quiet until you arrive.'; status.textContent = 'stopped'; gpsPoint.textContent = 'gps point · stopped'; treePoint.textContent = 'nearest tree · waiting'; contactState.textContent = 'the field is quiet until you arrive'; debug.textContent = 'city of perth tree data · gps stays on this device.'; }
+function stopField() { isWalking = false; clearAudio(); releaseWakeLock(); if (watchId !== null) navigator.geolocation.clearWatch(watchId); watchId = null; app.classList.remove('active', 'is-threshold', 'is-living', 'is-contact'); startButton.disabled = false; startButton.textContent = 'begin encounter'; stopButton.disabled = true; instruction.textContent = 'find a tree · hold the phone out · rotate once through a full circle.'; fieldValue.textContent = 'waiting'; fieldHint.textContent = 'the field is quiet until you arrive.'; status.textContent = 'stopped'; gpsPoint.textContent = 'gps point · stopped'; treePoint.textContent = 'nearest tree · waiting'; contactState.textContent = 'the field is quiet until you arrive'; debug.textContent = 'city of perth tree data · gps stays on this device.'; }
 document.addEventListener('visibilitychange', () => { if (isWalking && document.visibilityState === 'visible' && !wakeLock) requestWakeLock(); });
 fetch(DATA_URL).then((response) => { if (!response.ok) throw new Error('Tree data could not load'); return response.json(); }).then((data) => {
   trees = data.features.filter((tree) => tree.geometry?.type === 'Point' && tree.properties?.RETIRED !== 'Yes').concat(manualContactTrees);
