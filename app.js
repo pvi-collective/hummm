@@ -21,6 +21,7 @@ const treePoint = document.querySelector('#treePoint');
 let trees = [], audioContext = null, activeOscillators = [], fieldTimer = null, watchId = null, wakeLock = null, isWalking = false;
 let field = { life: 0, maturity: 0, diversity: 0, nearby: 0, nearest: null, canopy: 0 };
 let contactPhase = 'silent', contactTimer = null, presenceOscillator = null, presenceGain = null, microphoneStream = null, analyser = null, voiceDetected = false;
+let microphonePermissionState = 'unknown', orientationPermissionState = 'unknown';
 let orientationListening = false, orientationHeading = null, orientationTravel = 0, encounterConfirmed = false;
 const manualContactTrees = [
   { type: 'Feature', geometry: { type: 'Point', coordinates: [115.86011825711716, -31.950042702115724] }, properties: { TREE_ID: 'hummm-contact-a', BOTANICAL_NAME: 'local tree · northbridge contact', COMMON_NAME: 'contact tree', TREE_HEIGHT: 12, MANUAL_CONTACT: true } },
@@ -164,13 +165,17 @@ function startPresence(reading = field) {
   presenceOscillator.connect(presenceGain); presenceGain.connect(context.destination); presenceOscillator.start();
 }
 async function prepareMicrophone() {
-  if (microphoneStream || !navigator.mediaDevices?.getUserMedia) return;
+  if (microphoneStream) return true;
+  if (microphonePermissionState === 'denied') return false;
+  if (!navigator.mediaDevices?.getUserMedia) { microphonePermissionState = 'unavailable'; return false; }
   try {
     microphoneStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true }, video: false });
+    microphonePermissionState = 'ready';
     const context = getAudioContext(); analyser = context?.createAnalyser() || null;
     if (analyser) { analyser.fftSize = 256; const source = context.createMediaStreamSource(microphoneStream); source.connect(analyser); }
     if (contactPhase === 'listening') monitorVoice();
-  } catch { contactState.textContent = 'the tree is present · listening remains quiet'; }
+    return true;
+  } catch { microphonePermissionState = 'denied'; return false; }
 }
 function monitorVoice() {
   if (contactPhase !== 'listening' || !analyser) return;
@@ -196,16 +201,18 @@ function captureHeading(event) {
 }
 async function requestOrientation() {
   if (orientationListening) return true;
+  if (orientationPermissionState === 'denied' || orientationPermissionState === 'unavailable') return false;
   try {
     if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
       const permission = await DeviceOrientationEvent.requestPermission();
-      if (permission !== 'granted') return false;
+      if (permission !== 'granted') { orientationPermissionState = 'denied'; return false; }
     }
-    if (typeof DeviceOrientationEvent === 'undefined') return false;
+    if (typeof DeviceOrientationEvent === 'undefined') { orientationPermissionState = 'unavailable'; return false; }
+    orientationPermissionState = 'ready';
     orientationHeading = null; orientationTravel = 0; orientationListening = true;
     window.addEventListener('deviceorientation', captureHeading, true);
     return true;
-  } catch { return false; }
+  } catch { orientationPermissionState = 'denied'; return false; }
 }
 function confirmEncounter(message = 'contact · the tree is here') {
   if (encounterConfirmed || contactPhase === 'silent') return;
@@ -243,7 +250,16 @@ function locationProbeError(error) {
 function startField() {
   if (!navigator.geolocation) { status.textContent = 'location is unavailable in this browser'; return; }
   isWalking = true; startButton.disabled = true; startButton.textContent = 'reading the field'; stopButton.disabled = false; instruction.textContent = 'move. find a tree. hold the phone out · rotate once through a full circle.'; app.classList.add('active'); showConcreteBaseline();
-  try { getAudioContext(); requestOrientation(); } catch { status.textContent = 'connection could not begin'; }
+  contactState.textContent = 'allow access · location · motion · microphone';
+  try {
+    getAudioContext();
+    Promise.all([requestOrientation(), prepareMicrophone()]).then(([motionReady, microphoneReady]) => {
+      if (!isWalking || contactPhase !== 'silent') return;
+      if (!microphoneReady && microphonePermissionState === 'denied') contactState.textContent = 'microphone access unavailable · haptics still available';
+      else if (!motionReady && orientationPermissionState === 'denied') contactState.textContent = 'motion access unavailable · full circle skipped';
+      else contactState.textContent = 'the field is quiet until you arrive';
+    });
+  } catch { status.textContent = 'connection could not begin'; }
   const locationOptions = { enableHighAccuracy: true, maximumAge: 4000, timeout: 15000 };
   try {
     watchId = navigator.geolocation.watchPosition(updateField, locationError, locationOptions);
