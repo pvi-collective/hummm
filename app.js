@@ -104,6 +104,13 @@ function createConcretePattern(context, reading) {
   playPulse(context, { frequency: 45 + density * 4, strength: strength * .86, offset: 235 + Math.random() * 35, duration: 145 });
   playPulse(context, { frequency: 40 + density * 2, strength: strength * .42, offset: 650 + Math.random() * 100, duration: 115 });
 }
+function createNearTreePattern(context, reading) {
+  const signature = reading.nearest?.signature || treeSignature(reading.nearest?.tree || manualContactTrees[0]);
+  const base = 36 + signature.scale * 10 + (signature.seed % 6), strength = .52 + signature.scale * .12;
+  playPulse(context, { frequency: base, strength, offset: 0, duration: 260 + signature.scale * 100 });
+  playPulse(context, { frequency: base + 6, strength: strength * .82, offset: 260, duration: 180 + signature.scale * 80 });
+  playPulse(context, { frequency: base - 3, strength: strength * .7, offset: 560, duration: 300 + signature.scale * 130 });
+}
 function createThresholdPattern(context, reading) {
   createConcretePattern(context, reading);
   const approach = reading.nearest ? clamp(1 - reading.nearest.distance / INFLUENCE_RADIUS_METRES, 0, 1) : 0;
@@ -208,6 +215,7 @@ function captureHeading(event) {
   const heading = normaliseHeading(360 - event.alpha);
   if (orientationHeading === null) orientationHeading = heading;
   else { const delta = Math.abs(headingDelta(orientationHeading, heading)); orientationTravel += delta; if (encounterConfirmed) interactionMovement = clamp(interactionMovement + delta / 90, 0, 1); orientationHeading = heading; }
+  if (!encounterConfirmed && contactPhase === 'presence') contactState.textContent = `turning · ${Math.round(clamp(orientationTravel / 285, 0, 1) * 100)}%`;
   if (orientationTravel >= 285) confirmEncounter('the field has noticed you');
 }
 async function requestOrientation() {
@@ -241,6 +249,7 @@ async function beginListening() {
 function enterContact() {
   if (contactPhase !== 'silent') return;
   encounterConfirmed = false; orientationHeading = null; orientationTravel = 0; interactionMovement = 0; contactPhase = 'presence'; startPresence(field); contactState.textContent = 'tree nearby · hold the phone out · rotate once through a full circle';
+  const context = getAudioContext(); if (context) createNearTreePattern(context, field);
   if (!orientationListening) requestOrientation();
   contactTimer = window.setTimeout(() => { if (!encounterConfirmed) confirmEncounter('contact · movement sensor unavailable'); }, CONTACT_CONFIRM_FALLBACK_MS);
 }
