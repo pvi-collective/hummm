@@ -20,9 +20,9 @@ const contactState = document.querySelector('#contactState');
 const treePoint = document.querySelector('#treePoint');
 let trees = [], audioContext = null, activeOscillators = [], fieldTimer = null, watchId = null, wakeLock = null, isWalking = false;
 let field = { life: 0, maturity: 0, diversity: 0, nearby: 0, nearest: null, canopy: 0 };
-let contactPhase = 'silent', contactTimer = null, presenceOscillator = null, presenceGain = null, microphoneStream = null, analyser = null, voiceDetected = false;
+let contactPhase = 'silent', contactTimer = null, presenceOscillator = null, presenceGain = null, presenceLfo = null, presenceLfoGain = null, microphoneStream = null, analyser = null, voiceDetected = false;
 let microphonePermissionState = 'unknown', orientationPermissionState = 'unknown';
-let orientationListening = false, orientationHeading = null, orientationTravel = 0, encounterConfirmed = false;
+let orientationListening = false, orientationHeading = null, orientationTravel = 0, interactionMovement = 0, encounterConfirmed = false;
 const manualContactTrees = [
   { type: 'Feature', geometry: { type: 'Point', coordinates: [115.86011825711716, -31.950042702115724] }, properties: { TREE_ID: 'hummm-contact-a', BOTANICAL_NAME: 'local tree · northbridge contact', COMMON_NAME: 'contact tree', TREE_HEIGHT: 12, MANUAL_CONTACT: true } },
   { type: 'Feature', geometry: { type: 'Point', coordinates: [115.860145, -31.950025] }, properties: { TREE_ID: 'hummm-contact-b', BOTANICAL_NAME: 'local tree · northbridge contact', COMMON_NAME: 'contact tree', TREE_HEIGHT: 9, MANUAL_CONTACT: true } }
@@ -99,16 +99,10 @@ function playPulse(context, { frequency, strength, offset, duration, type = 'sin
   oscillator.addEventListener('ended', () => { activeOscillators = activeOscillators.filter((active) => active !== oscillator); }, { once: true });
 }
 function createConcretePattern(context, reading) {
-  const oscillator = context.createOscillator(), gain = context.createGain(), start = context.currentTime;
-  const strength = .34 + (1 - reading.life) * .14, end = start + 1.55;
-  oscillator.type = 'sine'; oscillator.frequency.setValueAtTime(47 + Math.random() * 4, start);
-  gain.gain.setValueAtTime(.0001, start);
-  gain.gain.exponentialRampToValueAtTime(strength, start + .05);
-  gain.gain.linearRampToValueAtTime(strength * .84, start + .52);
-  gain.gain.linearRampToValueAtTime(strength * 1.02, start + 1.04);
-  gain.gain.linearRampToValueAtTime(.0001, end);
-  oscillator.connect(gain); gain.connect(context.destination); oscillator.start(start); oscillator.stop(end + .03); activeOscillators.push(oscillator);
-  oscillator.addEventListener('ended', () => { activeOscillators = activeOscillators.filter((active) => active !== oscillator); }, { once: true });
+  const density = clamp((reading.nearby || 0) / 8, 0, 1), strength = .36 + density * .08;
+  playPulse(context, { frequency: 42 + density * 3, strength, offset: 0, duration: 190 });
+  playPulse(context, { frequency: 45 + density * 4, strength: strength * .86, offset: 235 + Math.random() * 35, duration: 145 });
+  playPulse(context, { frequency: 40 + density * 2, strength: strength * .42, offset: 650 + Math.random() * 100, duration: 115 });
 }
 function createThresholdPattern(context, reading) {
   createConcretePattern(context, reading);
@@ -125,7 +119,7 @@ function createLivingPattern(context, reading) {
 }
 function createContactPattern(context, reading) {
   const signature = reading.nearest?.signature || treeSignature(reading.nearest?.tree || manualContactTrees[0]);
-  const density = clamp(reading.nearby / 5, 0, 1), scale = signature.scale, strength = .58 + reading.maturity * .18 + scale * .16;
+  const density = clamp(reading.nearby / 5, 0, 1), scale = signature.scale, movement = interactionMovement, strength = (.58 + reading.maturity * .18 + scale * .16) * (1 + movement * .12);
   const wobble = signature.irregularity * 120, base = 36 + scale * 10 + (signature.seed % 7);
   playPulse(context, { frequency: base, strength, offset: 0, duration: 260 + scale * 140 });
   playPulse(context, { frequency: base + 5 + (signature.seed % 4), strength: strength * .86, offset: 240 + (signature.seed % 90), duration: 150 + scale * 100 });
@@ -133,19 +127,32 @@ function createContactPattern(context, reading) {
   playPulse(context, { frequency: base + 8 + density * 4, strength: strength * .7, offset: 930 + wobble * .7, duration: 180 + scale * 100 });
   playPulse(context, { frequency: base + 12, strength: strength * (.38 + density * .32), offset: 1320 + wobble * 1.2, duration: 140 + scale * 90 });
   if (scale > .6 || signature.age > .65) playPulse(context, { frequency: base - 7, strength: strength * .62, offset: 1660 + wobble, duration: 420 + scale * 180 });
+  interactionMovement = 0;
+}
+function createArrivalPattern(context, reading) {
+  const signature = reading.nearest?.signature || treeSignature(reading.nearest?.tree || manualContactTrees[0]);
+  const scale = signature.scale, base = 35 + scale * 11 + (signature.seed % 6), strength = .72 + scale * .2;
+  playPulse(context, { frequency: base, strength, offset: 0, duration: 280 + scale * 150 });
+  playPulse(context, { frequency: base + 7, strength: strength * .88, offset: 190, duration: 220 + scale * 110 });
+  playPulse(context, { frequency: base - 3, strength: strength * .92, offset: 470, duration: 420 + scale * 180 });
+  playPulse(context, { frequency: base + 11, strength: strength * .7, offset: 760 + signature.irregularity * 130, duration: 250 + scale * 130 });
+  playPulse(context, { frequency: base - 8, strength: strength * .68, offset: 1080, duration: 520 + scale * 220 });
+  playPulse(context, { frequency: base + 4, strength: strength * .55, offset: 1540 + signature.irregularity * 180, duration: 360 + scale * 180 });
 }
 function playFieldCycle() {
   const context = getAudioContext(); if (!context) return;
-  if (contactPhase !== 'responding') return;
-  if (field.life < .23) createConcretePattern(context, field);
+  if (contactPhase === 'silent') createConcretePattern(context, field);
+  else if (contactPhase !== 'responding') return;
+  else if (field.life < .23) createConcretePattern(context, field);
   else if (field.life < .5) createThresholdPattern(context, field);
   else if (field.life < .78) createLivingPattern(context, field);
   else createContactPattern(context, field);
 }
-function scheduleFieldCycle() { if (!isWalking || contactPhase !== 'responding') return; playFieldCycle(); fieldTimer = window.setTimeout(scheduleFieldCycle, 2600); }
+function scheduleFieldCycle() { if (!isWalking) return; playFieldCycle(); fieldTimer = window.setTimeout(scheduleFieldCycle, contactPhase === 'silent' ? 1900 : 2600); }
 function stopPresence() {
   if (presenceOscillator) { try { presenceOscillator.stop(); } catch { /* already ended */ } }
-  presenceOscillator = null; presenceGain = null;
+  if (presenceLfo) { try { presenceLfo.stop(); } catch { /* already ended */ } }
+  presenceOscillator = null; presenceGain = null; presenceLfo = null; presenceLfoGain = null;
 }
 function closeMicrophone() {
   if (microphoneStream) microphoneStream.getTracks().forEach((track) => track.stop());
@@ -161,8 +168,12 @@ function startPresence(reading = field) {
   presenceOscillator = context.createOscillator(); presenceGain = context.createGain();
   const signature = reading.nearest?.signature, scale = signature?.scale || .35;
   presenceOscillator.type = 'sine'; presenceOscillator.frequency.setValueAtTime(38 + scale * 10, context.currentTime);
-  presenceGain.gain.setValueAtTime(.0001, context.currentTime); presenceGain.gain.exponentialRampToValueAtTime(.22 + scale * .14, context.currentTime + .25);
+  presenceGain.gain.setValueAtTime(.0001, context.currentTime); presenceGain.gain.exponentialRampToValueAtTime(.32 + scale * .2, context.currentTime + .25);
   presenceOscillator.connect(presenceGain); presenceGain.connect(context.destination); presenceOscillator.start();
+  presenceLfo = context.createOscillator(); presenceLfoGain = context.createGain();
+  presenceLfo.frequency.setValueAtTime(.72 + (signature?.irregularity || .2) * 1.2, context.currentTime);
+  presenceLfoGain.gain.setValueAtTime(.1 + scale * .05, context.currentTime);
+  presenceLfo.connect(presenceLfoGain); presenceLfoGain.connect(presenceGain.gain); presenceLfo.start();
 }
 async function prepareMicrophone() {
   if (microphoneStream) return true;
@@ -196,7 +207,7 @@ function captureHeading(event) {
   if (!orientationListening || typeof event.alpha !== 'number') return;
   const heading = normaliseHeading(360 - event.alpha);
   if (orientationHeading === null) orientationHeading = heading;
-  else { orientationTravel += Math.abs(headingDelta(orientationHeading, heading)); orientationHeading = heading; }
+  else { const delta = Math.abs(headingDelta(orientationHeading, heading)); orientationTravel += delta; if (encounterConfirmed) interactionMovement = clamp(interactionMovement + delta / 90, 0, 1); orientationHeading = heading; }
   if (orientationTravel >= 285) confirmEncounter('the field has noticed you');
 }
 async function requestOrientation() {
@@ -217,7 +228,8 @@ async function requestOrientation() {
 function confirmEncounter(message = 'contact · the tree is here') {
   if (encounterConfirmed || contactPhase === 'silent') return;
   encounterConfirmed = true; contactPhase = 'presence'; window.clearTimeout(contactTimer); contactTimer = null;
-  app.classList.add('is-contact'); contactState.textContent = message;
+  interactionMovement = 0; app.classList.add('is-contact'); contactState.textContent = message;
+  const context = getAudioContext(); if (context) createArrivalPattern(context, field);
   contactTimer = window.setTimeout(beginListening, 900);
 }
 async function beginListening() {
@@ -228,14 +240,14 @@ async function beginListening() {
 }
 function enterContact() {
   if (contactPhase !== 'silent') return;
-  encounterConfirmed = false; orientationHeading = null; orientationTravel = 0; contactPhase = 'presence'; startPresence(field); contactState.textContent = 'tree nearby · hold the phone out · rotate once through a full circle';
+  encounterConfirmed = false; orientationHeading = null; orientationTravel = 0; interactionMovement = 0; contactPhase = 'presence'; startPresence(field); contactState.textContent = 'tree nearby · hold the phone out · rotate once through a full circle';
   if (!orientationListening) requestOrientation();
   contactTimer = window.setTimeout(() => { if (!encounterConfirmed) confirmEncounter('contact · movement sensor unavailable'); }, CONTACT_CONFIRM_FALLBACK_MS);
 }
 function leaveContact() {
   if (contactPhase === 'silent') return;
   contactPhase = 'silent'; window.clearTimeout(contactTimer); contactTimer = null; stopPresence(); closeMicrophone();
-  encounterConfirmed = false; orientationHeading = null; orientationTravel = 0; orientationListening = false; window.removeEventListener('deviceorientation', captureHeading, true); contactState.textContent = 'the contact fades into the street'; app.classList.remove('is-contact');
+  encounterConfirmed = false; orientationHeading = null; orientationTravel = 0; interactionMovement = 0; orientationListening = false; window.removeEventListener('deviceorientation', captureHeading, true); contactState.textContent = 'the contact fades into the street'; app.classList.remove('is-contact');
 }
 async function requestWakeLock() {
   if (!('wakeLock' in navigator)) return;
@@ -260,6 +272,7 @@ function startField() {
       else contactState.textContent = 'the field is quiet until you arrive';
     });
   } catch { status.textContent = 'connection could not begin'; }
+  scheduleFieldCycle();
   const locationOptions = { enableHighAccuracy: true, maximumAge: 4000, timeout: 15000 };
   try {
     watchId = navigator.geolocation.watchPosition(updateField, locationError, locationOptions);
