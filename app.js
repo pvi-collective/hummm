@@ -153,13 +153,19 @@ function createContactPattern(context, reading) {
 }
 function createArrivalPattern(context, reading) {
   const signature = reading.nearest?.signature || treeSignature(reading.nearest?.tree || manualContactTrees[0]);
-  const scale = signature.scale, base = 35 + scale * 11 + (signature.seed % 6), strength = .82 + scale * .18;
-  playPulse(context, { frequency: base, strength, offset: 0, duration: 280 + scale * 150 });
-  playPulse(context, { frequency: base + 7, strength: strength * .88, offset: 190, duration: 220 + scale * 110 });
-  playPulse(context, { frequency: base - 3, strength: strength * .92, offset: 470, duration: 420 + scale * 180 });
-  playPulse(context, { frequency: base + 11, strength: strength * .7, offset: 760 + signature.irregularity * 130, duration: 250 + scale * 130 });
-  playPulse(context, { frequency: base - 8, strength: strength * .68, offset: 1080, duration: 520 + scale * 220 });
-  playPulse(context, { frequency: base + 4, strength: strength * .55, offset: 1540 + signature.irregularity * 180, duration: 360 + scale * 180 });
+  const scale = signature.scale, base = 35 + scale * 11 + (signature.seed % 6), strength = .96 + scale * .16, wobble = signature.irregularity * 150;
+  // The arrival is deliberately overfull: overlapping, detuned pulses create
+  // the sense of a signal forcing its way through air and interference.
+  playPulse(context, { frequency: base, strength, offset: 0, duration: 300 + scale * 160, type: 'triangle' });
+  playPulse(context, { frequency: base + 9, strength: strength * .92, offset: 120, duration: 210 + scale * 120, type: 'sawtooth' });
+  playPulse(context, { frequency: base - 4, strength: strength * .9, offset: 260, duration: 470 + scale * 190, type: 'sine' });
+  playPulse(context, { frequency: base + 15, strength: strength * .74, offset: 390 + wobble * .2, duration: 180 + scale * 120, type: 'sawtooth' });
+  playPulse(context, { frequency: base - 11, strength: strength * .8, offset: 560 + wobble * .35, duration: 520 + scale * 220, type: 'triangle' });
+  playPulse(context, { frequency: base + 5, strength: strength * .7, offset: 780 + wobble * .5, duration: 260 + scale * 150, type: 'sawtooth' });
+  playPulse(context, { frequency: base + 18, strength: strength * .58, offset: 980 + wobble * .7, duration: 210 + scale * 120, type: 'triangle' });
+  playPulse(context, { frequency: base - 7, strength: strength * .76, offset: 1180 + wobble, duration: 540 + scale * 240, type: 'sine' });
+  playPulse(context, { frequency: base + 12, strength: strength * .55, offset: 1480 + wobble * 1.1, duration: 300 + scale * 160, type: 'sawtooth' });
+  playPulse(context, { frequency: base - 15, strength: strength * .5, offset: 1690 + wobble * 1.3, duration: 460 + scale * 220, type: 'triangle' });
 }
 function playFieldCycle() {
   const context = getAudioContext(); if (!context) return;
@@ -319,12 +325,12 @@ function startField() {
   contactState.textContent = 'allow access · location · motion · microphone';
   try {
     getAudioContext();
-    Promise.all([requestOrientation(), prepareMicrophone()]).then(([motionReady, microphoneReady]) => {
+    requestOrientation().then((motionReady) => prepareMicrophone().then((microphoneReady) => {
       if (!isWalking || contactPhase !== 'silent') return;
       if (!microphoneReady && microphonePermissionState === 'denied') contactState.textContent = 'microphone access unavailable · haptics still available';
       else if (!motionReady && orientationPermissionState === 'denied') contactState.textContent = 'motion access unavailable · full circle skipped';
       else contactState.textContent = 'the city hums · waiting for a tree';
-    });
+    }));
   } catch { status.textContent = 'connection could not begin'; }
   scheduleFieldCycle();
   const locationOptions = { enableHighAccuracy: true, maximumAge: 4000, timeout: 15000 };
