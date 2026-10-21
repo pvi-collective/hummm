@@ -25,7 +25,7 @@ let lastPosition = null;
 let selectedLocalTree = null;
 let contactPhase = 'silent', contactTimer = null, presenceOscillator = null, presenceGain = null, presenceLfo = null, presenceLfoGain = null;
 let orientationPermissionState = 'unknown';
-let orientationListening = false, orientationHeading = null, orientationTravel = 0, motionTravel = 0, lastMotionTime = 0, lastGestureTime = 0, lastAcceleration = null, lastRotationVector = null, coherentMotionMs = 0, interactionMovement = 0, encounterConfirmed = false;
+let orientationListening = false, orientationHeading = null, orientationTravel = 0, motionTravel = 0, lastMotionTime = 0, lastGestureTime = 0, lastAcceleration = null, lastRotationVector = null, coherentMotionMs = 0, motionEvidenceMs = 0, interactionMovement = 0, encounterConfirmed = false;
 const manualContactTrees = [
   { type: 'Feature', geometry: { type: 'Point', coordinates: [115.86011825711716, -31.950042702115724] }, properties: { TREE_ID: 'hummm-contact-a', BOTANICAL_NAME: 'local tree · northbridge contact', COMMON_NAME: 'contact tree', TREE_HEIGHT: 12, MANUAL_CONTACT: true } },
   { type: 'Feature', geometry: { type: 'Point', coordinates: [115.860145, -31.950025] }, properties: { TREE_ID: 'hummm-contact-b', BOTANICAL_NAME: 'local tree · northbridge contact', COMMON_NAME: 'contact tree', TREE_HEIGHT: 9, MANUAL_CONTACT: true } }
@@ -180,7 +180,7 @@ function closeMicrophone() {
 function clearAudio() {
   window.clearTimeout(fieldTimer); fieldTimer = null; window.clearTimeout(contactTimer); contactTimer = null;
   activeOscillators.forEach((oscillator) => { try { oscillator.stop(); } catch { /* already ended */ } });
-  activeOscillators = []; stopPresence(); closeMicrophone(); contactPhase = 'silent'; selectedLocalTree = null; orientationListening = false; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0;
+  activeOscillators = []; stopPresence(); closeMicrophone(); contactPhase = 'silent'; selectedLocalTree = null; orientationListening = false; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0;
   window.removeEventListener('deviceorientation', captureHeading, true); window.removeEventListener('devicemotion', captureMotion, true);
 }
 function startPresence() {
@@ -206,15 +206,15 @@ function captureHeading(event) {
   if (!orientationListening || typeof event.alpha !== 'number') return;
   const heading = normaliseHeading(360 - event.alpha);
   if (orientationHeading === null) orientationHeading = heading;
-  else { const delta = Math.abs(headingDelta(orientationHeading, heading)); if (encounterConfirmed && delta > 3) interactionMovement = clamp(interactionMovement + delta / 90, 0, 1); orientationHeading = heading; }
+  else { const delta = Math.abs(headingDelta(orientationHeading, heading)); if (!encounterConfirmed && motionEvidenceMs > 120 && delta > 2) orientationTravel += delta; if (encounterConfirmed && delta > 3) interactionMovement = clamp(interactionMovement + delta / 90, 0, 1); orientationHeading = heading; checkRotationProgress(); }
 }
 function captureMotion(event) {
   if (!orientationListening || !event.rotationRate) return;
   const gpsSpeed = lastPosition?.coords?.speed;
   const linearAcceleration = event.acceleration;
   const linearMagnitude = linearAcceleration ? Math.sqrt((linearAcceleration.x || 0) ** 2 + (linearAcceleration.y || 0) ** 2 + (linearAcceleration.z || 0) ** 2) : 0;
-  if ((Number.isFinite(gpsSpeed) && gpsSpeed > .3) || linearMagnitude > .35) {
-    motionTravel = 0; coherentMotionMs = 0; lastGestureTime = 0; return;
+  if ((Number.isFinite(gpsSpeed) && gpsSpeed > .3) || linearMagnitude > 1.2) {
+    orientationTravel = 0; motionTravel = 0; coherentMotionMs = 0; motionEvidenceMs = 0; lastGestureTime = 0; return;
   }
   const now = event.timeStamp || performance.now(), elapsed = lastMotionTime ? Math.min((now - lastMotionTime) / 1000, .2) : 0;
   lastMotionTime = now;
@@ -224,17 +224,17 @@ function captureMotion(event) {
   if (acceleration) lastAcceleration = { x: acceleration.x || 0, y: acceleration.y || 0, z: acceleration.z || 0 };
   const rotationVector = rate ? { x: (event.rotationRate.alpha || 0) / rate, y: (event.rotationRate.beta || 0) / rate, z: (event.rotationRate.gamma || 0) / rate } : null;
   const coherence = rotationVector && lastRotationVector ? rotationVector.x * lastRotationVector.x + rotationVector.y * lastRotationVector.y + rotationVector.z * lastRotationVector.z : 0;
-  const deliberateMotion = rate > 18 && (!acceleration || accelerationChange > .18) && coherence > .35;
+  const deliberateMotion = rate > 3 && (!acceleration || accelerationChange > .05) && coherence > .2;
   if (rotationVector) lastRotationVector = rotationVector;
-  if (deliberateMotion) { if (lastGestureTime && now - lastGestureTime > GESTURE_IDLE_RESET_MS) { orientationTravel = 0; motionTravel = 0; coherentMotionMs = 0; } lastGestureTime = now; motionTravel += rate * elapsed; coherentMotionMs += elapsed * 1000; }
-  else if (rate > 18) { coherentMotionMs = Math.max(0, coherentMotionMs - elapsed * 1800); motionTravel = Math.max(0, motionTravel - rate * elapsed * .7); }
+  if (deliberateMotion) { if (lastGestureTime && now - lastGestureTime > GESTURE_IDLE_RESET_MS) { orientationTravel = 0; motionTravel = 0; coherentMotionMs = 0; motionEvidenceMs = 0; } lastGestureTime = now; motionTravel += rate * elapsed; coherentMotionMs += elapsed * 1000; motionEvidenceMs += elapsed * 1000; }
+  else { coherentMotionMs = Math.max(0, coherentMotionMs - elapsed * 1800); motionEvidenceMs = Math.max(0, motionEvidenceMs - elapsed * 1800); motionTravel = Math.max(0, motionTravel - rate * elapsed * .7); }
   if (encounterConfirmed) interactionMovement = clamp(interactionMovement + rate * elapsed / 180, 0, 1);
   checkRotationProgress();
 }
 function checkRotationProgress() {
-  const travel = motionTravel;
-  if (!encounterConfirmed && coherentMotionMs > 250 && travel > 0 && (contactPhase === 'presence' || contactPhase === 'silent')) contactState.textContent = `turning · ${Math.round(clamp(travel / ROTATION_TARGET_DEGREES, 0, 1) * 100)}%`;
-  if (coherentMotionMs >= 900 && travel >= ROTATION_TARGET_DEGREES) {
+  const travel = orientationTravel;
+  if (!encounterConfirmed && motionEvidenceMs > 120 && travel > 0 && (contactPhase === 'presence' || contactPhase === 'silent')) contactState.textContent = `turning · ${Math.round(clamp(travel / ROTATION_TARGET_DEGREES, 0, 1) * 100)}%`;
+  if (motionEvidenceMs >= 300 && travel >= ROTATION_TARGET_DEGREES) {
     contactState.textContent = 'circle complete · opening connection';
     if (contactPhase === 'presence') confirmEncounter('the connection is open');
     else if (contactPhase === 'silent') selectLocalEncounter();
@@ -254,7 +254,7 @@ async function requestOrientation() {
     }
     if (typeof DeviceOrientationEvent === 'undefined' && typeof DeviceMotionEvent === 'undefined') { orientationPermissionState = 'unavailable'; return false; }
     orientationPermissionState = 'ready';
-    orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; orientationListening = true;
+    orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0; orientationListening = true;
     if (typeof DeviceOrientationEvent !== 'undefined') window.addEventListener('deviceorientation', captureHeading, true);
     if (typeof DeviceMotionEvent !== 'undefined') window.addEventListener('devicemotion', captureMotion, true);
     return true;
@@ -268,13 +268,13 @@ function confirmEncounter(message = 'contact · the tree is here') {
 }
 function enterContact() {
   if (contactPhase !== 'silent') return;
-  encounterConfirmed = false; selectedLocalTree = field.nearest; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; interactionMovement = 0; contactPhase = 'presence'; startPresence(field); contactState.textContent = 'tree nearby · hold the phone out · rotate once through a full circle';
+  encounterConfirmed = false; selectedLocalTree = field.nearest; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0; interactionMovement = 0; contactPhase = 'presence'; startPresence(field); contactState.textContent = 'tree nearby · hold the phone out · rotate once through a full circle';
   if (!orientationListening) requestOrientation();
 }
 function leaveContact() {
   if (contactPhase === 'silent') return;
   contactPhase = 'silent'; window.clearTimeout(contactTimer); contactTimer = null; stopPresence(); closeMicrophone();
-  encounterConfirmed = false; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; interactionMovement = 0; orientationListening = false; window.removeEventListener('deviceorientation', captureHeading, true); window.removeEventListener('devicemotion', captureMotion, true); contactState.textContent = 'the contact fades into the street'; app.classList.remove('is-contact');
+  encounterConfirmed = false; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0; interactionMovement = 0; orientationListening = false; window.removeEventListener('deviceorientation', captureHeading, true); window.removeEventListener('devicemotion', captureMotion, true); contactState.textContent = 'the contact fades into the street'; app.classList.remove('is-contact');
   selectedLocalTree = null;
 }
 async function requestWakeLock() {
