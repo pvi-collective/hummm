@@ -9,14 +9,10 @@
 </head>
 <body>
   <main class="app" id="app" aria-busy="true">
-    <p class="eyebrow">hummm · pcc · v0.16.6</p>
+    <p class="eyebrow">hummm · pcc · v0.17.0</p>
     <div class="orb" id="orb" aria-hidden="true"></div>
-    <h1>connector</h1>
-    <p class="instruction" id="instruction">find a tree · hold the phone out · rotate once through a full circle.</p>
-    <section class="field-reading" aria-label="connection state">
-      <p class="field-reading__value" id="fieldValue">waiting</p>
-      <p class="field-reading__hint" id="fieldHint">the city hums · waiting for a tree.</p>
-    </section>
+    <h1 id="connectorTitle">connector</h1>
+    <p class="instruction" id="instruction">move · find a tree</p>
     <div class="loader" id="loader" role="status" aria-live="polite">
       <span class="loader__line" aria-hidden="true"></span>
       <span id="loaderText">preparing local connection</span>
@@ -24,11 +20,10 @@
     <button class="play" id="startButton" type="button" disabled>preparing connection</button>
     <div class="controls"><button class="stop" id="stopButton" type="button" disabled>stop</button></div>
     <p class="status" id="status" role="status" aria-live="polite">loading boorloo connection</p>
-    <p class="contact-state" id="contactState" aria-live="polite">the city hums · waiting for a tree</p>
     <p class="tree-point" id="treePoint">nearest tree · waiting</p>
     <p class="gps-point" id="gpsPoint">gps point · waiting</p>
     <p class="debug" id="debug">city of perth tree data · gps stays on this device.</p>
   </main>
-  <script src="app.js?v=0.16.6" defer></script>
+  <script src="app.js?v=0.17.0" defer></script>
 </body>
 </html>
