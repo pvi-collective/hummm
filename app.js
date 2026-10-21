@@ -23,8 +23,8 @@ let trees = [], audioContext = null, activeOscillators = [], fieldTimer = null, 
 let field = { life: 0, maturity: 0, diversity: 0, nearby: 0, nearest: null, canopy: 0 };
 let lastPosition = null;
 let selectedLocalTree = null;
-let contactPhase = 'silent', contactTimer = null, presenceOscillator = null, presenceGain = null, presenceLfo = null, presenceLfoGain = null, microphoneStream = null, analyser = null, voiceDetected = false;
-let microphonePermissionState = 'unknown', orientationPermissionState = 'unknown';
+let contactPhase = 'silent', contactTimer = null, presenceOscillator = null, presenceGain = null, presenceLfo = null, presenceLfoGain = null;
+let orientationPermissionState = 'unknown';
 let orientationListening = false, orientationHeading = null, orientationTravel = 0, motionTravel = 0, lastMotionTime = 0, interactionMovement = 0, encounterConfirmed = false;
 const manualContactTrees = [
   { type: 'Feature', geometry: { type: 'Point', coordinates: [115.86011825711716, -31.950042702115724] }, properties: { TREE_ID: 'hummm-contact-a', BOTANICAL_NAME: 'local tree · northbridge contact', COMMON_NAME: 'contact tree', TREE_HEIGHT: 12, MANUAL_CONTACT: true } },
@@ -91,6 +91,8 @@ function updateField(position) {
     const gestureRadius = contactPhase === 'presence' && !encounterConfirmed ? 45 : CONTACT_EXIT_RADIUS_METRES;
     if (distance <= gestureRadius) {
       selectedLocalTree.distance = distance;
+      const distanceShift = Math.abs(distance - (selectedLocalTree.distance ?? distance));
+      interactionMovement = clamp(interactionMovement + distanceShift / 6, 0, 1);
       field = { ...field, life: Math.max(field.life, .8), maturity: Math.max(field.maturity, .55), diversity: Math.max(field.diversity, .2), nearby: Math.max(field.nearby, 1), nearest: selectedLocalTree, canopy: Math.max(field.canopy, .65) };
     } else {
       selectedLocalTree = null;
@@ -139,7 +141,7 @@ function createLivingPattern(context, reading) {
 }
 function createContactPattern(context, reading) {
   const signature = reading.nearest?.signature || treeSignature(reading.nearest?.tree || manualContactTrees[0]);
-  const density = clamp(reading.nearby / 5, 0, 1), scale = signature.scale, movement = interactionMovement, strength = (.72 + reading.maturity * .2 + scale * .2) * (1 + movement * .16);
+  const distance = reading.nearest?.distance ?? 45, proximity = clamp(1 - distance / 45, 0, 1), density = clamp(reading.nearby / 5, 0, 1), scale = signature.scale, movement = interactionMovement, strength = (.58 + proximity * .28 + reading.maturity * .16 + scale * .16) * (1 + movement * .16);
   const wobble = signature.irregularity * 120, base = 36 + scale * 10 + (signature.seed % 7);
   playPulse(context, { frequency: base, strength, offset: 0, duration: 260 + scale * 140 });
   playPulse(context, { frequency: base + 5 + (signature.seed % 4), strength: strength * .86, offset: 240 + (signature.seed % 90), duration: 150 + scale * 100 });
@@ -168,7 +170,6 @@ function createArrivalPattern(context, reading) {
 function playFieldCycle() {
   const context = getAudioContext(); if (!context) return;
   if (contactPhase === 'silent' || (contactPhase === 'presence' && !encounterConfirmed)) createConcretePattern(context, field);
-  else if (contactPhase === 'listening') createContactPattern(context, field);
   else if (contactPhase !== 'responding') return;
   else if (field.life < .23) createConcretePattern(context, field);
   else if (field.life < .5) createThresholdPattern(context, field);
@@ -182,8 +183,6 @@ function stopPresence() {
   presenceOscillator = null; presenceGain = null; presenceLfo = null; presenceLfoGain = null;
 }
 function closeMicrophone() {
-  if (microphoneStream) microphoneStream.getTracks().forEach((track) => track.stop());
-  microphoneStream = null; analyser = null;
 }
 function clearAudio() {
   window.clearTimeout(fieldTimer); fieldTimer = null; window.clearTimeout(contactTimer); contactTimer = null;
@@ -194,32 +193,6 @@ function clearAudio() {
 function startPresence() {
   // Near-tree presence stays event-driven: the journey heartbeat continues until
   // the circle is complete, rather than turning into a continuous drone.
-}
-async function prepareMicrophone() {
-  if (microphoneStream) return true;
-  if (microphonePermissionState === 'denied') return false;
-  if (!navigator.mediaDevices?.getUserMedia) { microphonePermissionState = 'unavailable'; return false; }
-  try {
-    microphoneStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true }, video: false });
-    microphonePermissionState = 'ready';
-    const context = getAudioContext(); analyser = context?.createAnalyser() || null;
-    if (analyser) { analyser.fftSize = 256; const source = context.createMediaStreamSource(microphoneStream); source.connect(analyser); }
-    if (contactPhase === 'listening') monitorVoice();
-    return true;
-  } catch { microphonePermissionState = 'denied'; return false; }
-}
-function monitorVoice() {
-  if (contactPhase !== 'listening' || !analyser) return;
-  const samples = new Uint8Array(analyser.fftSize); analyser.getByteTimeDomainData(samples);
-  let energy = 0; samples.forEach((sample) => { const value = (sample - 128) / 128; energy += value * value; });
-  if (Math.sqrt(energy / samples.length) > .045) voiceDetected = true;
-  window.requestAnimationFrame(monitorVoice);
-}
-function finishListening() {
-  if (contactPhase !== 'listening') return;
-  contactPhase = 'responding'; contactState.textContent = voiceDetected ? 'the tree is answering' : 'the tree shifts in response';
-  const context = getAudioContext(); if (context) createContactPattern(context, { ...field, maturity: clamp(field.maturity + (voiceDetected ? .15 : 0), 0, 1) });
-  contactTimer = window.setTimeout(beginListening, 2300);
 }
 function normaliseHeading(value) { return (value + 360) % 360; }
 function headingDelta(from, to) { let delta = normaliseHeading(to - from); return delta > 180 ? delta - 360 : delta; }
@@ -283,16 +256,9 @@ async function requestOrientation() {
 }
 function confirmEncounter(message = 'contact · the tree is here') {
   if (encounterConfirmed || contactPhase === 'silent') return;
-  encounterConfirmed = true; contactPhase = 'presence'; window.clearTimeout(contactTimer); contactTimer = null;
+  encounterConfirmed = true; contactPhase = 'responding'; window.clearTimeout(contactTimer); contactTimer = null;
   interactionMovement = 0; app.classList.add('is-contact'); contactState.textContent = message;
   const context = getAudioContext(); if (context) createArrivalPattern(context, field);
-  contactTimer = window.setTimeout(beginListening, 900);
-}
-async function beginListening() {
-  if (!isWalking || contactPhase === 'silent') return;
-  contactPhase = 'listening'; voiceDetected = false; contactState.textContent = 'listening · make a sound or speak';
-  prepareMicrophone(); monitorVoice();
-  window.clearTimeout(contactTimer); contactTimer = window.setTimeout(finishListening, LISTEN_DURATION_MS);
 }
 function enterContact() {
   if (contactPhase !== 'silent') return;
@@ -320,15 +286,14 @@ function locationProbeError(error) {
 function startField() {
   if (!navigator.geolocation) { status.textContent = 'location is unavailable in this browser'; return; }
   isWalking = true; startButton.disabled = true; startButton.textContent = 'reading the connection'; stopButton.disabled = false; instruction.textContent = 'move. find a tree. hold the phone out · rotate once through a full circle.'; app.classList.add('active'); showConcreteBaseline();
-  contactState.textContent = 'allow access · location · motion · microphone';
+  contactState.textContent = 'allow access · location · motion';
   try {
     getAudioContext();
-    requestOrientation().then((motionReady) => prepareMicrophone().then((microphoneReady) => {
+    requestOrientation().then((motionReady) => {
       if (!isWalking || contactPhase !== 'silent') return;
-      if (!microphoneReady && microphonePermissionState === 'denied') contactState.textContent = 'microphone access unavailable · haptics still available';
-      else if (!motionReady && orientationPermissionState === 'denied') contactState.textContent = 'motion access unavailable · full circle skipped';
+      if (!motionReady && orientationPermissionState === 'denied') contactState.textContent = 'motion access unavailable · full circle skipped';
       else contactState.textContent = 'the city hums · waiting for a tree';
-    }));
+    });
   } catch { status.textContent = 'connection could not begin'; }
   scheduleFieldCycle();
   const locationOptions = { enableHighAccuracy: true, maximumAge: 4000, timeout: 15000 };
