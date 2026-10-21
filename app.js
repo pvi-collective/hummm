@@ -210,6 +210,10 @@ function captureHeading(event) {
 }
 function captureMotion(event) {
   if (!orientationListening || !event.rotationRate) return;
+  const gpsSpeed = lastPosition?.coords?.speed;
+  if (Number.isFinite(gpsSpeed) && gpsSpeed > .8) {
+    motionTravel = 0; coherentMotionMs = 0; lastGestureTime = 0; return;
+  }
   const now = event.timeStamp || performance.now(), elapsed = lastMotionTime ? Math.min((now - lastMotionTime) / 1000, .2) : 0;
   lastMotionTime = now;
   const rate = Math.sqrt((event.rotationRate.alpha || 0) ** 2 + (event.rotationRate.beta || 0) ** 2 + (event.rotationRate.gamma || 0) ** 2);
