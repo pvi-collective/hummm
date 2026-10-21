@@ -3,6 +3,9 @@ const DATA_URL = 'data/perth-cultural-centre-trees.geojson';
 const INFLUENCE_RADIUS_METRES = 90;
 const CONTACT_RADIUS_METRES = 18;
 const CONTACT_EXIT_RADIUS_METRES = 28;
+const GESTURE_RADIUS_METRES = 45;
+const GESTURE_EXIT_RADIUS_METRES = 55;
+const GPS_STATIONARY_DRIFT_METRES = 6;
 const ROTATION_TARGET_DEGREES = 150;
 const GESTURE_IDLE_RESET_MS = 700;
 const LISTEN_DURATION_MS = 3200;
@@ -88,7 +91,9 @@ function updateField(position) {
   if (lastPosition) {
     const distanceMoved = distanceInMetres(lastPosition.coords.latitude, lastPosition.coords.longitude, position.coords.latitude, position.coords.longitude);
     const speed = position.coords.speed;
-    if (distanceMoved > 1.5 || (Number.isFinite(speed) && speed > .3)) stationarySince = 0;
+    // GPS can wander several metres while the participant is still. Allow
+    // that drift so holding the phone out and turning it is not read as walking.
+    if (distanceMoved > GPS_STATIONARY_DRIFT_METRES || (Number.isFinite(speed) && speed > .8)) stationarySince = 0;
     else if (!stationarySince) stationarySince = Date.now();
   } else stationarySince = Date.now();
   lastPosition = position;
@@ -96,10 +101,11 @@ function updateField(position) {
   if (selectedLocalTree && contactPhase !== 'silent') {
     const [lon, lat] = selectedLocalTree.tree.geometry.coordinates;
     const distance = distanceInMetres(position.coords.latitude, position.coords.longitude, lat, lon);
-    const gestureRadius = contactPhase === 'presence' && !encounterConfirmed ? 45 : CONTACT_EXIT_RADIUS_METRES;
+    const gestureRadius = contactPhase === 'presence' && !encounterConfirmed ? GESTURE_RADIUS_METRES : CONTACT_EXIT_RADIUS_METRES;
     if (distance <= gestureRadius) {
+      const previousDistance = selectedLocalTree.distance ?? distance;
       selectedLocalTree.distance = distance;
-      const distanceShift = Math.abs(distance - (selectedLocalTree.distance ?? distance));
+      const distanceShift = Math.abs(distance - previousDistance);
       interactionMovement = clamp(interactionMovement + distanceShift / 6, 0, 1);
       field = { ...field, life: Math.max(field.life, .8), maturity: Math.max(field.maturity, .55), diversity: Math.max(field.diversity, .2), nearby: Math.max(field.nearby, 1), nearest: selectedLocalTree, canopy: Math.max(field.canopy, .65) };
     } else {
@@ -107,8 +113,8 @@ function updateField(position) {
     }
   }
   if (contactPhase === 'silent') {
-    connectorTitle.textContent = field.nearest && field.nearest.distance <= 45 ? 'tree nearby' : 'connector';
-    instruction.textContent = field.nearest && field.nearest.distance <= 45
+    connectorTitle.textContent = field.nearest && field.nearest.distance <= GESTURE_RADIUS_METRES ? 'tree nearby' : 'connector';
+    instruction.textContent = field.nearest && field.nearest.distance <= GESTURE_RADIUS_METRES
       ? 'stop · then hold your phone out · rotate once through a full circle'
       : journeyInstruction();
   }
@@ -119,8 +125,8 @@ function updateField(position) {
   gpsPoint.textContent = `gps point · ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)} · ±${Math.round(position.coords.accuracy)}m`;
   debug.textContent = `signal ${Math.round(field.life * 100)} · maturity ${Math.round(field.maturity * 100)} · diversity ${Math.round(field.diversity * 100)} · gps ±${Math.round(position.coords.accuracy)}m${wakeLock ? ' · screen awake' : ''}`;
   treePoint.textContent = field.nearest ? `nearest tree · ${field.nearest.signature.name} · ${Math.round(field.nearest.distance)}m · id ${field.nearest.signature.id}` : 'nearest tree · none in range';
-  if (isWalking && field.nearest && field.nearest.distance <= CONTACT_RADIUS_METRES) enterContact();
-  else if (isWalking && (!field.nearest || field.nearest.distance > CONTACT_EXIT_RADIUS_METRES)) leaveContact();
+  if (isWalking && field.nearest && field.nearest.distance <= GESTURE_RADIUS_METRES) enterContact();
+  else if (isWalking && (!field.nearest || field.nearest.distance > (contactPhase === 'responding' ? CONTACT_EXIT_RADIUS_METRES : GESTURE_EXIT_RADIUS_METRES))) leaveContact();
 }
 function playPulse(context, { frequency, strength, offset, duration, type = 'sine' }) {
   const oscillator = context.createOscillator(), gain = context.createGain(), start = context.currentTime + offset / 1000, end = start + duration / 1000;
@@ -204,7 +210,7 @@ function normaliseHeading(value) { return (value + 360) % 360; }
 function headingDelta(from, to) { let delta = normaliseHeading(to - from); return delta > 180 ? delta - 360 : delta; }
 function selectLocalEncounter() {
   if (!isWalking || contactPhase !== 'silent' || !lastPosition) return;
-  if (!field.nearest || field.nearest.distance > 45) {
+  if (!field.nearest || field.nearest.distance > GESTURE_RADIUS_METRES) {
     const tree = { type: 'Feature', geometry: { type: 'Point', coordinates: [lastPosition.coords.longitude, lastPosition.coords.latitude] }, properties: { TREE_ID: `unmapped-${Math.round(lastPosition.coords.latitude * 100000)}-${Math.round(lastPosition.coords.longitude * 100000)}`, COMMON_NAME: 'unmapped tree', TREE_HEIGHT: 12, MANUAL_CONTACT: true } };
     field = { ...field, life: .8, maturity: .55, diversity: .2, nearby: 1, nearest: { distance: 0, tree, radius: canopyRadius(tree), signature: treeSignature(tree) }, canopy: .65 };
     selectedLocalTree = field.nearest;
