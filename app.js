@@ -115,9 +115,7 @@ function playPulse(context, { frequency, strength, offset, duration, type = 'sin
 }
 function createConcretePattern(context, reading) {
   const density = clamp((reading.nearby || 0) / 8, 0, 1), strength = .34 + density * .06;
-  playPulse(context, { frequency: 43 + density * 3, strength, offset: 0, duration: 125 });
-  playPulse(context, { frequency: 48 + density * 3, strength: strength * .82, offset: 185 + Math.random() * 25, duration: 82 });
-  playPulse(context, { frequency: 40 + density * 2, strength: strength * .28, offset: 690 + Math.random() * 80, duration: 72 });
+  playPulse(context, { frequency: 44 + density * 2, strength, offset: 0, duration: 125 });
 }
 function createNearTreePattern(context, reading) {
   const signature = reading.nearest?.signature || treeSignature(reading.nearest?.tree || manualContactTrees[0]);
@@ -177,7 +175,7 @@ function playFieldCycle() {
   else if (field.life < .78) createLivingPattern(context, field);
   else createContactPattern(context, field);
 }
-function scheduleFieldCycle() { if (!isWalking) return; playFieldCycle(); fieldTimer = window.setTimeout(scheduleFieldCycle, contactPhase === 'silent' ? 1900 : 2600); }
+function scheduleFieldCycle() { if (!isWalking) return; playFieldCycle(); fieldTimer = window.setTimeout(scheduleFieldCycle, contactPhase === 'silent' || (contactPhase === 'presence' && !encounterConfirmed) ? 3000 : 2600); }
 function stopPresence() {
   if (presenceOscillator) { try { presenceOscillator.stop(); } catch { /* already ended */ } }
   if (presenceLfo) { try { presenceLfo.stop(); } catch { /* already ended */ } }
