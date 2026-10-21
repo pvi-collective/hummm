@@ -211,7 +211,9 @@ function captureHeading(event) {
 function captureMotion(event) {
   if (!orientationListening || !event.rotationRate) return;
   const gpsSpeed = lastPosition?.coords?.speed;
-  if (Number.isFinite(gpsSpeed) && gpsSpeed > .8) {
+  const linearAcceleration = event.acceleration;
+  const linearMagnitude = linearAcceleration ? Math.sqrt((linearAcceleration.x || 0) ** 2 + (linearAcceleration.y || 0) ** 2 + (linearAcceleration.z || 0) ** 2) : 0;
+  if ((Number.isFinite(gpsSpeed) && gpsSpeed > .3) || linearMagnitude > .35) {
     motionTravel = 0; coherentMotionMs = 0; lastGestureTime = 0; return;
   }
   const now = event.timeStamp || performance.now(), elapsed = lastMotionTime ? Math.min((now - lastMotionTime) / 1000, .2) : 0;
