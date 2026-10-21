@@ -113,10 +113,14 @@ function updateField(position) {
     }
   }
   if (contactPhase === 'silent') {
-    connectorTitle.textContent = field.nearest && field.nearest.distance <= GESTURE_RADIUS_METRES ? 'tree nearby' : 'connector';
-    instruction.textContent = field.nearest && field.nearest.distance <= GESTURE_RADIUS_METRES
+    const mappedNearby = field.nearest && field.nearest.distance <= GESTURE_RADIUS_METRES;
+    const stationary = stationarySince && Date.now() - stationarySince > 1200;
+    connectorTitle.textContent = mappedNearby ? 'tree nearby' : 'connector';
+    instruction.textContent = mappedNearby
       ? 'stop · then hold your phone out · rotate once through a full circle'
-      : journeyInstruction();
+      : stationary
+        ? 'stop · choose a tree · hold your phone out · rotate once through a full circle'
+        : journeyInstruction();
   }
   const nearTree = field.nearest?.distance || Infinity;
   app.classList.toggle('is-threshold', nearTree <= 45 && nearTree > CONTACT_RADIUS_METRES); app.classList.toggle('is-living', field.life >= .5 || (nearTree <= CONTACT_RADIUS_METRES && nearTree > 5)); app.classList.toggle('is-contact', encounterConfirmed && nearTree <= CONTACT_RADIUS_METRES);
@@ -124,7 +128,8 @@ function updateField(position) {
   status.textContent = `${field.nearby} trees within ${INFLUENCE_RADIUS_METRES}m${nearestText}`;
   gpsPoint.textContent = `gps point · ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)} · ±${Math.round(position.coords.accuracy)}m`;
   debug.textContent = `signal ${Math.round(field.life * 100)} · maturity ${Math.round(field.maturity * 100)} · diversity ${Math.round(field.diversity * 100)} · gps ±${Math.round(position.coords.accuracy)}m${wakeLock ? ' · screen awake' : ''}`;
-  treePoint.textContent = field.nearest ? `nearest tree · ${field.nearest.signature.name} · ${Math.round(field.nearest.distance)}m · id ${field.nearest.signature.id}` : 'nearest tree · none in range';
+  const nearestLabel = field.nearest?.tree.properties?.MANUAL_CONTACT ? 'local encounter' : 'nearest tree';
+  treePoint.textContent = field.nearest ? `${nearestLabel} · ${field.nearest.signature.name} · ${Math.round(field.nearest.distance)}m · id ${field.nearest.signature.id}` : 'nearest tree · none in range';
   if (isWalking && field.nearest && field.nearest.distance <= GESTURE_RADIUS_METRES) enterContact();
   else if (isWalking && (!field.nearest || field.nearest.distance > (contactPhase === 'responding' ? CONTACT_EXIT_RADIUS_METRES : GESTURE_EXIT_RADIUS_METRES))) leaveContact();
 }
@@ -218,7 +223,8 @@ function selectLocalEncounter() {
   selectedLocalTree = field.nearest;
   contactPhase = 'presence'; encounterConfirmed = false; orientationTravel = 0; motionTravel = 0; interactionMovement = 0;
   connectorTitle.textContent = 'tree nearby'; instruction.textContent = 'circle complete · opening connection';
-  treePoint.textContent = `nearest tree · ${field.nearest.signature.name} · ${Math.round(field.nearest.distance)}m · id ${field.nearest.signature.id}`;
+  const encounterLabel = field.nearest.tree.properties?.MANUAL_CONTACT ? 'local encounter' : 'nearest tree';
+  treePoint.textContent = `${encounterLabel} · ${field.nearest.signature.name} · ${Math.round(field.nearest.distance)}m · id ${field.nearest.signature.id}`;
   startPresence(field); confirmEncounter('contact · connection open');
 }
 function captureHeading(event) {
