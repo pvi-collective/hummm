@@ -3,6 +3,7 @@ const DATA_URL = 'data/perth-cultural-centre-trees.geojson';
 const INFLUENCE_RADIUS_METRES = 90;
 const CONTACT_RADIUS_METRES = 18;
 const CONTACT_EXIT_RADIUS_METRES = 28;
+const ROTATION_TARGET_DEGREES = 120;
 const LISTEN_DURATION_MS = 3200;
 const CONTACT_CONFIRM_FALLBACK_MS = 9000;
 const app = document.querySelector('#app');
@@ -87,7 +88,8 @@ function updateField(position) {
   if (selectedLocalTree && contactPhase !== 'silent') {
     const [lon, lat] = selectedLocalTree.tree.geometry.coordinates;
     const distance = distanceInMetres(position.coords.latitude, position.coords.longitude, lat, lon);
-    if (distance <= CONTACT_EXIT_RADIUS_METRES) {
+    const gestureRadius = contactPhase === 'presence' && !encounterConfirmed ? 45 : CONTACT_EXIT_RADIUS_METRES;
+    if (distance <= gestureRadius) {
       selectedLocalTree.distance = distance;
       field = { ...field, life: Math.max(field.life, .8), maturity: Math.max(field.maturity, .55), diversity: Math.max(field.diversity, .2), nearby: Math.max(field.nearby, 1), nearest: selectedLocalTree, canopy: Math.max(field.canopy, .65) };
     } else {
@@ -224,6 +226,7 @@ function selectLocalEncounter() {
     field = { ...field, life: .8, maturity: .55, diversity: .2, nearby: 1, nearest: { distance: 0, tree, radius: canopyRadius(tree), signature: treeSignature(tree) }, canopy: .65 };
     selectedLocalTree = field.nearest;
   }
+  selectedLocalTree = field.nearest;
   contactPhase = 'presence'; encounterConfirmed = false; orientationTravel = 0; motionTravel = 0; interactionMovement = 0;
   fieldValue.textContent = 'encounter'; fieldHint.textContent = 'the connection opens here';
   treePoint.textContent = `nearest tree · ${field.nearest.signature.name} · ${Math.round(field.nearest.distance)}m · id ${field.nearest.signature.id}`;
@@ -241,14 +244,14 @@ function captureMotion(event) {
   const now = event.timeStamp || performance.now(), elapsed = lastMotionTime ? Math.min((now - lastMotionTime) / 1000, .2) : 0;
   lastMotionTime = now;
   const rate = Math.sqrt((event.rotationRate.alpha || 0) ** 2 + (event.rotationRate.beta || 0) ** 2 + (event.rotationRate.gamma || 0) ** 2);
-  if (rate > 4) motionTravel += rate * elapsed;
+  if (rate > .8) motionTravel += rate * elapsed;
   if (encounterConfirmed) interactionMovement = clamp(interactionMovement + rate * elapsed / 180, 0, 1);
   checkRotationProgress();
 }
 function checkRotationProgress() {
   const travel = Math.max(orientationTravel, motionTravel);
-  if (!encounterConfirmed && (contactPhase === 'presence' || contactPhase === 'silent')) contactState.textContent = `turning · ${Math.round(clamp(travel / 220, 0, 1) * 100)}%`;
-  if (travel >= 220) {
+  if (!encounterConfirmed && (contactPhase === 'presence' || contactPhase === 'silent')) contactState.textContent = `turning · ${Math.round(clamp(travel / ROTATION_TARGET_DEGREES, 0, 1) * 100)}%`;
+  if (travel >= ROTATION_TARGET_DEGREES) {
     contactState.textContent = 'circle complete · opening connection';
     if (contactPhase === 'presence') confirmEncounter('the connection is open');
     else if (contactPhase === 'silent') selectLocalEncounter();
@@ -289,7 +292,7 @@ async function beginListening() {
 }
 function enterContact() {
   if (contactPhase !== 'silent') return;
-  encounterConfirmed = false; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; interactionMovement = 0; contactPhase = 'presence'; startPresence(field); contactState.textContent = 'tree nearby · hold the phone out · rotate once through a full circle';
+  encounterConfirmed = false; selectedLocalTree = field.nearest; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; interactionMovement = 0; contactPhase = 'presence'; startPresence(field); contactState.textContent = 'tree nearby · hold the phone out · rotate once through a full circle';
   const context = getAudioContext(); if (context) createNearTreePattern(context, field);
   if (!orientationListening) requestOrientation();
   contactTimer = window.setTimeout(() => { if (!encounterConfirmed) confirmEncounter('contact · movement sensor unavailable'); }, CONTACT_CONFIRM_FALLBACK_MS);
