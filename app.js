@@ -20,6 +20,8 @@ const contactState = document.querySelector('#contactState');
 const treePoint = document.querySelector('#treePoint');
 let trees = [], audioContext = null, activeOscillators = [], fieldTimer = null, watchId = null, wakeLock = null, isWalking = false;
 let field = { life: 0, maturity: 0, diversity: 0, nearby: 0, nearest: null, canopy: 0 };
+let lastPosition = null;
+let selectedLocalTree = null;
 let contactPhase = 'silent', contactTimer = null, presenceOscillator = null, presenceGain = null, presenceLfo = null, presenceLfoGain = null, microphoneStream = null, analyser = null, voiceDetected = false;
 let microphonePermissionState = 'unknown', orientationPermissionState = 'unknown';
 let orientationListening = false, orientationHeading = null, orientationTravel = 0, interactionMovement = 0, encounterConfirmed = false;
@@ -64,30 +66,41 @@ function readField(latitude, longitude) {
   return { life: clamp(Math.sqrt(canopy / 42), 0, 1), maturity: clamp(maturity / 4.5, 0, 1), diversity: clamp(species.size / 5, 0, 1), nearby, nearest, canopy: clamp(canopy / 42, 0, 1) };
 }
 function describeField(reading) {
-  if (!reading.nearest || reading.nearest.distance > 45) return ['concrete bed', 'find a marked tree'];
-  if (reading.nearest.distance > CONTACT_RADIUS_METRES) return ['tree nearby', 'move closer · the field will notice'];
+  if (!reading.nearest || reading.nearest.distance > 45) return ['concrete bed', 'find a tree'];
+  if (reading.nearest.distance > CONTACT_RADIUS_METRES) return ['tree nearby', 'move closer · the city will notice'];
   if (!encounterConfirmed) return ['encounter', 'hold the phone out · rotate once through a full circle'];
   return ['contact', `${reading.nearest.signature.name} · ${Math.round(reading.nearest.distance)}m`];
 }
 function showConcreteBaseline() {
   field = { life: 0, maturity: 0, diversity: 0, nearby: 0, nearest: null, canopy: 0 };
-  fieldValue.textContent = 'concrete bed'; fieldHint.textContent = 'find a marked tree';
+  fieldValue.textContent = 'concrete bed'; fieldHint.textContent = 'the city hums · waiting for a tree';
   app.classList.remove('is-threshold', 'is-living', 'is-contact');
-  status.textContent = 'gps active · finding position';
+  status.textContent = 'gps active · finding a tree';
   gpsPoint.textContent = 'gps point · acquiring';
-  debug.textContent = 'field 0 · maturity 0 · diversity 0 · gps waiting';
-  contactState.textContent = 'the field is quiet until you arrive';
+  debug.textContent = 'signal 0 · maturity 0 · diversity 0 · gps waiting';
+  contactState.textContent = 'the city hums · waiting for a tree';
   treePoint.textContent = 'nearest tree · waiting';
 }
 function updateField(position) {
+  lastPosition = position;
   field = readField(position.coords.latitude, position.coords.longitude);
+  if (selectedLocalTree && contactPhase !== 'silent') {
+    const [lon, lat] = selectedLocalTree.tree.geometry.coordinates;
+    const distance = distanceInMetres(position.coords.latitude, position.coords.longitude, lat, lon);
+    if (distance <= CONTACT_EXIT_RADIUS_METRES) {
+      selectedLocalTree.distance = distance;
+      field = { ...field, life: Math.max(field.life, .8), maturity: Math.max(field.maturity, .55), diversity: Math.max(field.diversity, .2), nearby: Math.max(field.nearby, 1), nearest: selectedLocalTree, canopy: Math.max(field.canopy, .65) };
+    } else {
+      selectedLocalTree = null;
+    }
+  }
   const [name, description] = describeField(field); fieldValue.textContent = name; fieldHint.textContent = description;
   const nearTree = field.nearest?.distance || Infinity;
   app.classList.toggle('is-threshold', nearTree <= 45 && nearTree > CONTACT_RADIUS_METRES); app.classList.toggle('is-living', field.life >= .5 || (nearTree <= CONTACT_RADIUS_METRES && nearTree > 5)); app.classList.toggle('is-contact', encounterConfirmed && nearTree <= CONTACT_RADIUS_METRES);
   const nearestText = field.nearest ? ` · nearest ${Math.round(field.nearest.distance)}m` : '';
   status.textContent = `${field.nearby} trees within ${INFLUENCE_RADIUS_METRES}m${nearestText}`;
   gpsPoint.textContent = `gps point · ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)} · ±${Math.round(position.coords.accuracy)}m`;
-  debug.textContent = `field ${Math.round(field.life * 100)} · maturity ${Math.round(field.maturity * 100)} · diversity ${Math.round(field.diversity * 100)} · gps ±${Math.round(position.coords.accuracy)}m${wakeLock ? ' · screen awake' : ''}`;
+  debug.textContent = `signal ${Math.round(field.life * 100)} · maturity ${Math.round(field.maturity * 100)} · diversity ${Math.round(field.diversity * 100)} · gps ±${Math.round(position.coords.accuracy)}m${wakeLock ? ' · screen awake' : ''}`;
   treePoint.textContent = field.nearest ? `nearest tree · ${field.nearest.signature.name} · ${Math.round(field.nearest.distance)}m · id ${field.nearest.signature.id}` : 'nearest tree · none in range';
   if (isWalking && field.nearest && field.nearest.distance <= CONTACT_RADIUS_METRES) enterContact();
   else if (isWalking && (!field.nearest || field.nearest.distance > CONTACT_EXIT_RADIUS_METRES)) leaveContact();
@@ -106,7 +119,7 @@ function createConcretePattern(context, reading) {
 }
 function createNearTreePattern(context, reading) {
   const signature = reading.nearest?.signature || treeSignature(reading.nearest?.tree || manualContactTrees[0]);
-  const base = 36 + signature.scale * 10 + (signature.seed % 6), strength = .52 + signature.scale * .12;
+  const base = 36 + signature.scale * 10 + (signature.seed % 6), strength = .44 + signature.scale * .1;
   playPulse(context, { frequency: base, strength, offset: 0, duration: 260 + signature.scale * 100 });
   playPulse(context, { frequency: base + 6, strength: strength * .82, offset: 260, duration: 180 + signature.scale * 80 });
   playPulse(context, { frequency: base - 3, strength: strength * .7, offset: 560, duration: 300 + signature.scale * 130 });
@@ -126,7 +139,7 @@ function createLivingPattern(context, reading) {
 }
 function createContactPattern(context, reading) {
   const signature = reading.nearest?.signature || treeSignature(reading.nearest?.tree || manualContactTrees[0]);
-  const density = clamp(reading.nearby / 5, 0, 1), scale = signature.scale, movement = interactionMovement, strength = (.58 + reading.maturity * .18 + scale * .16) * (1 + movement * .12);
+  const density = clamp(reading.nearby / 5, 0, 1), scale = signature.scale, movement = interactionMovement, strength = (.72 + reading.maturity * .2 + scale * .2) * (1 + movement * .16);
   const wobble = signature.irregularity * 120, base = 36 + scale * 10 + (signature.seed % 7);
   playPulse(context, { frequency: base, strength, offset: 0, duration: 260 + scale * 140 });
   playPulse(context, { frequency: base + 5 + (signature.seed % 4), strength: strength * .86, offset: 240 + (signature.seed % 90), duration: 150 + scale * 100 });
@@ -138,7 +151,7 @@ function createContactPattern(context, reading) {
 }
 function createArrivalPattern(context, reading) {
   const signature = reading.nearest?.signature || treeSignature(reading.nearest?.tree || manualContactTrees[0]);
-  const scale = signature.scale, base = 35 + scale * 11 + (signature.seed % 6), strength = .72 + scale * .2;
+  const scale = signature.scale, base = 35 + scale * 11 + (signature.seed % 6), strength = .82 + scale * .18;
   playPulse(context, { frequency: base, strength, offset: 0, duration: 280 + scale * 150 });
   playPulse(context, { frequency: base + 7, strength: strength * .88, offset: 190, duration: 220 + scale * 110 });
   playPulse(context, { frequency: base - 3, strength: strength * .92, offset: 470, duration: 420 + scale * 180 });
@@ -168,18 +181,18 @@ function closeMicrophone() {
 function clearAudio() {
   window.clearTimeout(fieldTimer); fieldTimer = null; window.clearTimeout(contactTimer); contactTimer = null;
   activeOscillators.forEach((oscillator) => { try { oscillator.stop(); } catch { /* already ended */ } });
-  activeOscillators = []; stopPresence(); closeMicrophone(); contactPhase = 'silent';
+  activeOscillators = []; stopPresence(); closeMicrophone(); contactPhase = 'silent'; selectedLocalTree = null;
 }
 function startPresence(reading = field) {
   const context = getAudioContext(); if (!context || presenceOscillator) return;
   presenceOscillator = context.createOscillator(); presenceGain = context.createGain();
   const signature = reading.nearest?.signature, scale = signature?.scale || .35;
   presenceOscillator.type = 'sine'; presenceOscillator.frequency.setValueAtTime(38 + scale * 10, context.currentTime);
-  presenceGain.gain.setValueAtTime(.0001, context.currentTime); presenceGain.gain.exponentialRampToValueAtTime(.32 + scale * .2, context.currentTime + .25);
+  presenceGain.gain.setValueAtTime(.0001, context.currentTime); presenceGain.gain.exponentialRampToValueAtTime(.25 + scale * .16, context.currentTime + .25);
   presenceOscillator.connect(presenceGain); presenceGain.connect(context.destination); presenceOscillator.start();
   presenceLfo = context.createOscillator(); presenceLfoGain = context.createGain();
   presenceLfo.frequency.setValueAtTime(.72 + (signature?.irregularity || .2) * 1.2, context.currentTime);
-  presenceLfoGain.gain.setValueAtTime(.1 + scale * .05, context.currentTime);
+  presenceLfoGain.gain.setValueAtTime(.08 + scale * .04, context.currentTime);
   presenceLfo.connect(presenceLfoGain); presenceLfoGain.connect(presenceGain.gain); presenceLfo.start();
 }
 async function prepareMicrophone() {
@@ -210,13 +223,28 @@ function finishListening() {
 }
 function normaliseHeading(value) { return (value + 360) % 360; }
 function headingDelta(from, to) { let delta = normaliseHeading(to - from); return delta > 180 ? delta - 360 : delta; }
+function selectLocalEncounter() {
+  if (!isWalking || contactPhase !== 'silent' || !lastPosition) return;
+  if (!field.nearest || field.nearest.distance > 45) {
+    const tree = { type: 'Feature', geometry: { type: 'Point', coordinates: [lastPosition.coords.longitude, lastPosition.coords.latitude] }, properties: { TREE_ID: `unmapped-${Math.round(lastPosition.coords.latitude * 100000)}-${Math.round(lastPosition.coords.longitude * 100000)}`, COMMON_NAME: 'unmapped tree', TREE_HEIGHT: 12, MANUAL_CONTACT: true } };
+    field = { ...field, life: .8, maturity: .55, diversity: .2, nearby: 1, nearest: { distance: 0, tree, radius: canopyRadius(tree), signature: treeSignature(tree) }, canopy: .65 };
+    selectedLocalTree = field.nearest;
+  }
+  contactPhase = 'presence'; encounterConfirmed = false; orientationTravel = 0; interactionMovement = 0;
+  fieldValue.textContent = 'encounter'; fieldHint.textContent = 'the connection opens here';
+  treePoint.textContent = `nearest tree · ${field.nearest.signature.name} · ${Math.round(field.nearest.distance)}m · id ${field.nearest.signature.id}`;
+  startPresence(field); const context = getAudioContext(); if (context) createNearTreePattern(context, field); confirmEncounter('contact · connection open');
+}
 function captureHeading(event) {
   if (!orientationListening || typeof event.alpha !== 'number') return;
   const heading = normaliseHeading(360 - event.alpha);
   if (orientationHeading === null) orientationHeading = heading;
   else { const delta = Math.abs(headingDelta(orientationHeading, heading)); orientationTravel += delta; if (encounterConfirmed) interactionMovement = clamp(interactionMovement + delta / 90, 0, 1); orientationHeading = heading; }
-  if (!encounterConfirmed && contactPhase === 'presence') contactState.textContent = `turning · ${Math.round(clamp(orientationTravel / 285, 0, 1) * 100)}%`;
-  if (orientationTravel >= 285) confirmEncounter('the field has noticed you');
+  if (!encounterConfirmed && (contactPhase === 'presence' || contactPhase === 'silent')) contactState.textContent = `turning · ${Math.round(clamp(orientationTravel / 285, 0, 1) * 100)}%`;
+  if (orientationTravel >= 285) {
+    if (contactPhase === 'presence') confirmEncounter('the connection is open');
+    else if (contactPhase === 'silent') selectLocalEncounter();
+  }
 }
 async function requestOrientation() {
   if (orientationListening) return true;
@@ -257,6 +285,7 @@ function leaveContact() {
   if (contactPhase === 'silent') return;
   contactPhase = 'silent'; window.clearTimeout(contactTimer); contactTimer = null; stopPresence(); closeMicrophone();
   encounterConfirmed = false; orientationHeading = null; orientationTravel = 0; interactionMovement = 0; orientationListening = false; window.removeEventListener('deviceorientation', captureHeading, true); contactState.textContent = 'the contact fades into the street'; app.classList.remove('is-contact');
+  selectedLocalTree = null;
 }
 async function requestWakeLock() {
   if (!('wakeLock' in navigator)) return;
@@ -266,11 +295,11 @@ async function releaseWakeLock() { if (wakeLock) { await wakeLock.release(); wak
 function locationError(error) { isWalking = false; clearAudio(); releaseWakeLock(); startButton.disabled = false; startButton.textContent = 'try again'; stopButton.disabled = true; status.textContent = 'location unavailable'; gpsPoint.textContent = 'gps point · unavailable'; treePoint.textContent = 'nearest tree · unavailable'; debug.textContent = error.code === 1 ? 'allow location access, then try again.' : 'move outside or wait for a clearer gps signal.'; }
 function locationProbeError(error) {
   if (error.code === 1) locationError(error);
-  else if (isWalking) debug.textContent = 'field 0 · maturity 0 · diversity 0 · gps still searching';
+  else if (isWalking) debug.textContent = 'signal 0 · maturity 0 · diversity 0 · gps still searching';
 }
 function startField() {
   if (!navigator.geolocation) { status.textContent = 'location is unavailable in this browser'; return; }
-  isWalking = true; startButton.disabled = true; startButton.textContent = 'reading the field'; stopButton.disabled = false; instruction.textContent = 'move. find a tree. hold the phone out · rotate once through a full circle.'; app.classList.add('active'); showConcreteBaseline();
+  isWalking = true; startButton.disabled = true; startButton.textContent = 'reading the connection'; stopButton.disabled = false; instruction.textContent = 'move. find a tree. hold the phone out · rotate once through a full circle.'; app.classList.add('active'); showConcreteBaseline();
   contactState.textContent = 'allow access · location · motion · microphone';
   try {
     getAudioContext();
@@ -278,7 +307,7 @@ function startField() {
       if (!isWalking || contactPhase !== 'silent') return;
       if (!microphoneReady && microphonePermissionState === 'denied') contactState.textContent = 'microphone access unavailable · haptics still available';
       else if (!motionReady && orientationPermissionState === 'denied') contactState.textContent = 'motion access unavailable · full circle skipped';
-      else contactState.textContent = 'the field is quiet until you arrive';
+      else contactState.textContent = 'the city hums · waiting for a tree';
     });
   } catch { status.textContent = 'connection could not begin'; }
   scheduleFieldCycle();
@@ -289,10 +318,10 @@ function startField() {
   } catch { locationError({ code: 0 }); }
   requestWakeLock();
 }
-function stopField() { isWalking = false; clearAudio(); releaseWakeLock(); if (watchId !== null) navigator.geolocation.clearWatch(watchId); watchId = null; app.classList.remove('active', 'is-threshold', 'is-living', 'is-contact'); startButton.disabled = false; startButton.textContent = 'begin encounter'; stopButton.disabled = true; instruction.textContent = 'find a tree · hold the phone out · rotate once through a full circle.'; fieldValue.textContent = 'waiting'; fieldHint.textContent = 'the field is quiet until you arrive.'; status.textContent = 'stopped'; gpsPoint.textContent = 'gps point · stopped'; treePoint.textContent = 'nearest tree · waiting'; contactState.textContent = 'the field is quiet until you arrive'; debug.textContent = 'city of perth tree data · gps stays on this device.'; }
+function stopField() { isWalking = false; clearAudio(); releaseWakeLock(); if (watchId !== null) navigator.geolocation.clearWatch(watchId); watchId = null; app.classList.remove('active', 'is-threshold', 'is-living', 'is-contact'); startButton.disabled = false; startButton.textContent = 'begin encounter'; stopButton.disabled = true; instruction.textContent = 'find a tree · hold the phone out · rotate once through a full circle.'; fieldValue.textContent = 'waiting'; fieldHint.textContent = 'the city hums · waiting for a tree'; status.textContent = 'stopped'; gpsPoint.textContent = 'gps point · stopped'; treePoint.textContent = 'nearest tree · waiting'; contactState.textContent = 'the city hums · waiting for a tree'; debug.textContent = 'city of perth tree data · gps stays on this device.'; }
 document.addEventListener('visibilitychange', () => { if (isWalking && document.visibilityState === 'visible' && !wakeLock) requestWakeLock(); });
 fetch(DATA_URL).then((response) => { if (!response.ok) throw new Error('Tree data could not load'); return response.json(); }).then((data) => {
   trees = data.features.filter((tree) => tree.geometry?.type === 'Point' && tree.properties?.RETIRED !== 'Yes').concat(manualContactTrees);
   app.setAttribute('aria-busy', 'false'); loader.hidden = true; startButton.disabled = false; startButton.textContent = 'begin encounter'; status.textContent = `${trees.length} perth trees ready`;
-}).catch(() => { app.setAttribute('aria-busy', 'false'); loaderText.textContent = 'field unavailable'; status.textContent = 'tree field could not load'; debug.textContent = 'check your connection, then reload.'; });
+}).catch(() => { app.setAttribute('aria-busy', 'false'); loaderText.textContent = 'connection unavailable'; status.textContent = 'tree data could not load'; debug.textContent = 'check your connection, then reload.'; });
 startButton.addEventListener('click', startField); stopButton.addEventListener('click', stopField);

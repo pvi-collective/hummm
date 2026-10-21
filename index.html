@@ -4,32 +4,31 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#111111">
-  <title>hummm — pcc field</title>
+  <title>hummm — pcc connector</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main class="app" id="app" aria-busy="true">
-    <p class="eyebrow">hummm · pcc · v0.10.1</p>
+    <p class="eyebrow">hummm · pcc · v0.11.0</p>
     <div class="orb" id="orb" aria-hidden="true"></div>
-    <h1>move . connect</h1>
+    <h1>connector</h1>
     <p class="instruction" id="instruction">find a tree · hold the phone out · rotate once through a full circle.</p>
-    <section class="field-reading" aria-labelledby="fieldReading">
-      <p class="field-reading__label" id="fieldReading">field</p>
+    <section class="field-reading" aria-label="connection state">
       <p class="field-reading__value" id="fieldValue">waiting</p>
-      <p class="field-reading__hint" id="fieldHint">the field is quiet until you arrive.</p>
+      <p class="field-reading__hint" id="fieldHint">the city hums · waiting for a tree.</p>
     </section>
     <div class="loader" id="loader" role="status" aria-live="polite">
       <span class="loader__line" aria-hidden="true"></span>
-      <span id="loaderText">preparing local field</span>
+      <span id="loaderText">preparing local connection</span>
     </div>
-    <button class="play" id="startButton" type="button" disabled>preparing field</button>
+    <button class="play" id="startButton" type="button" disabled>preparing connection</button>
     <div class="controls"><button class="stop" id="stopButton" type="button" disabled>stop</button></div>
-    <p class="status" id="status" role="status" aria-live="polite">loading boorloo contact field</p>
-    <p class="contact-state" id="contactState" aria-live="polite">the field is quiet until you arrive</p>
+    <p class="status" id="status" role="status" aria-live="polite">loading boorloo connection</p>
+    <p class="contact-state" id="contactState" aria-live="polite">the city hums · waiting for a tree</p>
     <p class="tree-point" id="treePoint">nearest tree · waiting</p>
     <p class="gps-point" id="gpsPoint">gps point · waiting</p>
     <p class="debug" id="debug">city of perth tree data · gps stays on this device.</p>
   </main>
-  <script src="app.js?v=0.10.1" defer></script>
+  <script src="app.js?v=0.11.0" defer></script>
 </body>
 </html>
