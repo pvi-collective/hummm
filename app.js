@@ -6,7 +6,6 @@ const CONTACT_EXIT_RADIUS_METRES = 28;
 const ROTATION_TARGET_DEGREES = 150;
 const GESTURE_IDLE_RESET_MS = 700;
 const LISTEN_DURATION_MS = 3200;
-const CONTACT_CONFIRM_FALLBACK_MS = 9000;
 const app = document.querySelector('#app');
 const instruction = document.querySelector('#instruction');
 const fieldValue = document.querySelector('#fieldValue');
@@ -119,13 +118,6 @@ function playPulse(context, { frequency, strength, offset, duration, type = 'sin
 function createConcretePattern(context, reading) {
   const density = clamp((reading.nearby || 0) / 8, 0, 1), strength = .34 + density * .06;
   playPulse(context, { frequency: 44 + density * 2, strength, offset: 0, duration: 125 });
-}
-function createNearTreePattern(context, reading) {
-  const signature = reading.nearest?.signature || treeSignature(reading.nearest?.tree || manualContactTrees[0]);
-  const base = 36 + signature.scale * 10 + (signature.seed % 6), strength = .44 + signature.scale * .1;
-  playPulse(context, { frequency: base, strength, offset: 0, duration: 260 + signature.scale * 100 });
-  playPulse(context, { frequency: base + 6, strength: strength * .82, offset: 260, duration: 180 + signature.scale * 80 });
-  playPulse(context, { frequency: base - 3, strength: strength * .7, offset: 560, duration: 300 + signature.scale * 130 });
 }
 function createThresholdPattern(context, reading) {
   createConcretePattern(context, reading);
