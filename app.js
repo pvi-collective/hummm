@@ -161,7 +161,7 @@ function createArrivalPattern(context, reading) {
 }
 function playFieldCycle() {
   const context = getAudioContext(); if (!context) return;
-  if (contactPhase === 'silent') createConcretePattern(context, field);
+  if (contactPhase === 'silent' || (contactPhase === 'presence' && !encounterConfirmed)) createConcretePattern(context, field);
   else if (contactPhase !== 'responding') return;
   else if (field.life < .23) createConcretePattern(context, field);
   else if (field.life < .5) createThresholdPattern(context, field);
@@ -184,17 +184,9 @@ function clearAudio() {
   activeOscillators = []; stopPresence(); closeMicrophone(); contactPhase = 'silent'; selectedLocalTree = null; orientationListening = false; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0;
   window.removeEventListener('deviceorientation', captureHeading, true); window.removeEventListener('devicemotion', captureMotion, true);
 }
-function startPresence(reading = field) {
-  const context = getAudioContext(); if (!context || presenceOscillator) return;
-  presenceOscillator = context.createOscillator(); presenceGain = context.createGain();
-  const signature = reading.nearest?.signature, scale = signature?.scale || .35;
-  presenceOscillator.type = 'sine'; presenceOscillator.frequency.setValueAtTime(38 + scale * 10, context.currentTime);
-  presenceGain.gain.setValueAtTime(.0001, context.currentTime); presenceGain.gain.exponentialRampToValueAtTime(.25 + scale * .16, context.currentTime + .25);
-  presenceOscillator.connect(presenceGain); presenceGain.connect(context.destination); presenceOscillator.start();
-  presenceLfo = context.createOscillator(); presenceLfoGain = context.createGain();
-  presenceLfo.frequency.setValueAtTime(.72 + (signature?.irregularity || .2) * 1.2, context.currentTime);
-  presenceLfoGain.gain.setValueAtTime(.08 + scale * .04, context.currentTime);
-  presenceLfo.connect(presenceLfoGain); presenceLfoGain.connect(presenceGain.gain); presenceLfo.start();
+function startPresence() {
+  // Near-tree presence stays event-driven: the journey heartbeat continues until
+  // the circle is complete, rather than turning into a continuous drone.
 }
 async function prepareMicrophone() {
   if (microphoneStream) return true;
