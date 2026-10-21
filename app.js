@@ -162,6 +162,7 @@ function createArrivalPattern(context, reading) {
 function playFieldCycle() {
   const context = getAudioContext(); if (!context) return;
   if (contactPhase === 'silent' || (contactPhase === 'presence' && !encounterConfirmed)) createConcretePattern(context, field);
+  else if (contactPhase === 'listening') createContactPattern(context, field);
   else if (contactPhase !== 'responding') return;
   else if (field.life < .23) createConcretePattern(context, field);
   else if (field.life < .5) createThresholdPattern(context, field);
