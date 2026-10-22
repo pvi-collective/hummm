@@ -268,7 +268,9 @@ function captureMotion(event) {
   const gpsSpeed = lastPosition?.coords?.speed;
   const linearAcceleration = event.acceleration;
   const linearMagnitude = linearAcceleration ? Math.sqrt((linearAcceleration.x || 0) ** 2 + (linearAcceleration.y || 0) ** 2 + (linearAcceleration.z || 0) ** 2) : 0;
-  if ((Number.isFinite(gpsSpeed) && gpsSpeed > .3) || linearMagnitude > .8) {
+  const gpsWalking = Number.isFinite(gpsSpeed) && gpsSpeed > .3;
+  const physicalWalking = linearMagnitude > 1.2 && (!stationarySince || Date.now() - stationarySince < 1200);
+  if (gpsWalking || physicalWalking) {
     lastWalkingSignalAt = Date.now();
     orientationTravel = 0; motionTravel = 0; coherentMotionMs = 0; motionEvidenceMs = 0; lastGestureTime = 0; return;
   }
