@@ -39,7 +39,8 @@ function treeSignature(tree) {
   const p = tree.properties || {}, key = `${p.TREE_ID || tree.geometry.coordinates.join(',')}|${p.BOTANICAL_NAME || p.COMMON_NAME || 'tree'}`;
   const hash = hashString(key), age = p.DATE_PLANTED ? clamp((Date.now() - Number(p.DATE_PLANTED)) / (1000 * 60 * 60 * 24 * 365), 0, 100) : 12;
   const height = treeHeight(tree), canopy = clamp(canopyRadius(tree) / 13, 0, 1);
-  return { id: p.TREE_ID || key, name: p.COMMON_NAME || p.BOTANICAL_NAME || 'tree', seed: hash, age: clamp(age / 35, 0, 1), scale: clamp((height / 30) * .6 + canopy * .4, 0, 1), irregularity: .12 + ((hash >>> 9) % 28) / 100, offset: (hash % 360) / 360 };
+  const profiles = ['defending', 'kin · transferring', 'under strain'];
+  return { id: p.TREE_ID || key, name: p.COMMON_NAME || p.BOTANICAL_NAME || 'tree', seed: hash, profile: profiles[hash % profiles.length], age: clamp(age / 35, 0, 1), scale: clamp((height / 30) * .6 + canopy * .4, 0, 1), irregularity: .12 + ((hash >>> 9) % 28) / 100, offset: (hash % 360) / 360 };
 }
 
 function getAudioContext() {
@@ -66,12 +67,6 @@ function readField(latitude, longitude) {
     if (!nearest || distance < nearest.distance) nearest = { distance, tree, radius, signature: treeSignature(tree) };
   });
   return { life: clamp(Math.sqrt(canopy / 42), 0, 1), maturity: clamp(maturity / 4.5, 0, 1), diversity: clamp(species.size / 5, 0, 1), nearby, nearest, canopy: clamp(canopy / 42, 0, 1) };
-}
-function describeField(reading) {
-  if (!reading.nearest || reading.nearest.distance > 45) return ['concrete bed', 'find a tree'];
-  if (reading.nearest.distance > CONTACT_RADIUS_METRES) return ['tree nearby', 'move closer · the city will notice'];
-  if (!encounterConfirmed) return ['encounter', 'hold the phone out · rotate once through a full circle'];
-  return ['contact', `${reading.nearest.signature.name} · ${Math.round(reading.nearest.distance)}m`];
 }
 function showConcreteBaseline() {
   field = { life: 0, maturity: 0, diversity: 0, nearby: 0, nearest: null, canopy: 0 };
@@ -158,14 +153,32 @@ function createLivingPattern(context, reading) {
 }
 function createContactPattern(context, reading) {
   const signature = reading.nearest?.signature || treeSignature(reading.nearest?.tree || manualContactTrees[0]);
-  const distance = reading.nearest?.distance ?? 45, proximity = clamp(1 - distance / 45, 0, 1), density = clamp(reading.nearby / 5, 0, 1), scale = signature.scale, movement = interactionMovement, strength = (.58 + proximity * .28 + reading.maturity * .16 + scale * .16) * (1 + movement * .16);
-  const wobble = signature.irregularity * 120, base = 36 + scale * 10 + (signature.seed % 7);
-  playPulse(context, { frequency: base, strength, offset: 0, duration: 260 + scale * 140 });
-  playPulse(context, { frequency: base + 5 + (signature.seed % 4), strength: strength * .86, offset: 240 + (signature.seed % 90), duration: 150 + scale * 100 });
-  playPulse(context, { frequency: base - 2, strength: strength * .92, offset: 520 + wobble, duration: 300 + scale * 180 });
-  playPulse(context, { frequency: base + 8 + density * 4, strength: strength * .7, offset: 930 + wobble * .7, duration: 180 + scale * 100 });
-  playPulse(context, { frequency: base + 12, strength: strength * (.38 + density * .32), offset: 1320 + wobble * 1.2, duration: 140 + scale * 90 });
-  if (scale > .6 || signature.age > .65) playPulse(context, { frequency: base - 7, strength: strength * .62, offset: 1660 + wobble, duration: 420 + scale * 180 });
+  const distance = reading.nearest?.distance ?? 45, proximity = clamp(1 - distance / 45, 0, 1), density = clamp(reading.nearby / 5, 0, 1), scale = signature.scale, movement = interactionMovement;
+  const strength = (.62 + proximity * .24 + reading.maturity * .14 + scale * .16) * (1 + movement * .24);
+  const wobble = signature.irregularity * 150, base = 34 + scale * 12 + (signature.seed % 8), drift = Math.sin(Date.now() / 1800 + signature.offset * 8) * (1 + movement * 6);
+  if (signature.profile === 'defending') {
+    // A low body-bed interrupted by sharp, airborne warning-like fragments.
+    playPulse(context, { frequency: base - 5 + drift, strength, offset: 0, duration: 360 + scale * 180, type: 'sine' });
+    playPulse(context, { frequency: base + 15, strength: strength * .62, offset: 180 + wobble * .2, duration: 130, type: 'sawtooth' });
+    playPulse(context, { frequency: base + 3 - drift, strength: strength * .82, offset: 430 + wobble, duration: 260 + scale * 120, type: 'triangle' });
+    playPulse(context, { frequency: base + 22, strength: strength * (.42 + density * .25), offset: 760 + wobble * .5, duration: 110 + movement * 100, type: 'sawtooth' });
+    playPulse(context, { frequency: base - 8, strength: strength * .78, offset: 980 + wobble, duration: 400 + scale * 180, type: 'sine' });
+  } else if (signature.profile === 'kin · transferring') {
+    // Paired, overlapping pulses: a rhythmic exchange rather than a clean beat.
+    playPulse(context, { frequency: base - 3 + drift, strength: strength * .9, offset: 0, duration: 300 + scale * 150 });
+    playPulse(context, { frequency: base + 6, strength: strength * .78, offset: 105 + wobble * .2, duration: 230 + scale * 100, type: 'triangle' });
+    playPulse(context, { frequency: base - 9, strength: strength * .7, offset: 390 + wobble, duration: 360 + scale * 190 });
+    playPulse(context, { frequency: base + 11 + density * 5, strength: strength * .68, offset: 700 + wobble * .65, duration: 180 + movement * 110, type: 'sine' });
+    playPulse(context, { frequency: base - 1, strength: strength * .82, offset: 920 + wobble, duration: 330 + scale * 170 });
+  } else {
+    // A denser, unstable field with high and low components colliding.
+    playPulse(context, { frequency: base - 13 + drift, strength: strength * .92, offset: 0, duration: 420 + scale * 170, type: 'triangle' });
+    playPulse(context, { frequency: base + 17, strength: strength * .62, offset: 90 + wobble * .2, duration: 150, type: 'sawtooth' });
+    playPulse(context, { frequency: base + 2, strength, offset: 250 + wobble * .4, duration: 260 + scale * 160 });
+    playPulse(context, { frequency: base + 24, strength: strength * .5, offset: 510 + wobble, duration: 120 + movement * 100, type: 'sawtooth' });
+    playPulse(context, { frequency: base - 7, strength: strength * .82, offset: 700 + wobble * .7, duration: 390 + scale * 200, type: 'sine' });
+    playPulse(context, { frequency: base + 9, strength: strength * .68, offset: 1050 + wobble, duration: 200 + scale * 120, type: 'triangle' });
+  }
   interactionMovement = 0;
 }
 function createArrivalPattern(context, reading) {
@@ -225,7 +238,7 @@ function selectLocalEncounter() {
   connectorTitle.textContent = 'tree nearby'; instruction.textContent = 'circle complete · opening connection';
   const encounterLabel = field.nearest.tree.properties?.MANUAL_CONTACT ? 'local encounter' : 'nearest tree';
   treePoint.textContent = `${encounterLabel} · ${field.nearest.signature.name} · ${Math.round(field.nearest.distance)}m · id ${field.nearest.signature.id}`;
-  startPresence(field); confirmEncounter('contact · connection open');
+  startPresence(field); confirmEncounter();
 }
 function captureHeading(event) {
   if (!orientationListening || typeof event.alpha !== 'number') return;
@@ -288,15 +301,16 @@ async function requestOrientation() {
     return true;
   } catch { orientationPermissionState = 'denied'; return false; }
 }
-function confirmEncounter(message = 'contact · the tree is here') {
+function confirmEncounter(message = 'the connection is open') {
   if (encounterConfirmed || contactPhase === 'silent') return;
   encounterConfirmed = true; contactPhase = 'responding'; window.clearTimeout(contactTimer); contactTimer = null;
-  interactionMovement = 0; app.classList.add('is-contact'); connectorTitle.textContent = 'contact'; instruction.textContent = message;
+  const profile = field.nearest?.signature?.profile || 'local encounter';
+  interactionMovement = 0; app.classList.add('is-contact'); connectorTitle.textContent = 'contact'; instruction.textContent = `${profile} · ${message}`;
   const context = getAudioContext(); if (context) createArrivalPattern(context, field);
 }
 function enterContact() {
   if (contactPhase !== 'silent') return;
-  encounterConfirmed = false; selectedLocalTree = field.nearest; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0; interactionMovement = 0; contactPhase = 'presence'; connectorTitle.textContent = 'tree nearby'; instruction.textContent = 'stop · then hold your phone out · rotate once through a full circle'; startPresence(field);
+  encounterConfirmed = false; selectedLocalTree = field.nearest; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0; interactionMovement = 0; contactPhase = 'presence'; connectorTitle.textContent = 'tree nearby'; instruction.textContent = 'pause here · breathe · hold your phone out · rotate once through a full circle'; startPresence(field);
   if (!orientationListening) requestOrientation();
 }
 function leaveContact() {
