@@ -89,7 +89,10 @@ function updateField(position) {
     const speed = position.coords.speed;
     // GPS can wander several metres while the participant is still. Allow
     // that drift so holding the phone out and turning it is not read as walking.
-    if (distanceMoved > GPS_STATIONARY_DRIFT_METRES || (Number.isFinite(speed) && speed > .8)) { stationarySince = 0; lastWalkingSignalAt = Date.now(); }
+    if (distanceMoved > GPS_STATIONARY_DRIFT_METRES || (Number.isFinite(speed) && speed > .8)) {
+      stationarySince = 0; lastWalkingSignalAt = Date.now();
+      orientationTravel = 0; motionTravel = 0; coherentMotionMs = 0; motionEvidenceMs = 0;
+    }
     else if (!stationarySince) stationarySince = Date.now();
   } else stationarySince = Date.now();
   lastPosition = position;
