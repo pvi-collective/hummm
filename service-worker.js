@@ -1,4 +1,4 @@
-const CACHE = 'hummm-connector-v0.19.2';
+const CACHE = 'hummm-connector-v0.20.0';
 const FILES = ['./', './index.html', './style.css', './app.js', './manifest.json', './data/perth-cultural-centre-trees.geojson'];
 
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES)).then(() => self.skipWaiting())));

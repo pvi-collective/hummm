@@ -26,6 +26,7 @@ let field = { life: 0, maturity: 0, diversity: 0, nearby: 0, nearest: null, cano
 let lastPosition = null, stationarySince = 0, lastWalkingSignalAt = 0;
 let selectedLocalTree = null;
 let contactPhase = 'silent', contactTimer = null, journeyInstructionTimer = null, journeyStartedAt = 0, connectionLostUntil = 0, presenceOscillator = null, presenceGain = null, presenceLfo = null, presenceLfoGain = null;
+let contactBed = null, lastContactAccentAt = 0;
 let orientationPermissionState = 'unknown';
 let orientationListening = false, orientationHeading = null, orientationTravel = 0, motionTravel = 0, lastMotionTime = 0, lastGestureTime = 0, lastAcceleration = null, lastRotationVector = null, coherentMotionMs = 0, motionEvidenceMs = 0, interactionMovement = 0, encounterConfirmed = false;
 const manualContactTrees = [
@@ -129,9 +130,9 @@ function updateField(position) {
     instruction.textContent = connectionLost
       ? 'connection lost · move closer to reconnect'
       : mappedNearby
-      ? 'stop · then hold your phone out · rotate once through a full circle'
+      ? 'move closer · be near'
       : stationary
-        ? 'stop · choose a tree · hold your phone out · rotate once through a full circle'
+        ? 'pause here · breathe · then hold your phone out · rotate once through a full circle'
         : journeyInstruction();
   }
   const nearTree = field.nearest?.distance || Infinity;
@@ -198,6 +199,50 @@ function createContactPattern(context, reading) {
   }
   interactionMovement = 0;
 }
+function startContactBed(context, reading) {
+  if (contactBed) return;
+  const signature = reading.nearest?.signature || treeSignature(reading.nearest?.tree || manualContactTrees[0]);
+  const scale = signature.scale, base = 31 + scale * 9 + (signature.seed % 5);
+  const profile = signature.profile;
+  const master = context.createGain(), modulation = context.createGain(), lfo = context.createOscillator();
+  const nodes = [], now = context.currentTime;
+  master.gain.setValueAtTime(.0001, now); master.gain.exponentialRampToValueAtTime(.34 + scale * .08, now + .45); master.connect(context.destination);
+  lfo.type = 'sine'; lfo.frequency.value = profile === 'under strain' ? .19 : .11;
+  modulation.gain.value = profile === 'under strain' ? .12 : .085;
+  lfo.connect(modulation); modulation.connect(master.gain); lfo.start(now);
+  const layers = profile === 'defending'
+    ? [[base, 'sine', .62], [base + 13, 'sawtooth', .16], [base - 5, 'triangle', .25]]
+    : profile === 'kin · transferring'
+      ? [[base, 'sine', .58], [base + 3.5, 'triangle', .32], [base + 11, 'sine', .18]]
+      : [[base - 3, 'triangle', .52], [base + 5, 'sine', .34], [base + 18, 'sawtooth', .14]];
+  layers.forEach(([frequency, type, level], index) => {
+    const oscillator = context.createOscillator(), gain = context.createGain();
+    oscillator.type = type; oscillator.frequency.value = frequency + signature.irregularity * index * 4;
+    gain.gain.value = level; oscillator.connect(gain); gain.connect(master); oscillator.start(now);
+    nodes.push({ oscillator, gain, base: oscillator.frequency.value, level });
+  });
+  contactBed = { master, modulation, lfo, nodes, signature };
+}
+function updateContactBed(reading) {
+  if (!contactBed) return;
+  const context = getAudioContext(); if (!context) return;
+  const signature = contactBed.signature, distance = reading.nearest?.distance ?? 18;
+  const proximity = clamp(1 - distance / 45, 0, 1), movement = interactionMovement;
+  contactBed.master.gain.setTargetAtTime(.31 + signature.scale * .1 + proximity * .1 + movement * .08, context.currentTime, .28);
+  contactBed.modulation.gain.setTargetAtTime(.07 + movement * .11 + (signature.profile === 'under strain' ? .04 : 0), context.currentTime, .32);
+  contactBed.nodes.forEach((layer, index) => {
+    const drift = Math.sin(Date.now() / (1600 + index * 430) + signature.offset * 7) * (1.2 + movement * 5);
+    layer.oscillator.frequency.setTargetAtTime(layer.base + drift, context.currentTime, .22);
+    layer.gain.gain.setTargetAtTime(layer.level * (1 + movement * .35), context.currentTime, .3);
+  });
+  interactionMovement = 0;
+}
+function stopContactBed() {
+  if (!contactBed) return;
+  contactBed.nodes.forEach(({ oscillator }) => { try { oscillator.stop(); } catch { /* already stopped */ } });
+  try { contactBed.lfo.stop(); } catch { /* already stopped */ }
+  contactBed = null; lastContactAccentAt = 0;
+}
 function createArrivalPattern(context, reading) {
   const signature = reading.nearest?.signature || treeSignature(reading.nearest?.tree || manualContactTrees[0]);
   const scale = signature.scale, base = 35 + scale * 11 + (signature.seed % 6), strength = .96 + scale * .16, wobble = signature.irregularity * 150;
@@ -221,9 +266,14 @@ function playFieldCycle() {
   else if (field.life < .23) createConcretePattern(context, field);
   else if (field.life < .5) createThresholdPattern(context, field);
   else if (field.life < .78) createLivingPattern(context, field);
-  else createContactPattern(context, field);
+  else {
+    startContactBed(context, field);
+    updateContactBed(field);
+    // The continuous bed is the connection; accents are occasional texture, not a beat.
+    if (Date.now() - lastContactAccentAt > 4800) { createContactPattern(context, field); lastContactAccentAt = Date.now(); }
+  }
 }
-function scheduleFieldCycle() { if (!isWalking) return; playFieldCycle(); fieldTimer = window.setTimeout(scheduleFieldCycle, contactPhase === 'silent' || (contactPhase === 'presence' && !encounterConfirmed) ? 3000 : 2600); }
+function scheduleFieldCycle() { if (!isWalking) return; playFieldCycle(); fieldTimer = window.setTimeout(scheduleFieldCycle, contactPhase === 'silent' || (contactPhase === 'presence' && !encounterConfirmed) ? 3000 : 900); }
 function stopPresence() {
   if (presenceOscillator) { try { presenceOscillator.stop(); } catch { /* already ended */ } }
   if (presenceLfo) { try { presenceLfo.stop(); } catch { /* already ended */ } }
@@ -234,7 +284,7 @@ function closeMicrophone() {
 function clearAudio() {
   window.clearTimeout(fieldTimer); fieldTimer = null; window.clearTimeout(contactTimer); contactTimer = null;
   activeOscillators.forEach((oscillator) => { try { oscillator.stop(); } catch { /* already ended */ } });
-  activeOscillators = []; stopPresence(); closeMicrophone(); contactPhase = 'silent'; connectionLostUntil = 0; selectedLocalTree = null; lastPosition = null; stationarySince = 0; lastWalkingSignalAt = 0; orientationListening = false; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0;
+  activeOscillators = []; stopPresence(); stopContactBed(); closeMicrophone(); contactPhase = 'silent'; connectionLostUntil = 0; selectedLocalTree = null; lastPosition = null; stationarySince = 0; lastWalkingSignalAt = 0; orientationListening = false; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0;
   window.removeEventListener('deviceorientation', captureHeading, true); window.removeEventListener('devicemotion', captureMotion, true);
 }
 function startPresence() {
@@ -326,18 +376,18 @@ function confirmEncounter(message = 'the connection is open') {
   encounterConfirmed = true; contactPhase = 'responding'; window.clearTimeout(contactTimer); contactTimer = null;
   const profile = field.nearest?.signature?.profile || 'local encounter';
   interactionMovement = 0; app.classList.add('is-contact'); connectorTitle.textContent = 'contact'; instruction.textContent = `${profile} · ${message}`;
-  const context = getAudioContext(); if (context) createArrivalPattern(context, field);
+  const context = getAudioContext(); if (context) { createArrivalPattern(context, field); startContactBed(context, field); }
 }
 function enterContact() {
   if (contactPhase !== 'silent') return;
-  connectionLostUntil = 0; encounterConfirmed = false; selectedLocalTree = field.nearest; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0; interactionMovement = 0; contactPhase = 'presence'; connectorTitle.textContent = 'tree nearby'; instruction.textContent = 'pause here · breathe · hold your phone out · rotate once through a full circle'; startPresence(field);
+  connectionLostUntil = 0; encounterConfirmed = false; selectedLocalTree = field.nearest; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0; interactionMovement = 0; contactPhase = 'presence'; connectorTitle.textContent = 'tree nearby'; instruction.textContent = 'pause here · breathe · then hold your phone out · rotate once through a full circle'; startPresence(field);
   if (!orientationListening) requestOrientation();
 }
 function leaveContact() {
   if (contactPhase === 'silent') return;
   const wasConnected = contactPhase === 'responding' || encounterConfirmed;
   contactPhase = 'silent'; window.clearTimeout(contactTimer); contactTimer = null; stopPresence(); closeMicrophone();
-  connectionLostUntil = wasConnected ? Date.now() + 4000 : 0; encounterConfirmed = false; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0; interactionMovement = 0; orientationListening = false; window.removeEventListener('deviceorientation', captureHeading, true); window.removeEventListener('devicemotion', captureMotion, true); connectorTitle.textContent = 'connector'; instruction.textContent = wasConnected ? 'connection lost · move closer to reconnect' : journeyInstruction(); app.classList.remove('is-contact');
+  connectionLostUntil = wasConnected ? Date.now() + 4000 : 0; encounterConfirmed = false; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0; interactionMovement = 0; orientationListening = false; stopContactBed(); window.removeEventListener('deviceorientation', captureHeading, true); window.removeEventListener('devicemotion', captureMotion, true); connectorTitle.textContent = 'connector'; instruction.textContent = wasConnected ? 'connection lost · move closer to reconnect' : journeyInstruction(); app.classList.remove('is-contact');
 }
 async function requestWakeLock() {
   if (!('wakeLock' in navigator)) return;
