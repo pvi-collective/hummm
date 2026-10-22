@@ -3,6 +3,7 @@ const DATA_URL = 'data/perth-cultural-centre-trees.geojson';
 const INFLUENCE_RADIUS_METRES = 90;
 const CONTACT_RADIUS_METRES = 18;
 const CONTACT_EXIT_RADIUS_METRES = 28;
+const CONNECTION_EXIT_RADIUS_METRES = 12;
 const GESTURE_RADIUS_METRES = 45;
 const GESTURE_EXIT_RADIUS_METRES = 55;
 const GPS_STATIONARY_DRIFT_METRES = 6;
@@ -24,7 +25,7 @@ let trees = [], audioContext = null, activeOscillators = [], fieldTimer = null, 
 let field = { life: 0, maturity: 0, diversity: 0, nearby: 0, nearest: null, canopy: 0 };
 let lastPosition = null, stationarySince = 0;
 let selectedLocalTree = null;
-let contactPhase = 'silent', contactTimer = null, journeyInstructionTimer = null, journeyStartedAt = 0, presenceOscillator = null, presenceGain = null, presenceLfo = null, presenceLfoGain = null;
+let contactPhase = 'silent', contactTimer = null, journeyInstructionTimer = null, journeyStartedAt = 0, connectionLostUntil = 0, presenceOscillator = null, presenceGain = null, presenceLfo = null, presenceLfoGain = null;
 let orientationPermissionState = 'unknown';
 let orientationListening = false, orientationHeading = null, orientationTravel = 0, motionTravel = 0, lastMotionTime = 0, lastGestureTime = 0, lastAcceleration = null, lastRotationVector = null, coherentMotionMs = 0, motionEvidenceMs = 0, interactionMovement = 0, encounterConfirmed = false;
 const manualContactTrees = [
@@ -110,8 +111,11 @@ function updateField(position) {
   if (contactPhase === 'silent') {
     const mappedNearby = field.nearest && field.nearest.distance <= GESTURE_RADIUS_METRES;
     const stationary = stationarySince && Date.now() - stationarySince > 1200;
-    connectorTitle.textContent = mappedNearby ? 'tree nearby' : 'connector';
-    instruction.textContent = mappedNearby
+    const connectionLost = connectionLostUntil > Date.now();
+    connectorTitle.textContent = mappedNearby && !connectionLost ? 'tree nearby' : 'connector';
+    instruction.textContent = connectionLost
+      ? 'connection lost · move closer to reconnect'
+      : mappedNearby
       ? 'stop · then hold your phone out · rotate once through a full circle'
       : stationary
         ? 'stop · choose a tree · hold your phone out · rotate once through a full circle'
@@ -126,7 +130,7 @@ function updateField(position) {
   const nearestLabel = field.nearest?.tree.properties?.MANUAL_CONTACT ? 'local encounter' : 'nearest tree';
   treePoint.textContent = field.nearest ? `${nearestLabel} · ${field.nearest.signature.name} · ${Math.round(field.nearest.distance)}m · id ${field.nearest.signature.id}` : 'nearest tree · none in range';
   if (isWalking && field.nearest && field.nearest.distance <= GESTURE_RADIUS_METRES) enterContact();
-  else if (isWalking && (!field.nearest || field.nearest.distance > (contactPhase === 'responding' ? CONTACT_EXIT_RADIUS_METRES : GESTURE_EXIT_RADIUS_METRES))) leaveContact();
+  else if (isWalking && (!field.nearest || field.nearest.distance > (contactPhase === 'responding' ? CONNECTION_EXIT_RADIUS_METRES : GESTURE_EXIT_RADIUS_METRES))) leaveContact();
 }
 function playPulse(context, { frequency, strength, offset, duration, type = 'sine' }) {
   const oscillator = context.createOscillator(), gain = context.createGain(), start = context.currentTime + offset / 1000, end = start + duration / 1000;
@@ -217,7 +221,7 @@ function closeMicrophone() {
 function clearAudio() {
   window.clearTimeout(fieldTimer); fieldTimer = null; window.clearTimeout(contactTimer); contactTimer = null;
   activeOscillators.forEach((oscillator) => { try { oscillator.stop(); } catch { /* already ended */ } });
-  activeOscillators = []; stopPresence(); closeMicrophone(); contactPhase = 'silent'; selectedLocalTree = null; lastPosition = null; stationarySince = 0; orientationListening = false; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0;
+  activeOscillators = []; stopPresence(); closeMicrophone(); contactPhase = 'silent'; connectionLostUntil = 0; selectedLocalTree = null; lastPosition = null; stationarySince = 0; orientationListening = false; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0;
   window.removeEventListener('deviceorientation', captureHeading, true); window.removeEventListener('devicemotion', captureMotion, true);
 }
 function startPresence() {
@@ -310,13 +314,14 @@ function confirmEncounter(message = 'the connection is open') {
 }
 function enterContact() {
   if (contactPhase !== 'silent') return;
-  encounterConfirmed = false; selectedLocalTree = field.nearest; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0; interactionMovement = 0; contactPhase = 'presence'; connectorTitle.textContent = 'tree nearby'; instruction.textContent = 'pause here · breathe · hold your phone out · rotate once through a full circle'; startPresence(field);
+  connectionLostUntil = 0; encounterConfirmed = false; selectedLocalTree = field.nearest; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0; interactionMovement = 0; contactPhase = 'presence'; connectorTitle.textContent = 'tree nearby'; instruction.textContent = 'pause here · breathe · hold your phone out · rotate once through a full circle'; startPresence(field);
   if (!orientationListening) requestOrientation();
 }
 function leaveContact() {
   if (contactPhase === 'silent') return;
+  const wasConnected = contactPhase === 'responding' || encounterConfirmed;
   contactPhase = 'silent'; window.clearTimeout(contactTimer); contactTimer = null; stopPresence(); closeMicrophone();
-  encounterConfirmed = false; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0; interactionMovement = 0; orientationListening = false; window.removeEventListener('deviceorientation', captureHeading, true); window.removeEventListener('devicemotion', captureMotion, true); connectorTitle.textContent = 'connector'; instruction.textContent = journeyInstruction(); app.classList.remove('is-contact');
+  connectionLostUntil = wasConnected ? Date.now() + 4000 : 0; encounterConfirmed = false; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0; interactionMovement = 0; orientationListening = false; window.removeEventListener('deviceorientation', captureHeading, true); window.removeEventListener('devicemotion', captureMotion, true); connectorTitle.textContent = 'connector'; instruction.textContent = wasConnected ? 'connection lost · move closer to reconnect' : journeyInstruction(); app.classList.remove('is-contact');
   selectedLocalTree = null;
 }
 async function requestWakeLock() {
