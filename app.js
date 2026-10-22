@@ -3,7 +3,7 @@ const DATA_URL = 'data/perth-cultural-centre-trees.geojson';
 const INFLUENCE_RADIUS_METRES = 90;
 const CONTACT_RADIUS_METRES = 18;
 const CONTACT_EXIT_RADIUS_METRES = 28;
-const CONNECTION_EXIT_RADIUS_METRES = 12;
+const CONNECTION_EXIT_RADIUS_METRES = 10;
 const GESTURE_RADIUS_METRES = 45;
 const GESTURE_EXIT_RADIUS_METRES = 55;
 const GPS_STATIONARY_DRIFT_METRES = 6;
@@ -129,7 +129,7 @@ function updateField(position) {
   debug.textContent = `signal ${Math.round(field.life * 100)} · maturity ${Math.round(field.maturity * 100)} · diversity ${Math.round(field.diversity * 100)} · gps ±${Math.round(position.coords.accuracy)}m${wakeLock ? ' · screen awake' : ''}`;
   const nearestLabel = field.nearest?.tree.properties?.MANUAL_CONTACT ? 'local encounter' : 'nearest tree';
   treePoint.textContent = field.nearest ? `${nearestLabel} · ${field.nearest.signature.name} · ${Math.round(field.nearest.distance)}m · id ${field.nearest.signature.id}` : 'nearest tree · none in range';
-  if (isWalking && field.nearest && field.nearest.distance <= GESTURE_RADIUS_METRES) enterContact();
+  if (isWalking && connectionLostUntil <= Date.now() && field.nearest && field.nearest.distance <= GESTURE_RADIUS_METRES) enterContact();
   else if (isWalking && (!field.nearest || field.nearest.distance > (contactPhase === 'responding' ? CONNECTION_EXIT_RADIUS_METRES : GESTURE_EXIT_RADIUS_METRES))) leaveContact();
 }
 function playPulse(context, { frequency, strength, offset, duration, type = 'sine' }) {
