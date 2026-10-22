@@ -23,7 +23,7 @@ const loaderText = document.querySelector('#loaderText');
 const treePoint = document.querySelector('#treePoint');
 let trees = [], audioContext = null, activeOscillators = [], fieldTimer = null, watchId = null, wakeLock = null, isWalking = false;
 let field = { life: 0, maturity: 0, diversity: 0, nearby: 0, nearest: null, canopy: 0 };
-let lastPosition = null, stationarySince = 0;
+let lastPosition = null, stationarySince = 0, lastWalkingSignalAt = 0;
 let selectedLocalTree = null;
 let contactPhase = 'silent', contactTimer = null, journeyInstructionTimer = null, journeyStartedAt = 0, connectionLostUntil = 0, presenceOscillator = null, presenceGain = null, presenceLfo = null, presenceLfoGain = null;
 let orientationPermissionState = 'unknown';
@@ -89,7 +89,7 @@ function updateField(position) {
     const speed = position.coords.speed;
     // GPS can wander several metres while the participant is still. Allow
     // that drift so holding the phone out and turning it is not read as walking.
-    if (distanceMoved > GPS_STATIONARY_DRIFT_METRES || (Number.isFinite(speed) && speed > .8)) stationarySince = 0;
+    if (distanceMoved > GPS_STATIONARY_DRIFT_METRES || (Number.isFinite(speed) && speed > .8)) { stationarySince = 0; lastWalkingSignalAt = Date.now(); }
     else if (!stationarySince) stationarySince = Date.now();
   } else stationarySince = Date.now();
   lastPosition = position;
@@ -108,9 +108,19 @@ function updateField(position) {
       selectedLocalTree = null;
     }
   }
+  if (selectedLocalTree && contactPhase === 'silent') {
+    const [lon, lat] = selectedLocalTree.tree.geometry.coordinates;
+    const distance = distanceInMetres(position.coords.latitude, position.coords.longitude, lat, lon);
+    if (distance <= GESTURE_EXIT_RADIUS_METRES) {
+      selectedLocalTree.distance = distance;
+      if (!field.nearest || distance < field.nearest.distance) {
+        field = { ...field, life: Math.max(field.life, .8), maturity: Math.max(field.maturity, .55), diversity: Math.max(field.diversity, .2), nearby: Math.max(field.nearby, 1), nearest: selectedLocalTree, canopy: Math.max(field.canopy, .65) };
+      }
+    } else selectedLocalTree = null;
+  }
   if (contactPhase === 'silent') {
     const mappedNearby = field.nearest && field.nearest.distance <= GESTURE_RADIUS_METRES;
-    const stationary = stationarySince && Date.now() - stationarySince > 1200;
+    const stationary = stationarySince && Date.now() - stationarySince > 1200 && Date.now() - lastWalkingSignalAt > 1200;
     const connectionLost = connectionLostUntil > Date.now();
     connectorTitle.textContent = mappedNearby && !connectionLost ? 'tree nearby' : 'connector';
     instruction.textContent = connectionLost
@@ -221,7 +231,7 @@ function closeMicrophone() {
 function clearAudio() {
   window.clearTimeout(fieldTimer); fieldTimer = null; window.clearTimeout(contactTimer); contactTimer = null;
   activeOscillators.forEach((oscillator) => { try { oscillator.stop(); } catch { /* already ended */ } });
-  activeOscillators = []; stopPresence(); closeMicrophone(); contactPhase = 'silent'; connectionLostUntil = 0; selectedLocalTree = null; lastPosition = null; stationarySince = 0; orientationListening = false; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0;
+  activeOscillators = []; stopPresence(); closeMicrophone(); contactPhase = 'silent'; connectionLostUntil = 0; selectedLocalTree = null; lastPosition = null; stationarySince = 0; lastWalkingSignalAt = 0; orientationListening = false; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0;
   window.removeEventListener('deviceorientation', captureHeading, true); window.removeEventListener('devicemotion', captureMotion, true);
 }
 function startPresence() {
@@ -248,14 +258,15 @@ function captureHeading(event) {
   if (!orientationListening || typeof event.alpha !== 'number') return;
   const heading = normaliseHeading(360 - event.alpha);
   if (orientationHeading === null) orientationHeading = heading;
-  else { const delta = Math.abs(headingDelta(orientationHeading, heading)); const stationary = stationarySince && Date.now() - stationarySince > 1200; if (!encounterConfirmed && stationary && delta > 2) orientationTravel += delta; if (encounterConfirmed && delta > 3) interactionMovement = clamp(interactionMovement + delta / 90, 0, 1); orientationHeading = heading; checkRotationProgress(); }
+  else { const delta = Math.abs(headingDelta(orientationHeading, heading)); const stationary = stationarySince && Date.now() - stationarySince > 1200 && Date.now() - lastWalkingSignalAt > 1200; if (!encounterConfirmed && stationary && delta > 2) orientationTravel += delta; if (encounterConfirmed && delta > 3) interactionMovement = clamp(interactionMovement + delta / 90, 0, 1); orientationHeading = heading; checkRotationProgress(); }
 }
 function captureMotion(event) {
   if (!orientationListening || !event.rotationRate) return;
   const gpsSpeed = lastPosition?.coords?.speed;
   const linearAcceleration = event.acceleration;
   const linearMagnitude = linearAcceleration ? Math.sqrt((linearAcceleration.x || 0) ** 2 + (linearAcceleration.y || 0) ** 2 + (linearAcceleration.z || 0) ** 2) : 0;
-  if ((Number.isFinite(gpsSpeed) && gpsSpeed > .3) || linearMagnitude > 1.2) {
+  if ((Number.isFinite(gpsSpeed) && gpsSpeed > .3) || linearMagnitude > .8) {
+    lastWalkingSignalAt = Date.now();
     orientationTravel = 0; motionTravel = 0; coherentMotionMs = 0; motionEvidenceMs = 0; lastGestureTime = 0; return;
   }
   const now = event.timeStamp || performance.now(), elapsed = lastMotionTime ? Math.min((now - lastMotionTime) / 1000, .2) : 0;
@@ -274,7 +285,7 @@ function captureMotion(event) {
   checkRotationProgress();
 }
 function checkRotationProgress() {
-  const travel = orientationTravel, stationary = stationarySince && Date.now() - stationarySince > 1200;
+  const travel = orientationTravel, stationary = stationarySince && Date.now() - stationarySince > 1200 && Date.now() - lastWalkingSignalAt > 1200;
   if (!encounterConfirmed && stationary && travel > 0 && (contactPhase === 'presence' || contactPhase === 'silent')) {
     connectorTitle.textContent = 'tree nearby';
     instruction.textContent = `turning · ${Math.round(clamp(travel / ROTATION_TARGET_DEGREES, 0, 1) * 100)}%`;
@@ -322,7 +333,6 @@ function leaveContact() {
   const wasConnected = contactPhase === 'responding' || encounterConfirmed;
   contactPhase = 'silent'; window.clearTimeout(contactTimer); contactTimer = null; stopPresence(); closeMicrophone();
   connectionLostUntil = wasConnected ? Date.now() + 4000 : 0; encounterConfirmed = false; orientationHeading = null; orientationTravel = 0; motionTravel = 0; lastMotionTime = 0; lastGestureTime = 0; lastAcceleration = null; lastRotationVector = null; coherentMotionMs = 0; motionEvidenceMs = 0; interactionMovement = 0; orientationListening = false; window.removeEventListener('deviceorientation', captureHeading, true); window.removeEventListener('devicemotion', captureMotion, true); connectorTitle.textContent = 'connector'; instruction.textContent = wasConnected ? 'connection lost · move closer to reconnect' : journeyInstruction(); app.classList.remove('is-contact');
-  selectedLocalTree = null;
 }
 async function requestWakeLock() {
   if (!('wakeLock' in navigator)) return;
